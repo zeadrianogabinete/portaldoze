@@ -13,7 +13,7 @@ export function AppShell() {
     <div className="flex h-screen overflow-hidden bg-[var(--surface-page)]">
       {/* Sidebar desktop */}
       {!isMobile && (
-        <div className="hidden lg:block">
+        <div className="hidden lg:block lg:shrink-0">
           <Sidebar />
         </div>
       )}
@@ -26,7 +26,7 @@ export function AppShell() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-40 bg-black/50"
+              className="fixed inset-0 z-40 bg-[var(--surface-overlay)] backdrop-blur-[1px]"
               onClick={() => setSidebarOpen(false)}
             />
             <motion.div
@@ -44,11 +44,9 @@ export function AppShell() {
 
       {/* Conteúdo principal */}
       <div className="flex flex-1 flex-col overflow-x-hidden">
-        <Header
-          onMenuClick={() => setSidebarOpen(true)}
-        />
+        <Header onMenuClick={() => setSidebarOpen(true)} />
         <main className="flex-1 overflow-y-auto">
-          <div className="mx-auto max-w-[1440px] px-4 py-6 lg:px-8">
+          <div className="mx-auto w-full max-w-[1540px] px-4 py-5 md:px-6 lg:px-8 lg:py-8">
             <Outlet />
           </div>
         </main>

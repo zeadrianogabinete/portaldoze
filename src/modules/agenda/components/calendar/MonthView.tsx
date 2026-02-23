@@ -38,9 +38,9 @@ export function MonthView({ currentDate }: MonthViewProps) {
   };
 
   return (
-    <div className="overflow-hidden rounded-xl">
+    <div className="overflow-hidden rounded-2xl">
       {/* Header dias da semana */}
-      <div className="grid grid-cols-7 border-b border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)]">
+      <div className="grid grid-cols-7 border-b border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)]/70">
         {weekDays.map((day) => (
           <div
             key={day}
@@ -62,9 +62,9 @@ export function MonthView({ currentDate }: MonthViewProps) {
             <div
               key={day.toISOString()}
               className={cn(
-                'min-h-[90px] border-b border-r border-[var(--color-neutral-100)] p-1.5 transition-colors lg:min-h-[110px]',
+                'min-h-[100px] border-b border-r border-[var(--color-neutral-100)] p-2 transition-colors lg:min-h-[120px]',
                 !inMonth && 'bg-[var(--color-neutral-50)]/50',
-                'hover:bg-primary-50/30 cursor-pointer',
+                'cursor-pointer hover:bg-primary-50/30',
               )}
             >
               <div className="flex items-center justify-between">
@@ -86,10 +86,10 @@ export function MonthView({ currentDate }: MonthViewProps) {
                   <div
                     key={agenda.id}
                     className={cn(
-                      'truncate rounded px-1.5 py-0.5 text-[10px] font-medium leading-tight lg:text-xs',
+                      'truncate rounded-md px-1.5 py-0.5 text-[10px] font-semibold leading-tight lg:text-xs',
                       agenda.status === 'approved'
                         ? 'bg-primary-100 text-primary-700'
-                        : 'bg-yellow-100 text-yellow-700',
+                        : 'bg-[var(--color-warning)]/20 text-[var(--color-warning)]',
                     )}
                     title={agenda.title}
                   >

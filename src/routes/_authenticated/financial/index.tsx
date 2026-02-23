@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { createFileRoute, Link, useMatchRoute } from '@tanstack/react-router';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Wallet } from 'lucide-react';
 import { format, addMonths, subMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { PageContainer } from '@/shared/components/layout/PageContainer';
 import { cn } from '@/shared/utils/cn';
 import { FinancialDashboard } from '@/modules/financial/components/dashboard/FinancialDashboard';
+import { Badge } from '@/shared/components/ui/Badge';
 
 export const Route = createFileRoute('/_authenticated/financial/')({
   component: FinancialPage,
@@ -16,28 +17,42 @@ function FinancialPage() {
 
   return (
     <PageContainer>
-      {/* Header */}
-      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="font-heading text-2xl font-bold text-[var(--color-neutral-800)]">
-            Financeiro
-          </h1>
+      <div className="mb-6 rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-5 shadow-[var(--shadow-card)]">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="rounded-xl bg-primary-500/12 p-2.5 text-primary-600">
+              <Wallet size={20} strokeWidth={1.75} />
+            </div>
+            <div>
+              <h1 className="font-heading text-2xl font-bold text-[var(--color-neutral-800)]">
+                Financeiro
+              </h1>
+              <p className="text-sm text-[var(--color-neutral-500)]">
+                Gestão centralizada de receitas, despesas, cotas e relatórios.
+              </p>
+            </div>
+          </div>
+
+          <Badge variant="neutral">Atualização em tempo real</Badge>
         </div>
+
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => setCurrentMonth((d) => subMonths(d, 1))}
-            className="rounded-lg p-2 text-[var(--color-neutral-600)] transition-colors hover:bg-[var(--color-neutral-100)]"
+            className="rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] p-2 text-[var(--color-neutral-600)] transition-colors hover:bg-[var(--color-neutral-100)]"
+            aria-label="Mês anterior"
           >
             <ChevronLeft size={20} strokeWidth={1.5} />
           </button>
-          <span className="min-w-[160px] text-center font-heading text-base font-semibold capitalize text-[var(--color-neutral-800)]">
+          <span className="min-w-[180px] text-center font-heading text-base font-semibold capitalize text-[var(--color-neutral-800)]">
             {format(currentMonth, 'MMMM yyyy', { locale: ptBR })}
           </span>
           <button
             type="button"
             onClick={() => setCurrentMonth((d) => addMonths(d, 1))}
-            className="rounded-lg p-2 text-[var(--color-neutral-600)] transition-colors hover:bg-[var(--color-neutral-100)]"
+            className="rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] p-2 text-[var(--color-neutral-600)] transition-colors hover:bg-[var(--color-neutral-100)]"
+            aria-label="Próximo mês"
           >
             <ChevronRight size={20} strokeWidth={1.5} />
           </button>
@@ -66,8 +81,8 @@ function FinancialTabs() {
   ];
 
   return (
-    <div className="mb-6 overflow-x-auto">
-      <div className="flex gap-1 border-b border-[var(--color-neutral-200)]">
+    <div className="mb-6 overflow-x-auto rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-1.5 shadow-[var(--shadow-card)]">
+      <div className="flex gap-1">
         {tabs.map((tab) => {
           const active = !!matchRoute({ to: tab.href });
           return (
@@ -75,10 +90,10 @@ function FinancialTabs() {
               key={tab.href}
               to={tab.href}
               className={cn(
-                'whitespace-nowrap border-b-2 px-4 py-2.5 text-sm font-medium transition-colors',
+                'whitespace-nowrap rounded-xl px-4 py-2.5 text-sm font-medium transition-colors',
                 active
-                  ? 'border-primary-500 text-primary-600'
-                  : 'border-transparent text-[var(--color-neutral-500)] hover:border-[var(--color-neutral-300)] hover:text-[var(--color-neutral-700)]',
+                  ? 'bg-primary-500/12 text-primary-700'
+                  : 'text-[var(--color-neutral-500)] hover:bg-[var(--color-neutral-100)] hover:text-[var(--color-neutral-700)]',
               )}
             >
               {tab.label}

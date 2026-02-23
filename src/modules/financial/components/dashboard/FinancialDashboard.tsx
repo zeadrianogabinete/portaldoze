@@ -3,6 +3,7 @@ import { TrendingUp, TrendingDown, DollarSign, PieChart } from 'lucide-react';
 import { cn } from '@/shared/utils/cn';
 import { formatCurrency } from '@/shared/utils/format';
 import { useDashboard } from '@/modules/financial/hooks/useDashboard';
+import { Card, CardTitle } from '@/shared/components/ui/Card';
 
 interface FinancialDashboardProps {
   currentMonth: Date;
@@ -58,13 +59,12 @@ export function FinancialDashboard({ currentMonth }: FinancialDashboardProps) {
 
   return (
     <div>
-      {/* Summary Cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {cards.map((card) => (
-          <div
+          <Card
             key={card.label}
             className={cn(
-              'rounded-xl border border-[var(--color-neutral-200)] p-5 shadow-[var(--shadow-card)]',
+              'p-5',
               card.bgColor,
             )}
           >
@@ -83,28 +83,23 @@ export function FinancialDashboard({ currentMonth }: FinancialDashboardProps) {
                 {card.extra}
               </p>
             )}
-          </div>
+          </Card>
         ))}
       </div>
 
-      {/* Placeholder para gráficos futuros */}
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
-        <div className="rounded-xl border border-[var(--color-neutral-200)] bg-white p-6 shadow-[var(--shadow-card)]">
-          <h3 className="font-heading text-base font-semibold text-[var(--color-neutral-800)]">
-            Receitas vs Despesas
-          </h3>
+        <Card className="p-6">
+          <CardTitle>Receitas vs Despesas</CardTitle>
           <div className="mt-8 flex items-center justify-center py-12 text-sm text-[var(--color-neutral-400)]">
             Gráfico em desenvolvimento
           </div>
-        </div>
-        <div className="rounded-xl border border-[var(--color-neutral-200)] bg-white p-6 shadow-[var(--shadow-card)]">
-          <h3 className="font-heading text-base font-semibold text-[var(--color-neutral-800)]">
-            Despesas por Natureza
-          </h3>
+        </Card>
+        <Card className="p-6">
+          <CardTitle>Despesas por Natureza</CardTitle>
           <div className="mt-8 flex items-center justify-center py-12 text-sm text-[var(--color-neutral-400)]">
             Gráfico em desenvolvimento
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );

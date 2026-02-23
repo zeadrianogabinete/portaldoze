@@ -16,6 +16,9 @@ import {
 import { PageContainer } from '@/shared/components/layout/PageContainer';
 import { useCurrentUser } from '@/shared/hooks/useCurrentUser';
 import { useNotifications } from '@/shared/hooks/useNotifications';
+import { Card, CardDescription, CardTitle } from '@/shared/components/ui/Card';
+import { Badge } from '@/shared/components/ui/Badge';
+import { StatCard } from '@/shared/components/ui/StatCard';
 
 export const Route = createFileRoute('/_authenticated/')({
   component: DashboardPage,
@@ -27,28 +30,28 @@ const statCards = [
     value: '75.4%',
     description: 'Meta: 100.000 apoiadores',
     icon: Target,
-    color: 'text-primary-500',
+    tone: 'primary' as const,
   },
   {
     title: 'Equipe',
     value: '1.547',
     description: '+123 esta semana',
     icon: UsersRound,
-    color: 'text-[var(--color-accent-green)]',
+    tone: 'success' as const,
   },
   {
     title: 'Compromissos',
     value: '12',
     description: 'Próximos 7 dias',
     icon: Calendar,
-    color: 'text-[var(--color-accent-cyan)]',
+    tone: 'info' as const,
   },
   {
     title: 'Alcance',
     value: '89%',
     description: '+5.2% este mês',
     icon: TrendingUp,
-    color: 'text-[var(--color-accent-yellow)]',
+    tone: 'warning' as const,
   },
 ];
 
@@ -85,6 +88,7 @@ const recentActivities = [
 function DashboardPage() {
   const { profile, can } = useCurrentUser();
   const { unreadCount } = useNotifications();
+  const firstName = profile?.full_name?.split(' ')[0] || 'Equipe';
 
   const quickLinks = [
     {
@@ -100,7 +104,7 @@ function DashboardPage() {
       description: 'Controle orçamentário e cotas',
       icon: Wallet,
       href: '/financial',
-      color: 'bg-green-50 text-green-600',
+      color: 'bg-[var(--color-success)]/12 text-[var(--color-success)]',
       visible: can('financial', 'view'),
     },
     {
@@ -117,83 +121,80 @@ function DashboardPage() {
         unreadCount > 0 ? `${unreadCount} não lidas` : 'Todas lidas',
       icon: Bell,
       href: '/notifications',
-      color: 'bg-yellow-50 text-yellow-600',
+      color: 'bg-[var(--color-warning)]/15 text-[var(--color-warning)]',
       visible: true,
     },
   ];
 
   return (
     <PageContainer>
-      {/* Seção de boas-vindas */}
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
-          <h1 className="font-heading text-3xl font-bold text-[var(--color-neutral-800)]">
-            Portal do Zé
-          </h1>
-          <Zap className="h-7 w-7 text-primary-500" />
-        </div>
-        <p className="text-[var(--color-neutral-500)]">
-          Olá, {profile?.full_name?.split(' ')[0]}! Acompanhe e gerencie o
-          mandato do Deputado Federal Zé Adriano.
-        </p>
-      </div>
-
-      {/* Cards de estatísticas */}
-      <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {statCards.map((card) => (
-          <div
-            key={card.title}
-            className="rounded-xl border border-[var(--color-neutral-200)] bg-white p-5 shadow-[var(--shadow-card)]"
-          >
-            <div className="mb-2 flex items-center justify-between">
-              <span className="text-sm font-medium text-[var(--color-neutral-500)]">
-                {card.title}
-              </span>
-              <card.icon size={16} className={card.color} />
+      <div className="mb-6 rounded-2xl border border-primary-300/30 bg-gradient-to-r from-primary-600 to-primary-500 p-6 text-white shadow-[var(--shadow-lg)] lg:p-8">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold tracking-wide">
+              <Zap size={14} />
+              Mandato 2026 · Painel Estratégico
             </div>
-            <p className="text-2xl font-bold text-[var(--color-neutral-800)]">
-              {card.value}
-            </p>
-            <p className="mt-1 text-xs text-[var(--color-neutral-400)]">
-              {card.description}
+            <h1 className="font-heading text-2xl font-bold lg:text-3xl">
+              Bem-vindo, {firstName}
+            </h1>
+            <p className="mt-2 max-w-2xl text-sm text-white/85 lg:text-base">
+              Acompanhe métricas críticas, próximos compromissos e evolução das frentes do mandato em um único painel.
             </p>
           </div>
+
+          <div className="flex flex-wrap gap-2">
+            <Badge className="border-white/20 bg-white/15 text-white">
+              {unreadCount > 0 ? `${unreadCount} notificações pendentes` : 'Nenhuma pendência crítica'}
+            </Badge>
+            <Badge className="border-white/20 bg-white/15 text-white">
+              Operação ativa
+            </Badge>
+          </div>
+        </div>
+      </div>
+
+      <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {statCards.map((card) => (
+          <StatCard
+            key={card.title}
+            title={card.title}
+            value={card.value}
+            description={card.description}
+            icon={card.icon}
+            tone={card.tone}
+          />
         ))}
       </div>
 
-      {/* Cards de funcionalidades */}
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {featureCards.map((card) => (
-          <div
+          <Card
             key={card.title}
-            className="rounded-xl border border-[var(--color-neutral-200)] bg-white p-6 shadow-[var(--shadow-card)] transition-shadow hover:shadow-md"
+            className="p-6 transition-transform duration-200 hover:-translate-y-0.5"
           >
             <div className="mb-3 flex items-center gap-2">
               <card.icon size={24} className="text-primary-500" />
-              <h3 className="font-heading text-base font-semibold text-[var(--color-neutral-800)]">
-                {card.title}
-              </h3>
+              <CardTitle>{card.title}</CardTitle>
+              {card.disabled && <Badge variant="neutral">Roadmap</Badge>}
             </div>
-            <p className="mb-4 text-sm text-[var(--color-neutral-500)]">
-              {card.description}
-            </p>
+            <CardDescription className="mb-4">{card.description}</CardDescription>
             {card.disabled ? (
-              <span className="inline-flex items-center rounded-lg bg-[var(--color-neutral-100)] px-4 py-2 text-sm font-medium text-[var(--color-neutral-400)]">
+              <span className="inline-flex items-center rounded-xl border border-[var(--color-neutral-200)] bg-[var(--color-neutral-100)] px-4 py-2 text-sm font-medium text-[var(--color-neutral-500)]">
                 Em breve
               </span>
             ) : (
               <Link
                 to={card.href}
-                className="inline-flex items-center rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-600"
+                className="inline-flex items-center rounded-xl bg-primary-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-600"
               >
                 Acessar
               </Link>
             )}
-          </div>
+          </Card>
         ))}
       </div>
 
-      {/* Acesso rápido */}
       <h2 className="font-heading text-lg font-semibold text-[var(--color-neutral-800)] mb-4">
         Acesso Rápido
       </h2>
@@ -204,7 +205,7 @@ function DashboardPage() {
             <Link
               key={link.href}
               to={link.href}
-              className="group rounded-xl border border-[var(--color-neutral-200)] bg-white p-5 shadow-[var(--shadow-card)] transition-all hover:-translate-y-0.5 hover:shadow-md"
+              className="group rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-5 shadow-[var(--shadow-card)] transition-all hover:-translate-y-0.5 hover:shadow-md"
             >
               <div
                 className={`mb-3 inline-flex rounded-lg p-2.5 ${link.color}`}
@@ -224,8 +225,7 @@ function DashboardPage() {
           ))}
       </div>
 
-      {/* Atividades recentes */}
-      <div className="rounded-xl border border-[var(--color-neutral-200)] bg-white p-6 shadow-[var(--shadow-card)]">
+      <Card className="p-6">
         <h2 className="font-heading text-lg font-semibold text-[var(--color-neutral-800)] mb-4">
           Últimas Atividades
         </h2>
@@ -244,7 +244,7 @@ function DashboardPage() {
             </div>
           ))}
         </div>
-      </div>
+      </Card>
     </PageContainer>
   );
 }

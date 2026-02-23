@@ -16,16 +16,16 @@ const views: Array<{ value: ViewMode; label: string }> = [
 
 export function ViewSwitcher({ value, onChange }: ViewSwitcherProps) {
   return (
-    <div className="inline-flex rounded-lg border border-[var(--color-neutral-200)] bg-[var(--color-neutral-100)] p-0.5">
+    <div className="inline-flex rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] p-1">
       {views.map((view) => (
         <button
           key={view.value}
           type="button"
           onClick={() => onChange(view.value)}
           className={cn(
-            'rounded-md px-3 py-1.5 text-xs font-medium transition-all',
+            'rounded-lg px-3 py-1.5 text-xs font-semibold transition-all',
             value === view.value
-              ? 'bg-white text-[var(--color-neutral-800)] shadow-sm'
+              ? 'bg-primary-500/10 text-primary-700'
               : 'text-[var(--color-neutral-500)] hover:text-[var(--color-neutral-700)]',
           )}
         >

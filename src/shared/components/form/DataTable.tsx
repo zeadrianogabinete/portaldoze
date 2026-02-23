@@ -42,10 +42,10 @@ export function DataTable<T>({
   }
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] shadow-[var(--shadow-card)]">
       <table className="w-full">
         <thead>
-          <tr className="border-b border-[var(--color-neutral-200)]">
+          <tr className="border-b border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)]/50">
             {columns.map((col) => (
               <th
                 key={col.key}
@@ -65,7 +65,7 @@ export function DataTable<T>({
               key={keyExtractor(item)}
               className={cn(
                 'transition-colors',
-                onRowClick && 'cursor-pointer hover:bg-[var(--color-neutral-50)]',
+                onRowClick && 'cursor-pointer hover:bg-primary-50/35',
               )}
               onClick={() => onRowClick?.(item)}
             >

@@ -21,7 +21,8 @@ export function PageContainer({
   return (
     <div className={cn(!fullWidth && 'mx-auto max-w-7xl', className)}>
       {(title || actions) && (
-        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mb-6 rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-5 shadow-[var(--shadow-card)] sm:px-6 sm:py-5">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             {title && (
               <h1 className="font-heading text-2xl font-bold text-[var(--color-neutral-800)]">
@@ -35,6 +36,7 @@ export function PageContainer({
             )}
           </div>
           {actions && <div className="flex items-center gap-2">{actions}</div>}
+          </div>
         </div>
       )}
       {children}

@@ -7,6 +7,7 @@ import { EmptyState } from '@/shared/components/feedback/EmptyState';
 import { formatRelativeTime } from '@/shared/utils/format';
 import { cn } from '@/shared/utils/cn';
 import type { NotificationModule } from '@/shared/types/notification.types';
+import { Badge } from '@/shared/components/ui/Badge';
 
 export const Route = createFileRoute('/_authenticated/notifications/')({
   component: NotificationsPage,
@@ -24,7 +25,7 @@ function NotificationsPage() {
 
   const moduleColors: Record<NotificationModule, string> = {
     agenda: 'bg-primary-50 text-primary-600',
-    financial: 'bg-green-50 text-green-600',
+    financial: 'bg-[var(--color-success)]/12 text-[var(--color-success)]',
     system: 'bg-[var(--color-neutral-100)] text-[var(--color-neutral-600)]',
   };
 
@@ -42,12 +43,13 @@ function NotificationsPage() {
   return (
     <PageContainer
       title="Notificações"
+      subtitle="Central de alertas e atualizações da operação"
       actions={
         unreadCount > 0 ? (
           <button
             type="button"
             onClick={() => markAllAsRead()}
-            className="flex items-center gap-1.5 rounded-lg border border-[var(--color-neutral-200)] bg-white px-3 py-2 text-sm font-medium text-[var(--color-neutral-700)] transition-colors hover:bg-[var(--color-neutral-50)]"
+            className="flex items-center gap-1.5 rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-2 text-sm font-semibold text-[var(--color-neutral-700)] transition-colors hover:bg-[var(--color-neutral-100)]"
           >
             <CheckCheck size={16} strokeWidth={1.5} />
             Marcar todas como lidas
@@ -56,17 +58,17 @@ function NotificationsPage() {
       }
     >
       {/* Tabs */}
-      <div className="mb-4 flex gap-1 overflow-x-auto border-b border-[var(--color-neutral-200)]">
+      <div className="mb-4 flex gap-1 overflow-x-auto rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-1.5 shadow-[var(--shadow-card)]">
         {tabs.map((tab) => (
           <button
             key={tab.value}
             type="button"
             onClick={() => setFilter(tab.value)}
             className={cn(
-              'whitespace-nowrap border-b-2 px-4 py-2.5 text-sm font-medium transition-colors',
+              'whitespace-nowrap rounded-xl px-4 py-2.5 text-sm font-medium transition-colors',
               filter === tab.value
-                ? 'border-primary-500 text-primary-600'
-                : 'border-transparent text-[var(--color-neutral-500)] hover:text-[var(--color-neutral-700)]',
+                ? 'bg-primary-500/12 text-primary-700'
+                : 'text-[var(--color-neutral-500)] hover:bg-[var(--color-neutral-100)] hover:text-[var(--color-neutral-700)]',
             )}
           >
             {tab.label}
@@ -90,9 +92,9 @@ function NotificationsPage() {
               <div
                 key={notification.id}
                 className={cn(
-                  'flex items-start gap-3 rounded-xl border p-4 transition-colors',
+                  'flex items-start gap-3 rounded-2xl border p-4 transition-colors shadow-[var(--shadow-xs)]',
                   notification.read
-                    ? 'border-[var(--color-neutral-200)] bg-white'
+                    ? 'border-[var(--color-neutral-200)] bg-[var(--surface-card)]'
                     : 'border-primary-200 bg-primary-50/30',
                 )}
               >
@@ -100,9 +102,12 @@ function NotificationsPage() {
                   <Icon size={16} strokeWidth={1.5} />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-[var(--color-neutral-800)]">
-                    {notification.title}
-                  </p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-medium text-[var(--color-neutral-800)]">
+                      {notification.title}
+                    </p>
+                    {!notification.read && <Badge>Nova</Badge>}
+                  </div>
                   <p className="mt-0.5 text-sm text-[var(--color-neutral-500)]">
                     {notification.body}
                   </p>

@@ -81,21 +81,19 @@ function RegisterPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[var(--surface-page)] px-4">
-      {/* noindex para não indexar */}
-      <title>Cadastro — Mandato</title>
-      <meta name="robots" content="noindex, nofollow" />
-
       <div className="w-full max-w-md">
-        <div className="mb-6 text-center">
-          <h1 className="font-heading text-2xl font-bold text-primary-500">
-            Mandato
-          </h1>
+        <div className="mb-6 flex flex-col items-center">
+          <img
+            src="/LOGO.png"
+            alt="Logo Zé Adriano"
+            className="mb-3 h-14 w-auto"
+          />
           <p className="text-sm text-[var(--color-neutral-500)]">
             Solicitar acesso ao sistema
           </p>
         </div>
 
-        <div className="rounded-xl border border-[var(--color-neutral-200)] bg-white p-6 shadow-[var(--shadow-card)]">
+        <div className="relative overflow-hidden rounded-xl border border-[var(--color-neutral-200)] bg-white p-6 shadow-[var(--shadow-card)]">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {/* Nome */}
             <div>
@@ -192,6 +190,19 @@ function RegisterPage() {
               )}
             </button>
           </form>
+
+          <p className="mt-4 text-center text-xs text-[var(--color-neutral-400)]">
+            Já tem acesso?{' '}
+            <a href="/login" className="text-primary-500 hover:underline">
+              Fazer login
+            </a>
+          </p>
+
+          {/* Faixas amarela + verde */}
+          <div className="absolute bottom-0 left-0 w-full">
+            <div className="h-1 w-full bg-[var(--color-accent-yellow)]" />
+            <div className="h-1 w-full bg-[var(--color-accent-green)]" />
+          </div>
         </div>
       </div>
     </div>

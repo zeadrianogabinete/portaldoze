@@ -2,6 +2,8 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import { Users, Shield, Calendar, Wallet, Bell, Settings as SettingsIcon } from 'lucide-react';
 import { PageContainer } from '@/shared/components/layout/PageContainer';
 import { usePermission } from '@/shared/hooks/usePermission';
+import { Card, CardDescription, CardTitle } from '@/shared/components/ui/Card';
+import { Badge } from '@/shared/components/ui/Badge';
 
 export const Route = createFileRoute('/_authenticated/settings/')({
   component: SettingsPage,
@@ -56,26 +58,26 @@ function SettingsPage() {
   ];
 
   return (
-    <PageContainer title="Configurações" subtitle="Gerencie o sistema e suas preferências">
+    <PageContainer title="Configurações" subtitle="Gerencie usuários, permissões e parâmetros operacionais do portal">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {sections
           .filter((s) => s.visible)
           .map((section) => (
-            <Link
+            <Card
               key={section.href}
-              to={section.href}
-              className="group rounded-xl border border-[var(--color-neutral-200)] bg-white p-5 shadow-[var(--shadow-card)] transition-all hover:-translate-y-0.5 hover:shadow-md"
+              className="group p-0 transition-all hover:-translate-y-0.5"
             >
-              <div className="mb-3 inline-flex rounded-lg bg-[var(--color-neutral-100)] p-2.5 text-[var(--color-neutral-600)] transition-colors group-hover:bg-primary-50 group-hover:text-primary-600">
-                <section.icon size={20} strokeWidth={1.5} />
-              </div>
-              <h3 className="font-heading text-base font-semibold text-[var(--color-neutral-800)]">
-                {section.title}
-              </h3>
-              <p className="mt-1 text-sm text-[var(--color-neutral-500)]">
-                {section.description}
-              </p>
-            </Link>
+              <Link to={section.href} className="block p-5">
+                <div className="mb-3 flex items-center justify-between">
+                  <div className="inline-flex rounded-xl bg-[var(--color-neutral-100)] p-2.5 text-[var(--color-neutral-600)] transition-colors group-hover:bg-primary-50 group-hover:text-primary-600">
+                    <section.icon size={20} strokeWidth={1.5} />
+                  </div>
+                  <Badge variant="neutral">Admin</Badge>
+                </div>
+                <CardTitle>{section.title}</CardTitle>
+                <CardDescription className="mt-1">{section.description}</CardDescription>
+              </Link>
+            </Card>
           ))}
       </div>
     </PageContainer>
