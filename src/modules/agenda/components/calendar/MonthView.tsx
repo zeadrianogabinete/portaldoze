@@ -1,0 +1,111 @@
+import {
+  startOfMonth,
+  endOfMonth,
+  startOfWeek,
+  endOfWeek,
+  eachDayOfInterval,
+  format,
+  isSameMonth,
+  isSameDay,
+  isToday,
+} from 'date-fns';
+import { cn } from '@/shared/utils/cn';
+import { useAgendas } from '@/modules/agenda/hooks/useAgendas';
+
+interface MonthViewProps {
+  currentDate: Date;
+}
+
+const weekDays = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+
+export function MonthView({ currentDate }: MonthViewProps) {
+  const monthStart = startOfMonth(currentDate);
+  const monthEnd = endOfMonth(currentDate);
+  const calendarStart = startOfWeek(monthStart, { weekStartsOn: 1 });
+  const calendarEnd = endOfWeek(monthEnd, { weekStartsOn: 1 });
+  const days = eachDayOfInterval({ start: calendarStart, end: calendarEnd });
+
+  const { agendas } = useAgendas({
+    startDate: calendarStart,
+    endDate: calendarEnd,
+  });
+
+  const getAgendasForDay = (day: Date) => {
+    return agendas.filter((agenda) => {
+      const start = new Date(agenda.start_at);
+      return isSameDay(start, day);
+    });
+  };
+
+  return (
+    <div className="overflow-hidden rounded-xl">
+      {/* Header dias da semana */}
+      <div className="grid grid-cols-7 border-b border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)]">
+        {weekDays.map((day) => (
+          <div
+            key={day}
+            className="px-2 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-[var(--color-neutral-500)]"
+          >
+            {day}
+          </div>
+        ))}
+      </div>
+
+      {/* Grid de dias */}
+      <div className="grid grid-cols-7">
+        {days.map((day) => {
+          const dayAgendas = getAgendasForDay(day);
+          const inMonth = isSameMonth(day, currentDate);
+          const today = isToday(day);
+
+          return (
+            <div
+              key={day.toISOString()}
+              className={cn(
+                'min-h-[90px] border-b border-r border-[var(--color-neutral-100)] p-1.5 transition-colors lg:min-h-[110px]',
+                !inMonth && 'bg-[var(--color-neutral-50)]/50',
+                'hover:bg-primary-50/30 cursor-pointer',
+              )}
+            >
+              <div className="flex items-center justify-between">
+                <span
+                  className={cn(
+                    'flex h-7 w-7 items-center justify-center rounded-full text-sm',
+                    today && 'bg-primary-500 font-bold text-white',
+                    !today && inMonth && 'text-[var(--color-neutral-700)]',
+                    !today && !inMonth && 'text-[var(--color-neutral-400)]',
+                  )}
+                >
+                  {format(day, 'd')}
+                </span>
+              </div>
+
+              {/* Eventos do dia */}
+              <div className="mt-1 space-y-0.5">
+                {dayAgendas.slice(0, 3).map((agenda) => (
+                  <div
+                    key={agenda.id}
+                    className={cn(
+                      'truncate rounded px-1.5 py-0.5 text-[10px] font-medium leading-tight lg:text-xs',
+                      agenda.status === 'approved'
+                        ? 'bg-primary-100 text-primary-700'
+                        : 'bg-yellow-100 text-yellow-700',
+                    )}
+                    title={agenda.title}
+                  >
+                    {agenda.title}
+                  </div>
+                ))}
+                {dayAgendas.length > 3 && (
+                  <p className="px-1.5 text-[10px] font-medium text-[var(--color-neutral-400)]">
+                    +{dayAgendas.length - 3} mais
+                  </p>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
