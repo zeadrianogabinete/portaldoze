@@ -12,24 +12,24 @@ interface StatCardProps {
 
 const toneMap = {
   primary: {
-    icon: 'text-primary-600',
-    chip: 'bg-primary-500/12',
+    icon: 'text-primary-500',
+    chip: 'bg-primary-50 border-primary-100',
   },
   success: {
-    icon: 'text-[var(--color-success)]',
-    chip: 'bg-[var(--color-success)]/12',
+    icon: 'text-emerald-500',
+    chip: 'bg-emerald-50 border-emerald-100',
   },
   warning: {
-    icon: 'text-[var(--color-warning)]',
-    chip: 'bg-[var(--color-warning)]/15',
+    icon: 'text-amber-500',
+    chip: 'bg-amber-50 border-amber-100',
   },
   danger: {
-    icon: 'text-[var(--color-error)]',
-    chip: 'bg-[var(--color-error)]/12',
+    icon: 'text-red-500',
+    chip: 'bg-red-50 border-red-100',
   },
   info: {
-    icon: 'text-[var(--color-info)]',
-    chip: 'bg-[var(--color-info)]/12',
+    icon: 'text-blue-500',
+    chip: 'bg-blue-50 border-blue-100',
   },
 };
 
@@ -37,15 +37,27 @@ export function StatCard({ title, value, description, icon: Icon, tone = 'primar
   const palette = toneMap[tone];
 
   return (
-    <Card className="p-5">
-      <div className="mb-3 flex items-center justify-between">
-        <span className="text-sm font-medium text-[var(--color-neutral-500)]">{title}</span>
-        <div className={cn('rounded-lg p-2', palette.chip)}>
-          <Icon size={16} strokeWidth={1.75} className={palette.icon} />
+    <Card className="p-6 group hover:border-primary-200/50 hover:shadow-md transition-all">
+      <div className="flex items-center justify-between mb-4">
+        <div className={cn('flex h-12 w-12 items-center justify-center rounded-2xl border transition-transform group-hover:scale-110', palette.chip)}>
+          <Icon size={22} strokeWidth={2} className={palette.icon} />
         </div>
       </div>
-      <p className="text-2xl font-bold text-[var(--color-neutral-900)]">{value}</p>
-      {description && <p className="mt-1 text-xs text-[var(--color-neutral-500)]">{description}</p>}
+      <div>
+        <p className="text-[11px] font-bold uppercase tracking-widest text-[var(--color-neutral-400)] mb-1">
+          {title}
+        </p>
+        <p className="text-3xl font-bold tracking-tight text-[var(--color-neutral-900)]">
+          {value}
+        </p>
+        {description && (
+          <div className="mt-2 flex items-center gap-1.5">
+            <span className="text-[13px] font-medium text-[var(--color-neutral-500)]">
+              {description}
+            </span>
+          </div>
+        )}
+      </div>
     </Card>
   );
 }

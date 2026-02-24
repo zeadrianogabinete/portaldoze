@@ -1,6 +1,7 @@
 import { Link, useMatchRoute } from '@tanstack/react-router';
 import * as Collapsible from '@radix-ui/react-collapsible';
-import { ChevronRight, ChevronDown, LogOut, X } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ChevronDown, LogOut, X } from 'lucide-react';
 import { cn } from '@/shared/utils/cn';
 import { useAuth } from '@/shared/hooks/useAuth';
 import { usePermission } from '@/shared/hooks/usePermission';
@@ -33,21 +34,21 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
   return (
     <aside
       className={cn(
-        'flex h-full flex-col border-r border-white/10 bg-[var(--sidebar-bg)] shadow-[var(--shadow-lg)]',
-        mobile ? 'w-full' : 'w-[260px]',
+        'flex h-full flex-col border-r border-white/5 bg-[var(--sidebar-bg)] shadow-[var(--shadow-float)] transition-all duration-300',
+        mobile ? 'w-full' : 'w-[280px]',
       )}
     >
-      {/* Logo — texto apenas (a imagem tem fundo claro, não funciona no sidebar escuro) */}
-      <div className="flex items-center justify-between px-5 py-5">
-        <Link to="/" onClick={onClose} className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-500 text-base font-bold text-white shadow-md">
+      {/* Logo Section */}
+      <div className="flex items-center justify-between px-6 py-8">
+        <Link to="/" onClick={onClose} className="flex items-center gap-3.5 group">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-400 to-primary-600 text-lg font-bold text-white shadow-lg shadow-primary-500/20 transition-transform group-hover:scale-105">
             ZA
           </div>
-          <div>
-            <h1 className="font-heading text-base font-bold text-white">
+          <div className="flex flex-col">
+            <h1 className="font-heading text-lg font-bold tracking-tight text-white leading-tight">
               Portal do Zé
             </h1>
-            <p className="text-[11px] text-[var(--color-neutral-400)]">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-primary-400/80">
               Deputado Federal
             </p>
           </div>
@@ -56,20 +57,17 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1.5 text-[var(--color-neutral-400)] transition-colors hover:bg-white/5 hover:text-white"
+            className="rounded-xl p-2 text-[var(--color-neutral-400)] transition-colors hover:bg-white/10 hover:text-white"
             aria-label="Fechar menu lateral"
           >
-            <X size={20} strokeWidth={1.5} />
+            <X size={20} />
           </button>
         )}
       </div>
 
-      {/* Divisória */}
-      <div className="mx-3 border-t border-white/10" />
-
-      {/* Menu principal com grupos colapsáveis */}
-      <nav className="flex-1 overflow-y-auto px-3 py-3">
-        <div className="space-y-1">
+      {/* Navigation */}
+      <nav className="flex-1 overflow-y-auto px-4 py-2 space-y-6 custom-scrollbar">
+        <div className="space-y-1.5">
           {navGroups.map((group) => {
             if (
               group.permission &&
@@ -90,46 +88,48 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
           })}
         </div>
 
-        {/* Seção Configurar */}
-        <div className="my-4 border-t border-white/10" />
-        <p className="mb-2 px-3 text-[11px] font-semibold uppercase tracking-wider text-[var(--color-neutral-500)]">
-          Configurar
-        </p>
-
-        {configItems.map((item) => {
-          if (!can(item.permission.resource, item.permission.action))
-            return null;
-          const active = isActive(item.href);
-          return (
-            <Link
-              key={item.href}
-              to={item.href}
-              onClick={onClose}
-              className={cn(
-                'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150',
-                active
-                  ? 'border-l-[3px] border-primary-400 bg-primary-500/20 text-white'
-                  : 'text-[var(--sidebar-text)] hover:bg-white/5 hover:text-white',
-              )}
-            >
-              <item.icon size={18} strokeWidth={1.5} />
-              {item.title}
-            </Link>
-          );
-        })}
+        {/* Config Section */}
+        <div className="pt-4 border-t border-white/5">
+          <p className="mb-3 px-4 text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-neutral-500)]">
+            Configurar
+          </p>
+          <div className="space-y-1">
+            {configItems.map((item) => {
+              if (!can(item.permission.resource, item.permission.action))
+                return null;
+              const active = isActive(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  onClick={onClose}
+                  className={cn(
+                    'group flex items-center gap-3.5 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200',
+                    active
+                      ? 'bg-primary-500/10 text-primary-400 shadow-[inset_0_0_0_1px_rgba(59,130,246,0.2)]'
+                      : 'text-[var(--sidebar-text)] hover:bg-white/5 hover:text-white',
+                  )}
+                >
+                  <item.icon size={19} className={cn('transition-colors', active ? 'text-primary-400' : 'text-[var(--color-neutral-500)] group-hover:text-white')} />
+                  {item.title}
+                </Link>
+              );
+            })}
+          </div>
+        </div>
       </nav>
 
-      {/* Footer — User info */}
-      <div className="border-t border-white/10 px-4 py-4">
-        <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-500 text-sm font-semibold text-white">
+      {/* User Footer */}
+      <div className="p-4 bg-white/[0.02] border-t border-white/5">
+        <div className="flex items-center gap-3.5 rounded-2xl bg-white/[0.03] p-3 border border-white/5">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-primary-500 to-primary-400 text-sm font-bold text-white shadow-md">
             {profile?.full_name?.charAt(0)?.toUpperCase() || '?'}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium text-white">
+            <p className="truncate text-sm font-semibold text-white">
               {profile?.full_name}
             </p>
-            <p className="truncate text-xs text-[var(--color-neutral-400)]">
+            <p className="truncate text-[11px] font-medium text-[var(--color-neutral-500)]">
               {profile?.role}
             </p>
           </div>
@@ -137,10 +137,9 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
         <button
           type="button"
           onClick={() => logout()}
-          className="mt-3 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-[var(--color-neutral-400)] transition-colors hover:bg-white/5 hover:text-white"
-          aria-label="Sair da conta"
+          className="mt-2 flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-[var(--color-neutral-400)] transition-all hover:bg-red-500/10 hover:text-red-400 group"
         >
-          <LogOut size={18} strokeWidth={1.5} />
+          <LogOut size={18} className="transition-transform group-hover:translate-x-0.5" />
           Sair
         </button>
       </div>
@@ -162,17 +161,14 @@ function SidebarGroup({
 }) {
   if (group.disabled) {
     return (
-      <div className="rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2.5 opacity-90">
-        <div className="mb-1.5 flex items-center gap-3 text-[var(--sidebar-text)]">
-          <group.icon size={18} strokeWidth={1.5} className="shrink-0" />
+      <div className="px-4 py-2 opacity-60 grayscale-[0.5]">
+        <div className="flex items-center gap-3.5 text-[var(--sidebar-text)]">
+          <group.icon size={19} className="shrink-0" />
           <span className="flex-1 text-sm font-medium">{group.title}</span>
-          <Badge variant="neutral" className="border-white/10 bg-white/5 text-[10px] text-[var(--color-neutral-400)]">
-            Em breve
+          <Badge variant="neutral" className="border-white/10 bg-white/5 text-[9px] font-bold tracking-tighter py-0">
+            SOON
           </Badge>
         </div>
-        <p className="pl-8 text-xs text-[var(--color-neutral-500)]">
-          Módulo em planejamento.
-        </p>
       </div>
     );
   }
@@ -186,28 +182,22 @@ function SidebarGroup({
         <button
           type="button"
           className={cn(
-            'flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-150',
+            'flex w-full items-center gap-3.5 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 group/btn',
             'text-[var(--sidebar-text)] hover:bg-white/5 hover:text-white',
-            groupActive && 'bg-white/[0.04] text-white',
+            groupActive && 'bg-white/[0.04] text-white shadow-sm',
           )}
         >
-          <group.icon size={18} strokeWidth={1.5} className="shrink-0" />
+          <group.icon size={19} className={cn('shrink-0 transition-colors', groupActive ? 'text-primary-400' : 'text-[var(--color-neutral-500)] group-hover/btn:text-white')} />
           <span className="flex-1 text-left">{group.title}</span>
-          <ChevronRight
-            size={14}
-            strokeWidth={2}
-            className="shrink-0 text-[var(--color-neutral-500)] transition-transform group-data-[state=open]/collapsible:hidden"
-          />
           <ChevronDown
-            size={14}
-            strokeWidth={2}
-            className="shrink-0 text-[var(--color-neutral-500)] group-data-[state=closed]/collapsible:hidden"
+            size={16}
+            className="shrink-0 text-[var(--color-neutral-600)] transition-transform duration-200 group-data-[state=closed]/collapsible:-rotate-90 group-data-[state=open]/collapsible:rotate-0"
           />
         </button>
       </Collapsible.Trigger>
 
       <Collapsible.Content className="overflow-hidden data-[state=closed]:animate-collapse data-[state=open]:animate-expand">
-        <div className="ml-[18px] space-y-0.5 border-l border-white/10 py-1 pl-4">
+        <div className="ml-6 mt-1 space-y-1 border-l border-white/5 py-1 pl-4">
           {group.items.map((subItem) => {
             const active = isActive(subItem.href);
             return (
@@ -216,14 +206,19 @@ function SidebarGroup({
                 to={subItem.href}
                 onClick={onClose}
                 className={cn(
-                  'flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[13px] font-medium transition-all duration-150',
+                  'relative flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium transition-all duration-200',
                   active
-                    ? 'bg-primary-500/15 text-white'
-                    : 'text-[var(--color-neutral-400)] hover:bg-white/5 hover:text-[var(--color-neutral-200)]',
+                    ? 'bg-primary-500/10 text-primary-400'
+                    : 'text-[var(--color-neutral-500)] hover:bg-white/5 hover:text-[var(--color-neutral-200)]',
                 )}
               >
-                <subItem.icon size={14} strokeWidth={1.5} className="shrink-0" />
-                {subItem.title}
+                {active && (
+                  <motion.div
+                    layoutId="sidebar-sub-active"
+                    className="absolute inset-y-1.5 left-0 w-1 rounded-full bg-primary-500"
+                  />
+                )}
+                <span>{subItem.title}</span>
               </Link>
             );
           })}

@@ -45,10 +45,8 @@ export function AppShell() {
       {/* Conteúdo principal */}
       <div className="flex flex-1 flex-col overflow-x-hidden">
         <Header onMenuClick={() => setSidebarOpen(true)} />
-        <main className="flex-1 overflow-y-auto">
-          <div className="mx-auto w-full max-w-[1540px] px-4 py-5 md:px-6 lg:px-8 lg:py-8">
-            <Outlet />
-          </div>
+        <main className="flex-1 overflow-y-auto bg-[var(--surface-page)] custom-scrollbar">
+          <Outlet />
         </main>
       </div>
     </div>

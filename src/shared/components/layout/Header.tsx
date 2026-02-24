@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { Menu, Bell, LogOut, Settings, Moon, Sun } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useAuth } from '@/shared/hooks/useAuth';
 import { useNotifications } from '@/shared/hooks/useNotifications';
 import { useTheme } from '@/shared/hooks/useTheme';
@@ -17,119 +18,121 @@ export function Header({ title, onMenuClick }: HeaderProps) {
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   return (
-    <header className="sticky top-0 z-30 border-b border-[var(--color-neutral-200)]/80 bg-[var(--surface-card)]/90 backdrop-blur-md">
-      <div className="relative flex h-14 items-center justify-between px-3 sm:h-16 sm:px-4 lg:px-6">
-      {/* Esquerda */}
-      <div className="flex items-center gap-3">
-        {onMenuClick && (
-          <button
-            type="button"
-            onClick={onMenuClick}
-            className="rounded-lg p-2 text-[var(--color-neutral-600)] transition-colors hover:bg-[var(--color-neutral-100)] lg:hidden"
-            aria-label="Abrir menu"
-          >
-            <Menu size={20} strokeWidth={1.5} />
-          </button>
-        )}
-        <div>
-          <p className="hidden text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-neutral-500)] sm:block">
-            Portal do Mandato
-          </p>
-          <h2 className="font-heading text-base font-semibold text-[var(--color-neutral-800)] sm:text-lg lg:text-xl">
-            {title || 'Painel Administrativo'}
-          </h2>
-        </div>
-      </div>
-
-      {/* Direita */}
-      <div className="flex items-center gap-1.5 sm:gap-2">
-        <button
-          type="button"
-          onClick={toggleTheme}
-          className="rounded-lg p-2 text-[var(--color-neutral-500)] transition-colors hover:bg-[var(--color-neutral-100)] hover:text-[var(--color-neutral-700)]"
-          aria-label={isDark ? 'Ativar tema claro' : 'Ativar tema escuro'}
-          title={isDark ? 'Ativar tema claro' : 'Ativar tema escuro'}
-        >
-          {isDark ? <Sun size={19} strokeWidth={1.8} /> : <Moon size={19} strokeWidth={1.8} />}
-        </button>
-
-        {/* Notificações */}
-        <Link
-          to="/notifications"
-          className="relative rounded-lg p-2 text-[var(--color-neutral-500)] transition-colors hover:bg-[var(--color-neutral-100)] hover:text-[var(--color-neutral-700)]"
-        >
-          <Bell size={20} strokeWidth={1.5} />
-          {unreadCount > 0 && (
-            <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--color-error)] px-1 text-[10px] font-bold text-white">
-              {unreadCount > 99 ? '99+' : unreadCount}
-            </span>
+    <header className="sticky top-0 z-30 border-b border-[var(--color-neutral-200)]/60 bg-[var(--surface-card)]/80 backdrop-blur-xl">
+      <div className="relative flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
+        {/* Left Section */}
+        <div className="flex items-center gap-4">
+          {onMenuClick && (
+            <button
+              type="button"
+              onClick={onMenuClick}
+              className="rounded-xl p-2.5 text-[var(--color-neutral-500)] transition-all hover:bg-[var(--color-neutral-100)] hover:text-[var(--color-neutral-800)] lg:hidden"
+              aria-label="Abrir menu"
+            >
+              <Menu size={22} strokeWidth={2} />
+            </button>
           )}
-        </Link>
+          <div className="flex flex-col">
+            <p className="hidden text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-neutral-400)] sm:block leading-tight">
+              Gestão de Mandato
+            </p>
+            <h2 className="font-heading text-lg font-bold text-[var(--color-neutral-900)] sm:text-xl tracking-tight">
+              {title || 'Painel Administrativo'}
+            </h2>
+          </div>
+        </div>
 
-        {/* Avatar / Menu do usuário */}
-        <div className="relative">
+        {/* Right Section */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Theme Toggle */}
           <button
             type="button"
-            onClick={() => setShowUserMenu(!showUserMenu)}
-            className="flex items-center gap-2 rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] p-1.5 transition-colors hover:bg-[var(--color-neutral-100)]"
-            aria-haspopup="menu"
-            aria-expanded={showUserMenu}
-            aria-label="Abrir menu do usuário"
+            onClick={toggleTheme}
+            className="rounded-xl p-2.5 text-[var(--color-neutral-500)] transition-all hover:bg-[var(--color-neutral-100)] hover:text-primary-500"
+            aria-label={isDark ? 'Ativar tema claro' : 'Ativar tema escuro'}
           >
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-sm font-semibold text-white">
-              {profile?.full_name?.charAt(0)?.toUpperCase() || '?'}
-            </div>
-            <span className="hidden pr-1 text-sm font-medium text-[var(--color-neutral-700)] md:block">
-              {profile?.full_name?.split(' ')[0]}
-            </span>
+            {isDark ? <Sun size={20} /> : <Moon size={20} />}
           </button>
 
-          {showUserMenu && (
-            <>
-              <button
-                type="button"
-                className="fixed inset-0 z-40"
-                onClick={() => setShowUserMenu(false)}
-                aria-label="Fechar menu do usuário"
-              />
-              <div className="absolute right-0 top-full z-50 mt-2 w-64 rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] py-1.5 shadow-[var(--shadow-lg)]">
-                <div className="border-b border-[var(--color-neutral-100)] px-4 py-3">
-                  <p className="text-sm font-medium text-[var(--color-neutral-800)]">
-                    {profile?.full_name}
-                  </p>
-                  <p className="text-xs text-[var(--color-neutral-500)]">
-                    {profile?.email}
-                  </p>
-                </div>
-                <Link
-                  to="/settings"
-                  onClick={() => setShowUserMenu(false)}
-                  className="flex items-center gap-2 px-4 py-2.5 text-sm text-[var(--color-neutral-600)] transition-colors hover:bg-[var(--color-neutral-50)]"
-                >
-                  <Settings size={16} strokeWidth={1.5} />
-                  Configurações
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowUserMenu(false);
-                    logout();
-                  }}
-                  className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-[var(--color-error)] transition-colors hover:bg-[var(--color-neutral-50)]"
-                >
-                  <LogOut size={16} strokeWidth={1.5} />
-                  Sair
-                </button>
+          {/* Notifications */}
+          <Link
+            to="/notifications"
+            className="relative rounded-xl p-2.5 text-[var(--color-neutral-500)] transition-all hover:bg-[var(--color-neutral-100)] hover:text-primary-500 group"
+          >
+            <Bell size={20} className="transition-transform group-hover:rotate-12" />
+            {unreadCount > 0 && (
+              <span className="absolute right-2 top-2 flex h-4.5 min-w-[18px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white ring-2 ring-white">
+                {unreadCount > 99 ? '99+' : unreadCount}
+              </span>
+            )}
+          </Link>
+
+          {/* User Menu */}
+          <div className="relative ml-1">
+            <button
+              type="button"
+              onClick={() => setShowUserMenu(!showUserMenu)}
+              className="flex items-center gap-2.5 rounded-2xl border border-[var(--color-neutral-200)] bg-white p-1 pr-3 shadow-sm transition-all hover:border-primary-200 hover:shadow-md active:scale-95"
+            >
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-sm font-bold text-white shadow-md shadow-primary-500/10">
+                {profile?.full_name?.charAt(0)?.toUpperCase() || '?'}
               </div>
-            </>
-          )}
-        </div>
-      </div>
-      </div>
+              <div className="hidden flex-col items-start md:flex">
+                <span className="text-sm font-bold text-[var(--color-neutral-800)] leading-none">
+                  {profile?.full_name?.split(' ')[0]}
+                </span>
+                <span className="text-[10px] font-medium text-[var(--color-neutral-400)] mt-0.5">
+                  {profile?.role}
+                </span>
+              </div>
+            </button>
 
-      <div className="w-full">
-        <div className="h-[2px] w-full bg-[var(--color-accent-yellow)]/90" />
-        <div className="h-[1px] w-full bg-[var(--color-accent-green)]/90" />
+            {showUserMenu && (
+              <>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="fixed inset-0 z-40"
+                  onClick={() => setShowUserMenu(false)}
+                />
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  className="absolute right-0 top-full z-50 mt-3 w-64 rounded-3xl border border-[var(--color-neutral-200)]/80 bg-white p-2 shadow-float backdrop-blur-sm"
+                >
+                  <div className="px-4 py-3 mb-2">
+                    <p className="text-sm font-bold text-[var(--color-neutral-900)]">
+                      {profile?.full_name}
+                    </p>
+                    <p className="text-[11px] font-medium text-[var(--color-neutral-500)] truncate">
+                      {profile?.email}
+                    </p>
+                  </div>
+                  <div className="h-px bg-[var(--color-neutral-100)] mx-2 mb-2" />
+                  <Link
+                    to="/settings"
+                    onClick={() => setShowUserMenu(false)}
+                    className="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-[var(--color-neutral-600)] transition-all rounded-2xl hover:bg-primary-50 hover:text-primary-600 group"
+                  >
+                    <Settings size={18} className="transition-transform group-hover:rotate-45" />
+                    Configurações
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowUserMenu(false);
+                      logout();
+                    }}
+                    className="flex w-full items-center gap-3 px-4 py-3 text-sm font-semibold text-red-500 transition-all rounded-2xl hover:bg-red-50"
+                  >
+                    <LogOut size={18} />
+                    Sair da conta
+                  </button>
+                </motion.div>
+              </>
+            )}
+          </div>
+        </div>
       </div>
     </header>
   );
