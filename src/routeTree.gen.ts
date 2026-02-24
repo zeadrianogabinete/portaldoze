@@ -25,6 +25,7 @@ import { Route as AuthenticatedSettingsAgendaRouteImport } from './routes/_authe
 import { Route as AuthenticatedFinancialRevenuesRouteImport } from './routes/_authenticated/financial/revenues'
 import { Route as AuthenticatedFinancialReportsRouteImport } from './routes/_authenticated/financial/reports'
 import { Route as AuthenticatedFinancialQuotasRouteImport } from './routes/_authenticated/financial/quotas'
+import { Route as AuthenticatedFinancialPayablesRouteImport } from './routes/_authenticated/financial/payables'
 import { Route as AuthenticatedFinancialNewRouteImport } from './routes/_authenticated/financial/new'
 import { Route as AuthenticatedFinancialFixedRouteImport } from './routes/_authenticated/financial/fixed'
 import { Route as AuthenticatedFinancialExpensesRouteImport } from './routes/_authenticated/financial/expenses'
@@ -124,6 +125,12 @@ const AuthenticatedFinancialQuotasRoute =
     path: '/financial/quotas',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedFinancialPayablesRoute =
+  AuthenticatedFinancialPayablesRouteImport.update({
+    id: '/financial/payables',
+    path: '/financial/payables',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedFinancialNewRoute =
   AuthenticatedFinancialNewRouteImport.update({
     id: '/financial/new',
@@ -176,6 +183,7 @@ export interface FileRoutesByFullPath {
   '/financial/expenses': typeof AuthenticatedFinancialExpensesRoute
   '/financial/fixed': typeof AuthenticatedFinancialFixedRoute
   '/financial/new': typeof AuthenticatedFinancialNewRoute
+  '/financial/payables': typeof AuthenticatedFinancialPayablesRoute
   '/financial/quotas': typeof AuthenticatedFinancialQuotasRoute
   '/financial/reports': typeof AuthenticatedFinancialReportsRoute
   '/financial/revenues': typeof AuthenticatedFinancialRevenuesRoute
@@ -200,6 +208,7 @@ export interface FileRoutesByTo {
   '/financial/expenses': typeof AuthenticatedFinancialExpensesRoute
   '/financial/fixed': typeof AuthenticatedFinancialFixedRoute
   '/financial/new': typeof AuthenticatedFinancialNewRoute
+  '/financial/payables': typeof AuthenticatedFinancialPayablesRoute
   '/financial/quotas': typeof AuthenticatedFinancialQuotasRoute
   '/financial/reports': typeof AuthenticatedFinancialReportsRoute
   '/financial/revenues': typeof AuthenticatedFinancialRevenuesRoute
@@ -226,6 +235,7 @@ export interface FileRoutesById {
   '/_authenticated/financial/expenses': typeof AuthenticatedFinancialExpensesRoute
   '/_authenticated/financial/fixed': typeof AuthenticatedFinancialFixedRoute
   '/_authenticated/financial/new': typeof AuthenticatedFinancialNewRoute
+  '/_authenticated/financial/payables': typeof AuthenticatedFinancialPayablesRoute
   '/_authenticated/financial/quotas': typeof AuthenticatedFinancialQuotasRoute
   '/_authenticated/financial/reports': typeof AuthenticatedFinancialReportsRoute
   '/_authenticated/financial/revenues': typeof AuthenticatedFinancialRevenuesRoute
@@ -252,6 +262,7 @@ export interface FileRouteTypes {
     | '/financial/expenses'
     | '/financial/fixed'
     | '/financial/new'
+    | '/financial/payables'
     | '/financial/quotas'
     | '/financial/reports'
     | '/financial/revenues'
@@ -276,6 +287,7 @@ export interface FileRouteTypes {
     | '/financial/expenses'
     | '/financial/fixed'
     | '/financial/new'
+    | '/financial/payables'
     | '/financial/quotas'
     | '/financial/reports'
     | '/financial/revenues'
@@ -301,6 +313,7 @@ export interface FileRouteTypes {
     | '/_authenticated/financial/expenses'
     | '/_authenticated/financial/fixed'
     | '/_authenticated/financial/new'
+    | '/_authenticated/financial/payables'
     | '/_authenticated/financial/quotas'
     | '/_authenticated/financial/reports'
     | '/_authenticated/financial/revenues'
@@ -435,6 +448,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedFinancialQuotasRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/financial/payables': {
+      id: '/_authenticated/financial/payables'
+      path: '/financial/payables'
+      fullPath: '/financial/payables'
+      preLoaderRoute: typeof AuthenticatedFinancialPayablesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/financial/new': {
       id: '/_authenticated/financial/new'
       path: '/financial/new'
@@ -496,6 +516,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedFinancialExpensesRoute: typeof AuthenticatedFinancialExpensesRoute
   AuthenticatedFinancialFixedRoute: typeof AuthenticatedFinancialFixedRoute
   AuthenticatedFinancialNewRoute: typeof AuthenticatedFinancialNewRoute
+  AuthenticatedFinancialPayablesRoute: typeof AuthenticatedFinancialPayablesRoute
   AuthenticatedFinancialQuotasRoute: typeof AuthenticatedFinancialQuotasRoute
   AuthenticatedFinancialReportsRoute: typeof AuthenticatedFinancialReportsRoute
   AuthenticatedFinancialRevenuesRoute: typeof AuthenticatedFinancialRevenuesRoute
@@ -519,6 +540,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedFinancialExpensesRoute: AuthenticatedFinancialExpensesRoute,
   AuthenticatedFinancialFixedRoute: AuthenticatedFinancialFixedRoute,
   AuthenticatedFinancialNewRoute: AuthenticatedFinancialNewRoute,
+  AuthenticatedFinancialPayablesRoute: AuthenticatedFinancialPayablesRoute,
   AuthenticatedFinancialQuotasRoute: AuthenticatedFinancialQuotasRoute,
   AuthenticatedFinancialReportsRoute: AuthenticatedFinancialReportsRoute,
   AuthenticatedFinancialRevenuesRoute: AuthenticatedFinancialRevenuesRoute,

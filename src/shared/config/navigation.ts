@@ -3,6 +3,7 @@ import {
   Zap,
   CalendarDays,
   Wallet,
+  CreditCard,
   MessageSquare,
   UsersRound,
   MapPin,
@@ -71,6 +72,7 @@ export const navGroups: NavGroup[] = [
     items: [
       { title: 'Dashboard', href: '/financial', icon: LayoutDashboard },
       { title: 'Despesas', href: '/financial/expenses', icon: FileText },
+      { title: 'Contas a Pagar', href: '/financial/payables', icon: CreditCard },
       { title: 'Receitas', href: '/financial/revenues', icon: TrendingUp },
       { title: 'Fixas', href: '/financial/fixed', icon: Target },
       { title: 'Cotas', href: '/financial/quotas', icon: Vote },

@@ -74,6 +74,7 @@ function FinancialTabs() {
   const tabs = [
     { label: 'Dashboard', href: '/financial' },
     { label: 'Despesas', href: '/financial/expenses' },
+    { label: 'Contas a Pagar', href: '/financial/payables' },
     { label: 'Receitas', href: '/financial/revenues' },
     { label: 'Fixas', href: '/financial/fixed' },
     { label: 'Cotas', href: '/financial/quotas' },

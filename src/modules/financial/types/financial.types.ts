@@ -13,7 +13,11 @@ export interface ExpenseNature {
   code: string;
   description: string | null;
   ceap_eligible: boolean;
+  has_quota: boolean;
+  monthly_quota: number | null;
+  category_id: string | null;
   is_active: boolean;
+  sort_order: number;
   created_at: string;
 }
 

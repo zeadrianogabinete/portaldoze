@@ -82,7 +82,7 @@ export const financialService = {
   async markAsPaid(id: string): Promise<Transaction> {
     const { data, error } = await supabase
       .from('transactions')
-      .update({ status: 'paid', paid_at: new Date().toISOString() })
+      .update({ status: 'paid', paid_at: new Date().toISOString().split('T')[0] })
       .eq('id', id)
       .select()
       .single();

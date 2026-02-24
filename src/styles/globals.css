@@ -1,124 +1,100 @@
 @import "tailwindcss";
 
 @theme {
-  /* === CORES PRIMARIAS === */
-  --color-primary-50: #EBF0FF;
-  --color-primary-100: #D6E0FF;
-  --color-primary-200: #ADC1FF;
-  --color-primary-300: #6B8CFF;
-  --color-primary-400: #3D62E0;
-  --color-primary-500: #1B3A9E;
-  --color-primary-600: #152E7E;
-  --color-primary-700: #0F2260;
-  --color-primary-800: #0A1740;
-  --color-primary-900: #050C20;
+  /* === MODERN BLUE PALETTE (Primário) === */
+  --color-primary-50: #f0f4ff;
+  --color-primary-100: #e0e9fe;
+  --color-primary-200: #c1d3fe;
+  --color-primary-300: #93b1fd;
+  --color-primary-400: #5f87f9;
+  --color-primary-500: #3b60f3;
+  --color-primary-600: #2541e8;
+  --color-primary-700: #1d31d4;
+  --color-primary-800: #1d29ab;
+  --color-primary-900: #1d2888;
+  --color-primary-950: #161c53;
 
-  /* === CORES DE ACENTO === */
-  --color-accent-yellow: #F5C518;
-  --color-accent-green: #009640;
-  --color-accent-cyan: #00A3D9;
+  /* === COLORS === */
+  --color-accent-yellow: #facc15;
+  --color-accent-green: #22c55e;
+  --color-accent-blue: #3b82f6;
+  
+  /* === SEMANTICS === */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
 
-  /* === SEMANTICAS === */
-  --color-success: #16A34A;
-  --color-warning: #EAB308;
-  --color-error: #DC2626;
-  --color-info: #0EA5E9;
-
-  /* === FONTS === */
-  --font-heading: 'Plus Jakarta Sans', sans-serif;
-  --font-body: 'DM Sans', sans-serif;
+  /* === TYPOGRAPHY === */
+  --font-heading: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Inter', 'DM Sans', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* === SHADOWS === */
-  --shadow-card: 0 1px 3px rgba(15,23,42,0.08), 0 1px 2px rgba(15,23,42,0.04);
+  /* === PREMIUM SHADOWS (Layered) === */
+  --shadow-card: 0 0 0 1px rgba(0, 0, 0, 0.03), 0 2px 4px rgba(0, 0, 0, 0.05), 0 12px 24px rgba(0, 0, 0, 0.05);
+  --shadow-float: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);
 
-  /* === ANIMACOES COLLAPSIBLE === */
-  --animate-expand: collapsible-expand 200ms ease-out;
-  --animate-collapse: collapsible-collapse 150ms ease-in;
+  /* === ANIMATIONS === */
+  --animate-expand: collapsible-expand 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --animate-collapse: collapsible-collapse 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --animate-in: fade-in 300ms ease-out;
 }
 
 :root {
-  /* === NEUTROS === */
-  --color-neutral-0: #FFFFFF;
-  --color-neutral-50: #F8FAFC;
-  --color-neutral-100: #F1F5F9;
-  --color-neutral-200: #E2E8F0;
-  --color-neutral-300: #CBD5E1;
-  --color-neutral-400: #94A3B8;
-  --color-neutral-500: #64748B;
+  /* === NEUTRALS (Slate based) === */
+  --color-neutral-0: #ffffff;
+  --color-neutral-50: #f8fafc;
+  --color-neutral-100: #f1f5f9;
+  --color-neutral-200: #e2e8f0;
+  --color-neutral-300: #cbd5e1;
+  --color-neutral-400: #94a3b8;
+  --color-neutral-500: #64748b;
   --color-neutral-600: #475569;
   --color-neutral-700: #334155;
-  --color-neutral-800: #1E293B;
-  --color-neutral-900: #0F172A;
+  --color-neutral-800: #1e293b;
+  --color-neutral-900: #0f172a;
+  --color-neutral-950: #020617;
 
-  /* === STATUS FINANCEIROS === */
-  --color-status-paid: #16A34A;
-  --color-status-pending: #F5C518;
-  --color-status-overdue: #DC2626;
-  --color-status-cancelled: #94A3B8;
+  /* === UI BASICS === */
+  --sidebar-bg: #0f172a;
+  --sidebar-text: #94a3b8;
+  --sidebar-text-active: #ffffff;
+  --sidebar-accent: #3b82f6;
 
-  /* === STATUS AGENDA === */
-  --color-agenda-proposed: #F5C518;
-  --color-agenda-approved: #1B3A9E;
-  --color-agenda-cancelled: #94A3B8;
+  --surface-page: #f8fafc;
+  --surface-card: #ffffff;
+  --surface-elevated: #ffffff;
+  --surface-overlay: rgba(15, 23, 42, 0.6);
 
-  /* === PRESENCA === */
-  --color-presence-politician: #1B3A9E;
-  --color-presence-representative: #009640;
-  --color-presence-none: #94A3B8;
-
-  /* === SIDEBAR === */
-  --sidebar-bg: #0F172A;
-  --sidebar-text: #CBD5E1;
-  --sidebar-text-active: #FFFFFF;
-  --sidebar-accent: #1B3A9E;
-
-  /* === SUPERFICIES === */
-  --surface-page: #F8FAFC;
-  --surface-card: #FFFFFF;
-  --surface-elevated: #FFFFFF;
-  --surface-overlay: rgba(0,0,0,0.5);
-
-  /* === SOMBRAS === */
-  --shadow-xs: 0 1px 2px rgba(0,0,0,0.05);
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
-  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
+  /* === BORDER RADIUS === */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
 }
 
 [data-theme='dark'] {
   --color-neutral-0: #020617;
-  --color-neutral-50: #0B1220;
-  --color-neutral-100: #121A2A;
-  --color-neutral-200: #1E293B;
-  --color-neutral-300: #334155;
-  --color-neutral-400: #64748B;
-  --color-neutral-500: #94A3B8;
-  --color-neutral-600: #CBD5E1;
-  --color-neutral-700: #E2E8F0;
-  --color-neutral-800: #F1F5F9;
-  --color-neutral-900: #F8FAFC;
+  --color-neutral-50: #0f172a;
+  --color-neutral-100: #1e293b;
+  --color-neutral-200: #334155;
+  --color-neutral-300: #475569;
+  --color-neutral-400: #64748b;
+  --color-neutral-500: #94a3b8;
+  --color-neutral-600: #cbd5e1;
+  --color-neutral-700: #e2e8f0;
+  --color-neutral-800: #f1f5f9;
+  --color-neutral-900: #f8fafc;
 
-  --sidebar-bg: #060D1A;
-  --sidebar-text: #94A3B8;
-  --sidebar-text-active: #FFFFFF;
-  --sidebar-accent: #3D62E0;
+  --sidebar-bg: #020617;
+  --surface-page: #0b1121;
+  --surface-card: #0f172a;
+  --surface-elevated: #1e293b;
+  --surface-overlay: rgba(2, 6, 23, 0.8);
 
-  --surface-page: #070F1E;
-  --surface-card: #0E1729;
-  --surface-elevated: #121E32;
-  --surface-overlay: rgba(2, 6, 23, 0.72);
-
-  --shadow-card: 0 12px 26px rgba(0, 0, 0, 0.35);
-  --shadow-xs: 0 1px 2px rgba(0,0,0,0.32);
-  --shadow-sm: 0 2px 6px rgba(0,0,0,0.28);
-  --shadow-md: 0 8px 20px rgba(0,0,0,0.35);
-  --shadow-lg: 0 18px 32px rgba(0,0,0,0.38);
+  --shadow-card: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 /* === BASE STYLES === */
