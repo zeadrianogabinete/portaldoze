@@ -66,17 +66,17 @@ function Permissoes() {
       actions={
         <Link
           to="/settings"
-          className="flex items-center gap-1.5 text-sm text-[var(--color-neutral-500)] hover:text-[var(--color-neutral-700)]"
+          className="flex items-center gap-1.5 text-sm font-medium text-[var(--color-neutral-500)] hover:text-[var(--color-neutral-700)]"
         >
           <ArrowLeft size={16} strokeWidth={1.5} />
           Voltar
         </Link>
       }
     >
-      <div className="overflow-x-auto rounded-xl border border-[var(--color-neutral-200)] bg-white shadow-[var(--shadow-card)]">
+      <div className="overflow-x-auto rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] shadow-[var(--shadow-card)]">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)]">
+            <tr className="border-b border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)]/70">
               <th className="sticky left-0 bg-[var(--color-neutral-50)] px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-[var(--color-neutral-500)]">
                 Permissão
               </th>
@@ -93,7 +93,7 @@ function Permissoes() {
           <tbody className="divide-y divide-[var(--color-neutral-100)]">
             {permissions?.map((perm) => (
               <tr key={perm.id}>
-                <td className="sticky left-0 bg-white px-4 py-3">
+                <td className="sticky left-0 bg-[var(--surface-card)] px-4 py-3">
                   <p className="text-sm font-medium text-[var(--color-neutral-800)]">
                     {perm.resource}.{perm.action}
                   </p>

@@ -16,7 +16,15 @@ interface MonthViewProps {
   currentDate: Date;
 }
 
-const weekDays = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+const weekDays = [
+  { short: 'S', full: 'Seg' },
+  { short: 'T', full: 'Ter' },
+  { short: 'Q', full: 'Qua' },
+  { short: 'Q', full: 'Qui' },
+  { short: 'S', full: 'Sex' },
+  { short: 'S', full: 'Sáb' },
+  { short: 'D', full: 'Dom' },
+];
 
 export function MonthView({ currentDate }: MonthViewProps) {
   const monthStart = startOfMonth(currentDate);
@@ -43,10 +51,11 @@ export function MonthView({ currentDate }: MonthViewProps) {
       <div className="grid grid-cols-7 border-b border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)]/70">
         {weekDays.map((day) => (
           <div
-            key={day}
+            key={day.full}
             className="px-2 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-[var(--color-neutral-500)]"
           >
-            {day}
+            <span className="sm:hidden">{day.short}</span>
+            <span className="hidden sm:inline">{day.full}</span>
           </div>
         ))}
       </div>
@@ -62,7 +71,7 @@ export function MonthView({ currentDate }: MonthViewProps) {
             <div
               key={day.toISOString()}
               className={cn(
-                'min-h-[100px] border-b border-r border-[var(--color-neutral-100)] p-2 transition-colors lg:min-h-[120px]',
+                'min-h-[78px] border-b border-r border-[var(--color-neutral-100)] p-1.5 transition-colors sm:min-h-[100px] sm:p-2 lg:min-h-[120px]',
                 !inMonth && 'bg-[var(--color-neutral-50)]/50',
                 'cursor-pointer hover:bg-primary-50/30',
               )}
@@ -86,14 +95,15 @@ export function MonthView({ currentDate }: MonthViewProps) {
                   <div
                     key={agenda.id}
                     className={cn(
-                      'truncate rounded-md px-1.5 py-0.5 text-[10px] font-semibold leading-tight lg:text-xs',
+                      'truncate rounded-md px-1 py-0.5 text-[9px] font-semibold leading-tight sm:px-1.5 sm:text-[10px] lg:text-xs',
                       agenda.status === 'approved'
                         ? 'bg-primary-100 text-primary-700'
                         : 'bg-[var(--color-warning)]/20 text-[var(--color-warning)]',
                     )}
                     title={agenda.title}
                   >
-                    {agenda.title}
+                    <span className="sm:hidden">• evento</span>
+                    <span className="hidden sm:inline">{agenda.title}</span>
                   </div>
                 ))}
                 {dayAgendas.length > 3 && (

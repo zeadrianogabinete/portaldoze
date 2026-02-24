@@ -57,6 +57,7 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
             type="button"
             onClick={onClose}
             className="rounded-lg p-1.5 text-[var(--color-neutral-400)] transition-colors hover:bg-white/5 hover:text-white"
+            aria-label="Fechar menu lateral"
           >
             <X size={20} strokeWidth={1.5} />
           </button>
@@ -137,6 +138,7 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
           type="button"
           onClick={() => logout()}
           className="mt-3 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-[var(--color-neutral-400)] transition-colors hover:bg-white/5 hover:text-white"
+          aria-label="Sair da conta"
         >
           <LogOut size={18} strokeWidth={1.5} />
           Sair

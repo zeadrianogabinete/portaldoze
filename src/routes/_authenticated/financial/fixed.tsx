@@ -30,7 +30,7 @@ function DespesasFixas() {
           {fixedExpenses.map((expense) => (
             <div
               key={expense.id}
-              className="flex items-center justify-between rounded-xl border border-[var(--color-neutral-200)] bg-white p-4 shadow-[var(--shadow-card)]"
+              className="flex items-center justify-between rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-card)]"
             >
               <div>
                 <p className="text-sm font-medium text-[var(--color-neutral-800)]">{expense.description}</p>
@@ -44,7 +44,7 @@ function DespesasFixas() {
                 </span>
                 <span className={cn(
                   'rounded-full px-2 py-0.5 text-xs font-semibold',
-                  expense.is_active ? 'bg-green-50 text-green-700' : 'bg-[var(--color-neutral-100)] text-[var(--color-neutral-500)]'
+                  expense.is_active ? 'bg-[var(--color-success)]/12 text-[var(--color-success)]' : 'bg-[var(--color-neutral-100)] text-[var(--color-neutral-500)]'
                 )}>
                   {expense.is_active ? 'Ativa' : 'Inativa'}
                 </span>

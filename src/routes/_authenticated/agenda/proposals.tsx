@@ -27,7 +27,7 @@ function PropostasDeAgenda() {
       actions={
         <Link
           to="/agenda"
-          className="flex items-center gap-1.5 text-sm text-[var(--color-neutral-500)] hover:text-[var(--color-neutral-700)]"
+          className="flex items-center gap-1.5 text-sm font-medium text-[var(--color-neutral-500)] hover:text-[var(--color-neutral-700)]"
         >
           <ArrowLeft size={16} strokeWidth={1.5} />
           Voltar
@@ -49,7 +49,7 @@ function PropostasDeAgenda() {
           {proposals.map((proposal) => (
             <div
               key={proposal.id}
-              className="rounded-xl border border-[var(--color-neutral-200)] bg-white p-5 shadow-[var(--shadow-card)]"
+              className="rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-5 shadow-[var(--shadow-card)]"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
@@ -84,7 +84,7 @@ function PropostasDeAgenda() {
                   <Link
                     to="/agenda/$id"
                     params={{ id: proposal.id }}
-                    className="rounded-lg border border-[var(--color-neutral-200)] px-3 py-1.5 text-xs font-medium text-[var(--color-neutral-600)] transition-colors hover:bg-[var(--color-neutral-50)]"
+                    className="rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-1.5 text-xs font-semibold text-[var(--color-neutral-600)] transition-colors hover:bg-[var(--color-neutral-100)]"
                   >
                     Detalhes
                   </Link>
@@ -94,7 +94,7 @@ function PropostasDeAgenda() {
                       approve.mutate({ id: proposal.id, presence: proposal.politician_presence });
                     }}
                     disabled={approve.isPending}
-                    className="flex items-center gap-1 rounded-lg bg-[var(--color-accent-green)] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:opacity-90 disabled:opacity-50"
+                    className="flex items-center gap-1 rounded-xl bg-[var(--color-accent-green)] px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:opacity-90 disabled:opacity-50"
                   >
                     <CheckCircle size={12} strokeWidth={1.5} />
                     Aprovar

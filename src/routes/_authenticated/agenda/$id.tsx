@@ -58,7 +58,7 @@ function AgendaDetalhe() {
       actions={
         <Link
           to="/agenda"
-          className="flex items-center gap-1.5 text-sm text-[var(--color-neutral-500)] hover:text-[var(--color-neutral-700)]"
+          className="flex items-center gap-1.5 text-sm font-medium text-[var(--color-neutral-500)] hover:text-[var(--color-neutral-700)]"
         >
           <ArrowLeft size={16} strokeWidth={1.5} />
           Voltar
@@ -74,7 +74,7 @@ function AgendaDetalhe() {
         </div>
 
         {/* Card principal */}
-        <div className="rounded-xl border border-[var(--color-neutral-200)] bg-white p-6 shadow-[var(--shadow-card)]">
+        <div className="rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-6 shadow-[var(--shadow-card)]">
           {agenda.description && (
             <p className="mb-4 text-sm text-[var(--color-neutral-600)]">{agenda.description}</p>
           )}
@@ -130,7 +130,7 @@ function AgendaDetalhe() {
           {can('agenda', 'update') && (
             <button
               type="button"
-              className="flex items-center gap-1.5 rounded-lg border border-[var(--color-neutral-200)] bg-white px-3 py-2 text-sm font-medium text-[var(--color-neutral-700)] transition-colors hover:bg-[var(--color-neutral-50)]"
+              className="flex items-center gap-1.5 rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-2 text-sm font-semibold text-[var(--color-neutral-700)] transition-colors hover:bg-[var(--color-neutral-100)]"
             >
               <Edit2 size={14} strokeWidth={1.5} />
               Editar
@@ -141,7 +141,7 @@ function AgendaDetalhe() {
               type="button"
               onClick={handleApprove}
               disabled={approve.isPending}
-              className="flex items-center gap-1.5 rounded-lg bg-[var(--color-accent-green)] px-3 py-2 text-sm font-medium text-white transition-colors hover:opacity-90 disabled:opacity-50"
+              className="flex items-center gap-1.5 rounded-xl bg-[var(--color-accent-green)] px-3 py-2 text-sm font-semibold text-white transition-colors hover:opacity-90 disabled:opacity-50"
             >
               <CheckCircle size={14} strokeWidth={1.5} />
               Aprovar
@@ -150,7 +150,7 @@ function AgendaDetalhe() {
           {can('agenda', 'approve') && agenda.status === 'approved' && (
             <button
               type="button"
-              className="flex items-center gap-1.5 rounded-lg bg-[var(--color-neutral-100)] px-3 py-2 text-sm font-medium text-[var(--color-neutral-600)] transition-colors hover:bg-[var(--color-neutral-200)]"
+              className="flex items-center gap-1.5 rounded-xl bg-[var(--color-neutral-100)] px-3 py-2 text-sm font-semibold text-[var(--color-neutral-600)] transition-colors hover:bg-[var(--color-neutral-200)]"
             >
               <XCircle size={14} strokeWidth={1.5} />
               Cancelar Agenda
@@ -161,14 +161,14 @@ function AgendaDetalhe() {
               <button
                 type="button"
                 onClick={() => setShowDeleteConfirm(true)}
-                className="flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-[var(--color-error)] transition-colors hover:bg-red-100"
+                className="flex items-center gap-1.5 rounded-xl bg-red-50 px-3 py-2 text-sm font-semibold text-[var(--color-error)] transition-colors hover:bg-red-100"
               >
                 <Trash2 size={14} strokeWidth={1.5} />
                 Excluir
               </button>
               {showDeleteConfirm && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-                  <div className="mx-4 max-w-md rounded-xl bg-white p-6 shadow-lg">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--surface-overlay)]">
+                  <div className="mx-4 max-w-md rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] p-6 shadow-[var(--shadow-lg)]">
                     <h3 className="font-heading text-lg font-semibold text-[var(--color-neutral-800)]">
                       Excluir agenda?
                     </h3>
@@ -179,7 +179,7 @@ function AgendaDetalhe() {
                       <button
                         type="button"
                         onClick={() => setShowDeleteConfirm(false)}
-                        className="rounded-lg border border-[var(--color-neutral-200)] px-4 py-2 text-sm font-medium text-[var(--color-neutral-700)]"
+                        className="rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] px-4 py-2 text-sm font-semibold text-[var(--color-neutral-700)]"
                       >
                         Cancelar
                       </button>
@@ -187,7 +187,7 @@ function AgendaDetalhe() {
                         type="button"
                         onClick={handleDelete}
                         disabled={remove.isPending}
-                        className="rounded-lg bg-[var(--color-error)] px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+                        className="rounded-xl bg-[var(--color-error)] px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
                       >
                         {remove.isPending ? 'Excluindo...' : 'Excluir'}
                       </button>

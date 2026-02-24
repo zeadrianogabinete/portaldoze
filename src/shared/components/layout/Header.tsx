@@ -18,7 +18,7 @@ export function Header({ title, onMenuClick }: HeaderProps) {
 
   return (
     <header className="sticky top-0 z-30 border-b border-[var(--color-neutral-200)]/80 bg-[var(--surface-card)]/90 backdrop-blur-md">
-      <div className="relative flex h-16 items-center justify-between px-4 lg:px-6">
+      <div className="relative flex h-14 items-center justify-between px-3 sm:h-16 sm:px-4 lg:px-6">
       {/* Esquerda */}
       <div className="flex items-center gap-3">
         {onMenuClick && (
@@ -32,10 +32,10 @@ export function Header({ title, onMenuClick }: HeaderProps) {
           </button>
         )}
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-neutral-500)]">
+          <p className="hidden text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-neutral-500)] sm:block">
             Portal do Mandato
           </p>
-          <h2 className="font-heading text-lg font-semibold text-[var(--color-neutral-800)] lg:text-xl">
+          <h2 className="font-heading text-base font-semibold text-[var(--color-neutral-800)] sm:text-lg lg:text-xl">
             {title || 'Painel Administrativo'}
           </h2>
         </div>
@@ -72,6 +72,9 @@ export function Header({ title, onMenuClick }: HeaderProps) {
             type="button"
             onClick={() => setShowUserMenu(!showUserMenu)}
             className="flex items-center gap-2 rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] p-1.5 transition-colors hover:bg-[var(--color-neutral-100)]"
+            aria-haspopup="menu"
+            aria-expanded={showUserMenu}
+            aria-label="Abrir menu do usuário"
           >
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-sm font-semibold text-white">
               {profile?.full_name?.charAt(0)?.toUpperCase() || '?'}
@@ -83,10 +86,11 @@ export function Header({ title, onMenuClick }: HeaderProps) {
 
           {showUserMenu && (
             <>
-              <div
+              <button
+                type="button"
                 className="fixed inset-0 z-40"
                 onClick={() => setShowUserMenu(false)}
-                onKeyDown={() => {}}
+                aria-label="Fechar menu do usuário"
               />
               <div className="absolute right-0 top-full z-50 mt-2 w-64 rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] py-1.5 shadow-[var(--shadow-lg)]">
                 <div className="border-b border-[var(--color-neutral-100)] px-4 py-3">

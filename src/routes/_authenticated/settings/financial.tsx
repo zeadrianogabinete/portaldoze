@@ -53,7 +53,7 @@ function ConfigFinanceiro() {
       actions={
         <Link
           to="/settings"
-          className="flex items-center gap-1.5 text-sm text-[var(--color-neutral-500)] hover:text-[var(--color-neutral-700)]"
+          className="flex items-center gap-1.5 text-sm font-medium text-[var(--color-neutral-500)] hover:text-[var(--color-neutral-700)]"
         >
           <ArrowLeft size={16} strokeWidth={1.5} />
           Voltar
@@ -63,20 +63,20 @@ function ConfigFinanceiro() {
       <div className="space-y-6">
         {/* Cota CEAP */}
         {quotaConfig && (
-          <div className="rounded-xl border border-[var(--color-neutral-200)] bg-white p-5 shadow-[var(--shadow-card)]">
+          <div className="rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-5 shadow-[var(--shadow-card)]">
             <h3 className="font-heading text-base font-semibold text-[var(--color-neutral-800)]">Cota CEAP</h3>
             <p className="mt-1 text-sm text-[var(--color-neutral-500)]">Limite mensal: {formatCurrency(quotaConfig.monthly_limit)}</p>
           </div>
         )}
 
         {/* Naturezas */}
-        <div className="rounded-xl border border-[var(--color-neutral-200)] bg-white p-5 shadow-[var(--shadow-card)]">
+        <div className="rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-5 shadow-[var(--shadow-card)]">
           <h3 className="mb-3 font-heading text-base font-semibold text-[var(--color-neutral-800)]">
             Naturezas de Despesa ({natures?.length ?? 0})
           </h3>
           <div className="space-y-2">
             {natures?.map((n: { id: string; name: string; code: string; ceap_eligible: boolean; is_active: boolean }) => (
-              <div key={n.id} className="flex items-center justify-between rounded-lg border border-[var(--color-neutral-100)] px-3 py-2">
+              <div key={n.id} className="flex items-center justify-between rounded-xl border border-[var(--color-neutral-100)] bg-[var(--surface-elevated)] px-3 py-2">
                 <div>
                   <p className="text-sm font-medium text-[var(--color-neutral-800)]">{n.name}</p>
                   <p className="text-xs text-[var(--color-neutral-500)]">Código: {n.code}</p>
@@ -98,13 +98,13 @@ function ConfigFinanceiro() {
         </div>
 
         {/* Categorias */}
-        <div className="rounded-xl border border-[var(--color-neutral-200)] bg-white p-5 shadow-[var(--shadow-card)]">
+        <div className="rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-5 shadow-[var(--shadow-card)]">
           <h3 className="mb-3 font-heading text-base font-semibold text-[var(--color-neutral-800)]">
             Categorias ({categories?.length ?? 0})
           </h3>
           <div className="flex flex-wrap gap-2">
             {categories?.map((c: { id: string; name: string }) => (
-              <span key={c.id} className="rounded-full bg-[var(--color-neutral-100)] px-3 py-1 text-xs font-medium text-[var(--color-neutral-700)]">
+              <span key={c.id} className="rounded-full bg-[var(--color-neutral-100)] px-3 py-1 text-xs font-semibold text-[var(--color-neutral-700)]">
                 {c.name}
               </span>
             ))}
@@ -112,13 +112,13 @@ function ConfigFinanceiro() {
         </div>
 
         {/* Fontes de Recurso */}
-        <div className="rounded-xl border border-[var(--color-neutral-200)] bg-white p-5 shadow-[var(--shadow-card)]">
+        <div className="rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-5 shadow-[var(--shadow-card)]">
           <h3 className="mb-3 font-heading text-base font-semibold text-[var(--color-neutral-800)]">
             Fontes de Recurso ({sources?.length ?? 0})
           </h3>
           <div className="flex flex-wrap gap-2">
             {sources?.map((s: { id: string; name: string }) => (
-              <span key={s.id} className="rounded-full bg-[var(--color-neutral-100)] px-3 py-1 text-xs font-medium text-[var(--color-neutral-700)]">
+              <span key={s.id} className="rounded-full bg-[var(--color-neutral-100)] px-3 py-1 text-xs font-semibold text-[var(--color-neutral-700)]">
                 {s.name}
               </span>
             ))}

@@ -60,8 +60,8 @@ function NovaTransacao() {
     });
   };
 
-  const inputClasses = 'flex h-10 w-full rounded-lg border border-[var(--color-neutral-200)] bg-white px-3 py-2 text-sm text-[var(--color-neutral-800)] transition-colors placeholder:text-[var(--color-neutral-400)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500';
-  const selectClasses = 'flex h-10 w-full appearance-none rounded-lg border border-[var(--color-neutral-200)] bg-white px-3 py-2 text-sm text-[var(--color-neutral-800)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500';
+  const inputClasses = 'flex h-10 w-full rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-2 text-sm text-[var(--color-neutral-800)] transition-colors placeholder:text-[var(--color-neutral-400)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500';
+  const selectClasses = 'flex h-10 w-full appearance-none rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-2 text-sm text-[var(--color-neutral-800)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500';
   const labelClasses = 'text-sm font-medium text-[var(--color-neutral-700)]';
 
   return (
@@ -70,7 +70,7 @@ function NovaTransacao() {
       actions={
         <Link
           to="/financial"
-          className="flex items-center gap-1.5 text-sm text-[var(--color-neutral-500)] hover:text-[var(--color-neutral-700)]"
+          className="flex items-center gap-1.5 text-sm font-medium text-[var(--color-neutral-500)] hover:text-[var(--color-neutral-700)]"
         >
           <ArrowLeft size={16} strokeWidth={1.5} />
           Voltar
@@ -79,7 +79,7 @@ function NovaTransacao() {
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="mx-auto max-w-2xl space-y-6 rounded-xl border border-[var(--color-neutral-200)] bg-white p-6 shadow-[var(--shadow-card)]"
+        className="mx-auto max-w-2xl space-y-6 rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-6 shadow-[var(--shadow-card)]"
       >
         {/* Tipo */}
         <div className="space-y-1.5">
@@ -205,7 +205,7 @@ function NovaTransacao() {
           <textarea
             {...register('notes')}
             rows={2}
-            className="flex min-h-[60px] w-full rounded-lg border border-[var(--color-neutral-200)] bg-white px-3 py-2 text-sm text-[var(--color-neutral-800)] placeholder:text-[var(--color-neutral-400)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+            className="flex min-h-[60px] w-full rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-2 text-sm text-[var(--color-neutral-800)] placeholder:text-[var(--color-neutral-400)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
             placeholder="Observações adicionais"
           />
         </div>
@@ -214,14 +214,14 @@ function NovaTransacao() {
         <div className="flex justify-end gap-3 border-t border-[var(--color-neutral-100)] pt-4">
           <Link
             to="/financial"
-            className="rounded-lg border border-[var(--color-neutral-200)] bg-white px-4 py-2 text-sm font-medium text-[var(--color-neutral-700)] transition-colors hover:bg-[var(--color-neutral-50)]"
+            className="rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-4 py-2 text-sm font-semibold text-[var(--color-neutral-700)] transition-colors hover:bg-[var(--color-neutral-100)]"
           >
             Cancelar
           </Link>
           <button
             type="submit"
             disabled={create.isPending}
-            className="rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-600 disabled:opacity-50"
+            className="rounded-xl bg-primary-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-600 disabled:opacity-50"
           >
             {create.isPending ? 'Salvando...' : 'Salvar'}
           </button>

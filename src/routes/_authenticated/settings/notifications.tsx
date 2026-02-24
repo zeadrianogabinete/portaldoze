@@ -86,7 +86,7 @@ function ConfigNotificacoes() {
       actions={
         <Link
           to="/settings"
-          className="flex items-center gap-1.5 text-sm text-[var(--color-neutral-500)] hover:text-[var(--color-neutral-700)]"
+          className="flex items-center gap-1.5 text-sm font-medium text-[var(--color-neutral-500)] hover:text-[var(--color-neutral-700)]"
         >
           <ArrowLeft size={16} strokeWidth={1.5} />
           Voltar
@@ -99,10 +99,10 @@ function ConfigNotificacoes() {
         </div>
       ) : (
         <div className="mx-auto max-w-xl space-y-4">
-          <div className="overflow-hidden rounded-xl border border-[var(--color-neutral-200)] bg-white shadow-[var(--shadow-card)]">
+          <div className="overflow-hidden rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] shadow-[var(--shadow-card)]">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)]">
+                <tr className="border-b border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)]/70">
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-[var(--color-neutral-500)]">Módulo</th>
                   <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-[var(--color-neutral-500)]">In-App</th>
                   <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-[var(--color-neutral-500)]">Push</th>
@@ -121,6 +121,7 @@ function ConfigNotificacoes() {
                         checked={pref.in_app_enabled}
                         onChange={() => togglePref(pref.module, 'in_app_enabled')}
                         className="h-4 w-4 rounded border-[var(--color-neutral-300)] text-primary-500 focus:ring-primary-500"
+                        aria-label={`Ativar notificações in-app para ${moduleLabels[pref.module] ?? pref.module}`}
                       />
                     </td>
                     <td className="px-4 py-3 text-center">
@@ -129,6 +130,7 @@ function ConfigNotificacoes() {
                         checked={pref.push_enabled}
                         onChange={() => togglePref(pref.module, 'push_enabled')}
                         className="h-4 w-4 rounded border-[var(--color-neutral-300)] text-primary-500 focus:ring-primary-500"
+                        aria-label={`Ativar notificações push para ${moduleLabels[pref.module] ?? pref.module}`}
                       />
                     </td>
                     <td className="px-4 py-3 text-center">
@@ -137,6 +139,7 @@ function ConfigNotificacoes() {
                         checked={pref.email_enabled}
                         onChange={() => togglePref(pref.module, 'email_enabled')}
                         className="h-4 w-4 rounded border-[var(--color-neutral-300)] text-primary-500 focus:ring-primary-500"
+                        aria-label={`Ativar notificações por email para ${moduleLabels[pref.module] ?? pref.module}`}
                       />
                     </td>
                   </tr>
@@ -150,7 +153,7 @@ function ConfigNotificacoes() {
               type="button"
               onClick={() => saveMutation.mutate()}
               disabled={saveMutation.isPending}
-              className="flex items-center gap-1.5 rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-600 disabled:opacity-50"
+              className="flex items-center gap-1.5 rounded-xl bg-primary-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-600 disabled:opacity-50"
             >
               <Save size={14} strokeWidth={1.5} />
               {saveMutation.isPending ? 'Salvando...' : 'Salvar Preferências'}

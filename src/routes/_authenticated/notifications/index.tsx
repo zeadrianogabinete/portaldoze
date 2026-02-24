@@ -49,7 +49,7 @@ function NotificationsPage() {
           <button
             type="button"
             onClick={() => markAllAsRead()}
-            className="flex items-center gap-1.5 rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-2 text-sm font-semibold text-[var(--color-neutral-700)] transition-colors hover:bg-[var(--color-neutral-100)]"
+            className="flex items-center gap-1.5 rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-2.5 py-2 text-xs font-semibold text-[var(--color-neutral-700)] transition-colors hover:bg-[var(--color-neutral-100)] sm:px-3 sm:text-sm"
           >
             <CheckCheck size={16} strokeWidth={1.5} />
             Marcar todas como lidas
@@ -65,7 +65,7 @@ function NotificationsPage() {
             type="button"
             onClick={() => setFilter(tab.value)}
             className={cn(
-              'whitespace-nowrap rounded-xl px-4 py-2.5 text-sm font-medium transition-colors',
+              'whitespace-nowrap rounded-xl px-3 py-2 text-xs font-medium transition-colors sm:px-4 sm:py-2.5 sm:text-sm',
               filter === tab.value
                 ? 'bg-primary-500/12 text-primary-700'
                 : 'text-[var(--color-neutral-500)] hover:bg-[var(--color-neutral-100)] hover:text-[var(--color-neutral-700)]',
@@ -102,7 +102,7 @@ function NotificationsPage() {
                   <Icon size={16} strokeWidth={1.5} />
                 </div>
                 <div className="flex-1">
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <p className="text-sm font-medium text-[var(--color-neutral-800)]">
                       {notification.title}
                     </p>

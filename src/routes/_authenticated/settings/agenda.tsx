@@ -69,14 +69,14 @@ function ConfigAgenda() {
       actions={
         <Link
           to="/settings"
-          className="flex items-center gap-1.5 text-sm text-[var(--color-neutral-500)] hover:text-[var(--color-neutral-700)]"
+          className="flex items-center gap-1.5 text-sm font-medium text-[var(--color-neutral-500)] hover:text-[var(--color-neutral-700)]"
         >
           <ArrowLeft size={16} strokeWidth={1.5} />
           Voltar
         </Link>
       }
     >
-      <div className="mx-auto max-w-xl space-y-6 rounded-xl border border-[var(--color-neutral-200)] bg-white p-6 shadow-[var(--shadow-card)]">
+      <div className="mx-auto max-w-xl space-y-6 rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-6 shadow-[var(--shadow-card)]">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm font-medium text-[var(--color-neutral-800)]">Exigir aprovação</p>
@@ -93,7 +93,7 @@ function ConfigAgenda() {
             <span
               className={cn(
                 'inline-block h-5 w-5 transform rounded-full bg-white shadow-sm transition-transform',
-                requireApproval ? 'translate-x-5.5' : 'translate-x-0.5',
+                requireApproval ? 'translate-x-[22px]' : 'translate-x-0.5',
               )}
               style={{ marginTop: '2px' }}
             />
@@ -105,7 +105,7 @@ function ConfigAgenda() {
           <select
             value={defaultPresence}
             onChange={(e) => setDefaultPresence(e.target.value)}
-            className="flex h-10 w-full appearance-none rounded-lg border border-[var(--color-neutral-200)] bg-white px-3 py-2 text-sm text-[var(--color-neutral-800)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+            className="flex h-10 w-full appearance-none rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-2 text-sm text-[var(--color-neutral-800)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
           >
             <option value="politician">Político presente</option>
             <option value="representative">Representante</option>
@@ -118,7 +118,7 @@ function ConfigAgenda() {
             type="button"
             onClick={() => saveMutation.mutate()}
             disabled={saveMutation.isPending}
-            className="flex items-center gap-1.5 rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-600 disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-xl bg-primary-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-600 disabled:opacity-50"
           >
             <Save size={14} strokeWidth={1.5} />
             {saveMutation.isPending ? 'Salvando...' : 'Salvar'}

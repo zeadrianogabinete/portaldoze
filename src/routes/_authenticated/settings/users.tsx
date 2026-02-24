@@ -108,7 +108,7 @@ function Usuarios() {
       actions={
         <Link
           to="/settings"
-          className="flex items-center gap-1.5 text-sm text-[var(--color-neutral-500)] hover:text-[var(--color-neutral-700)]"
+          className="flex items-center gap-1.5 text-sm font-medium text-[var(--color-neutral-500)] hover:text-[var(--color-neutral-700)]"
         >
           <ArrowLeft size={16} strokeWidth={1.5} />
           Voltar
@@ -116,15 +116,15 @@ function Usuarios() {
       }
     >
       {/* Tabs */}
-      <div className="mb-4 flex gap-1 border-b border-[var(--color-neutral-200)]">
+      <div className="mb-4 flex gap-1 rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-1.5 shadow-[var(--shadow-card)]">
         <button
           type="button"
           onClick={() => setTab('all')}
           className={cn(
-            'border-b-2 px-4 py-2.5 text-sm font-medium transition-colors',
+            'rounded-xl px-4 py-2.5 text-sm font-medium transition-colors',
             tab === 'all'
-              ? 'border-primary-500 text-primary-600'
-              : 'border-transparent text-[var(--color-neutral-500)] hover:text-[var(--color-neutral-700)]',
+              ? 'bg-primary-500/12 text-primary-700'
+              : 'text-[var(--color-neutral-500)] hover:bg-[var(--color-neutral-100)] hover:text-[var(--color-neutral-700)]',
           )}
         >
           Todos ({users?.length ?? 0})
@@ -133,10 +133,10 @@ function Usuarios() {
           type="button"
           onClick={() => setTab('pending')}
           className={cn(
-            'border-b-2 px-4 py-2.5 text-sm font-medium transition-colors',
+            'rounded-xl px-4 py-2.5 text-sm font-medium transition-colors',
             tab === 'pending'
-              ? 'border-primary-500 text-primary-600'
-              : 'border-transparent text-[var(--color-neutral-500)] hover:text-[var(--color-neutral-700)]',
+              ? 'bg-primary-500/12 text-primary-700'
+              : 'text-[var(--color-neutral-500)] hover:bg-[var(--color-neutral-100)] hover:text-[var(--color-neutral-700)]',
           )}
         >
           Pendentes ({pendingCount})
@@ -159,7 +159,7 @@ function Usuarios() {
           {filteredUsers.map((user) => (
             <div
               key={user.id}
-              className="rounded-xl border border-[var(--color-neutral-200)] bg-white p-4 shadow-[var(--shadow-card)]"
+              className="rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-card)]"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -176,7 +176,7 @@ function Usuarios() {
                   <select
                     value={user.role}
                     onChange={(e) => updateRole.mutate({ id: user.id, role: e.target.value })}
-                    className="rounded-lg border border-[var(--color-neutral-200)] bg-white px-2 py-1 text-xs text-[var(--color-neutral-700)] focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+                    className="rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-2 py-1 text-xs text-[var(--color-neutral-700)] focus:outline-none focus:ring-2 focus:ring-primary-500/20"
                   >
                     {Object.entries(roleLabels).map(([value, label]) => (
                       <option key={value} value={value}>{label}</option>
@@ -194,6 +194,7 @@ function Usuarios() {
                         onClick={() => updateStatus.mutate({ id: user.id, status: 'active' })}
                         className="rounded-lg bg-green-50 p-1.5 text-green-600 transition-colors hover:bg-green-100"
                         title="Aprovar"
+                        aria-label={`Aprovar usuário ${user.full_name}`}
                       >
                         <Check size={14} strokeWidth={2} />
                       </button>
@@ -202,6 +203,7 @@ function Usuarios() {
                         onClick={() => updateStatus.mutate({ id: user.id, status: 'disabled' })}
                         className="rounded-lg bg-red-50 p-1.5 text-[var(--color-error)] transition-colors hover:bg-red-100"
                         title="Rejeitar"
+                        aria-label={`Rejeitar usuário ${user.full_name}`}
                       >
                         <X size={14} strokeWidth={2} />
                       </button>
@@ -213,6 +215,7 @@ function Usuarios() {
                       onClick={() => updateStatus.mutate({ id: user.id, status: 'disabled' })}
                       className="rounded-lg bg-red-50 p-1.5 text-[var(--color-error)] transition-colors hover:bg-red-100"
                       title="Desativar"
+                      aria-label={`Desativar usuário ${user.full_name}`}
                     >
                       <UserX size={14} strokeWidth={1.5} />
                     </button>
@@ -223,6 +226,7 @@ function Usuarios() {
                       onClick={() => updateStatus.mutate({ id: user.id, status: 'active' })}
                       className="rounded-lg bg-green-50 p-1.5 text-green-600 transition-colors hover:bg-green-100"
                       title="Reativar"
+                      aria-label={`Reativar usuário ${user.full_name}`}
                     >
                       <UserCheck size={14} strokeWidth={1.5} />
                     </button>

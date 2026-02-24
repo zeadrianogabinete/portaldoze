@@ -40,7 +40,7 @@ function AgendaPage() {
       title="Agenda"
       subtitle="Planejamento de compromissos, propostas e acompanhamento da operação"
       actions={
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {can('agenda', 'approve') && (
             <Link
               to="/agenda/proposals"
@@ -62,7 +62,7 @@ function AgendaPage() {
       }
     >
       <div className="mb-4 rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-card)] sm:p-5">
-        <div className="mb-3 flex items-center justify-between">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <CalendarDays size={18} className="text-primary-600" />
             <p className="text-sm font-medium text-[var(--color-neutral-600)]">Visão de calendário</p>
@@ -71,7 +71,7 @@ function AgendaPage() {
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
             onClick={goToPrev}
@@ -80,7 +80,7 @@ function AgendaPage() {
           >
             <ChevronLeft size={20} strokeWidth={1.5} />
           </button>
-          <h2 className="min-w-[180px] text-center font-heading text-lg font-semibold capitalize text-[var(--color-neutral-800)]">
+          <h2 className="min-w-[140px] text-center font-heading text-base font-semibold capitalize text-[var(--color-neutral-800)] sm:min-w-[180px] sm:text-lg">
             {format(currentDate, 'MMMM yyyy', { locale: ptBR })}
           </h2>
           <button
@@ -94,7 +94,7 @@ function AgendaPage() {
           <button
             type="button"
             onClick={goToToday}
-            className="ml-2 rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-1.5 text-xs font-semibold text-[var(--color-neutral-600)] transition-colors hover:bg-[var(--color-neutral-100)]"
+            className="rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-1.5 text-xs font-semibold text-[var(--color-neutral-600)] transition-colors hover:bg-[var(--color-neutral-100)] sm:ml-2"
           >
             Hoje
           </button>

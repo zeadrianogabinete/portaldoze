@@ -21,7 +21,7 @@ function CotasCEAP() {
   return (
     <PageContainer title="Cota CEAP" subtitle="Cota para Exercício da Atividade Parlamentar">
       {/* Resumo */}
-      <div className="mb-6 rounded-xl border border-[var(--color-neutral-200)] bg-white p-6 shadow-[var(--shadow-card)]">
+      <div className="mb-6 rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-6 shadow-[var(--shadow-card)]">
         <div className="grid gap-4 sm:grid-cols-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-[var(--color-neutral-500)]">Limite Mensal</p>
@@ -63,13 +63,13 @@ function CotasCEAP() {
           <div className="h-8 w-8 animate-spin rounded-full border-3 border-primary-200 border-t-primary-500" />
         </div>
       ) : !usage || usage.length === 0 ? (
-        <div className="rounded-xl border border-[var(--color-neutral-200)] bg-white p-8 text-center text-sm text-[var(--color-neutral-400)]">
+        <div className="rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-8 text-center text-sm text-[var(--color-neutral-400)] shadow-[var(--shadow-card)]">
           Nenhum gasto CEAP registrado neste mês
         </div>
       ) : (
         <div className="space-y-2">
           {usage.map((item: { nature_name: string; total_used: number }, idx: number) => (
-            <div key={idx} className="rounded-xl border border-[var(--color-neutral-200)] bg-white p-4 shadow-[var(--shadow-card)]">
+            <div key={idx} className="rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-card)]">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium text-[var(--color-neutral-800)]">{item.nature_name}</p>
                 <p className="text-sm font-semibold text-[var(--color-neutral-800)]">{formatCurrency(item.total_used)}</p>

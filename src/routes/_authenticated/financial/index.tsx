@@ -36,7 +36,7 @@ function FinancialPage() {
           <Badge variant="neutral">Atualização em tempo real</Badge>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
             onClick={() => setCurrentMonth((d) => subMonths(d, 1))}
@@ -45,7 +45,7 @@ function FinancialPage() {
           >
             <ChevronLeft size={20} strokeWidth={1.5} />
           </button>
-          <span className="min-w-[180px] text-center font-heading text-base font-semibold capitalize text-[var(--color-neutral-800)]">
+          <span className="min-w-[140px] text-center font-heading text-sm font-semibold capitalize text-[var(--color-neutral-800)] sm:min-w-[180px] sm:text-base">
             {format(currentMonth, 'MMMM yyyy', { locale: ptBR })}
           </span>
           <button
@@ -90,7 +90,7 @@ function FinancialTabs() {
               key={tab.href}
               to={tab.href}
               className={cn(
-                'whitespace-nowrap rounded-xl px-4 py-2.5 text-sm font-medium transition-colors',
+                'whitespace-nowrap rounded-xl px-3 py-2 text-xs font-medium transition-colors sm:px-4 sm:py-2.5 sm:text-sm',
                 active
                   ? 'bg-primary-500/12 text-primary-700'
                   : 'text-[var(--color-neutral-500)] hover:bg-[var(--color-neutral-100)] hover:text-[var(--color-neutral-700)]',
