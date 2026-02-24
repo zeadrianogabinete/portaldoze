@@ -66,8 +66,8 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto px-4 py-2 space-y-6 custom-scrollbar">
-        <div className="space-y-1.5">
+      <nav className="flex-1 overflow-y-auto px-4 py-4 space-y-2 custom-scrollbar">
+        <div className="space-y-1">
           {navGroups.map((group) => {
             if (
               group.permission &&
@@ -89,8 +89,8 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
         </div>
 
         {/* Config Section */}
-        <div className="pt-4 border-t border-white/5">
-          <p className="mb-3 px-4 text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-neutral-500)]">
+        <div className="pt-5 border-t border-white/10">
+          <p className="mb-3 px-4 text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-neutral-400)]">
             Configurar
           </p>
           <div className="space-y-1">
@@ -120,8 +120,8 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
       </nav>
 
       {/* User Footer */}
-      <div className="p-4 bg-white/[0.02] border-t border-white/5">
-        <div className="flex items-center gap-3.5 rounded-2xl bg-white/[0.03] p-3 border border-white/5">
+      <div className="p-4 bg-white/[0.03] border-t border-white/8">
+        <div className="flex items-center gap-3.5 rounded-2xl bg-white/[0.05] p-3.5 border border-white/8">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-primary-500 to-primary-400 text-sm font-bold text-white shadow-md">
             {profile?.full_name?.charAt(0)?.toUpperCase() || '?'}
           </div>
@@ -161,12 +161,12 @@ function SidebarGroup({
 }) {
   if (group.disabled) {
     return (
-      <div className="px-4 py-2 opacity-60 grayscale-[0.5]">
-        <div className="flex items-center gap-3.5 text-[var(--sidebar-text)]">
-          <group.icon size={19} className="shrink-0" />
+      <div className="px-4 py-3 rounded-xl">
+        <div className="flex items-center gap-3.5 text-[var(--sidebar-text-disabled)]">
+          <group.icon size={19} className="shrink-0 text-[var(--color-neutral-600)]" />
           <span className="flex-1 text-sm font-medium">{group.title}</span>
-          <Badge variant="neutral" className="border-white/10 bg-white/5 text-[9px] font-bold tracking-tighter py-0">
-            SOON
+          <Badge variant="neutral" className="border-white/8 bg-white/5 text-[9px] font-semibold tracking-wide py-0.5 px-2">
+            EM BREVE
           </Badge>
         </div>
       </div>
@@ -184,7 +184,7 @@ function SidebarGroup({
           className={cn(
             'flex w-full items-center gap-3.5 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 group/btn',
             'text-[var(--sidebar-text)] hover:bg-white/5 hover:text-white',
-            groupActive && 'bg-white/[0.04] text-white shadow-sm',
+            groupActive && 'bg-white/[0.06] text-white',
           )}
         >
           <group.icon size={19} className={cn('shrink-0 transition-colors', groupActive ? 'text-primary-400' : 'text-[var(--color-neutral-500)] group-hover/btn:text-white')} />
@@ -197,7 +197,7 @@ function SidebarGroup({
       </Collapsible.Trigger>
 
       <Collapsible.Content className="overflow-hidden data-[state=closed]:animate-collapse data-[state=open]:animate-expand">
-        <div className="ml-6 mt-1 space-y-1 border-l border-white/5 py-1 pl-4">
+        <div className="ml-6 mt-1.5 space-y-0.5 border-l border-white/8 py-1.5 pl-4">
           {group.items.map((subItem) => {
             const active = isActive(subItem.href);
             return (

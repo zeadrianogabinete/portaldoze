@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { Menu, Bell, LogOut, Settings, Moon, Sun } from 'lucide-react';
+import { Menu, Bell, LogOut, Settings, Moon, Sun, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/shared/hooks/useAuth';
 import { useNotifications } from '@/shared/hooks/useNotifications';
 import { useTheme } from '@/shared/hooks/useTheme';
+import { usePageContext } from '@/shared/context/PageContext';
 
 interface HeaderProps {
   title?: string;
@@ -15,11 +16,15 @@ export function Header({ title, onMenuClick }: HeaderProps) {
   const { profile, logout } = useAuth();
   const { unreadCount } = useNotifications();
   const { isDark, toggleTheme } = useTheme();
+  const { pageTitle, breadcrumbs } = usePageContext();
   const [showUserMenu, setShowUserMenu] = useState(false);
 
+  const displayTitle = title || pageTitle || 'Painel Administrativo';
+  const hasBreadcrumbs = breadcrumbs.length > 0;
+
   return (
-    <header className="sticky top-0 z-30 border-b border-[var(--color-neutral-200)]/60 bg-[var(--surface-card)]/80 backdrop-blur-xl">
-      <div className="relative flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-30 border-b border-[var(--color-neutral-200)]/40 bg-[var(--surface-card)]/85 backdrop-blur-xl shadow-[var(--shadow-header)]">
+      <div className="relative flex h-[72px] items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Left Section */}
         <div className="flex items-center gap-4">
           {onMenuClick && (
@@ -33,11 +38,31 @@ export function Header({ title, onMenuClick }: HeaderProps) {
             </button>
           )}
           <div className="flex flex-col">
-            <p className="hidden text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-neutral-400)] sm:block leading-tight">
-              Gestão de Mandato
-            </p>
+            {hasBreadcrumbs ? (
+              <nav className="hidden items-center gap-1.5 text-[11px] font-medium text-[var(--color-neutral-400)] sm:flex mb-0.5">
+                <Link to="/" className="hover:text-[var(--color-neutral-600)] transition-colors">
+                  Painel
+                </Link>
+                {breadcrumbs.map((crumb, idx) => (
+                  <span key={idx} className="flex items-center gap-1.5">
+                    <ChevronRight size={12} className="text-[var(--color-neutral-300)]" />
+                    {crumb.href ? (
+                      <Link to={crumb.href} className="hover:text-[var(--color-neutral-600)] transition-colors">
+                        {crumb.label}
+                      </Link>
+                    ) : (
+                      <span className="text-[var(--color-neutral-600)]">{crumb.label}</span>
+                    )}
+                  </span>
+                ))}
+              </nav>
+            ) : (
+              <p className="hidden text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-neutral-400)] sm:block leading-tight">
+                Gestão de Mandato
+              </p>
+            )}
             <h2 className="font-heading text-lg font-bold text-[var(--color-neutral-900)] sm:text-xl tracking-tight">
-              {title || 'Painel Administrativo'}
+              {displayTitle}
             </h2>
           </div>
         </div>

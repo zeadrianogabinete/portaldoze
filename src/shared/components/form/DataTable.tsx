@@ -1,5 +1,7 @@
 import { type ReactNode } from 'react';
+import { SearchX } from 'lucide-react';
 import { cn } from '@/shared/utils/cn';
+import { EmptyState } from '@/shared/components/feedback/EmptyState';
 
 interface Column<T> {
   key: string;
@@ -35,22 +37,23 @@ export function DataTable<T>({
 
   if (data.length === 0) {
     return (
-      <div className="flex items-center justify-center py-12 text-sm text-[var(--color-neutral-400)]">
-        {emptyMessage}
-      </div>
+      <EmptyState
+        title={emptyMessage}
+        icon={<SearchX size={28} strokeWidth={1.5} />}
+      />
     );
   }
 
   return (
-    <div className="overflow-x-auto rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] shadow-[var(--shadow-card)]">
+    <div className="overflow-x-auto rounded-2xl border border-[var(--color-neutral-200)]/60 bg-[var(--surface-card)] shadow-card">
       <table className="w-full">
         <thead>
-          <tr className="border-b border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)]/50">
+          <tr className="border-b border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)]">
             {columns.map((col) => (
               <th
                 key={col.key}
                 className={cn(
-                  'px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-[var(--color-neutral-500)]',
+                  'px-5 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-[var(--color-neutral-500)]',
                   col.className,
                 )}
               >
@@ -73,7 +76,7 @@ export function DataTable<T>({
                 <td
                   key={col.key}
                   className={cn(
-                    'px-4 py-3 text-sm text-[var(--color-neutral-700)]',
+                    'px-5 py-3.5 text-sm text-[var(--color-neutral-700)]',
                     col.className,
                   )}
                 >
