@@ -41,7 +41,7 @@ function Receitas() {
       actions={
         <Link
           to="/financial/new"
-          className="flex items-center gap-1.5 rounded-xl bg-primary-500 px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-600"
+          className="flex items-center gap-1.5 rounded-lg bg-primary-500 px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-600"
         >
           <Plus size={16} strokeWidth={2} />
           Nova Receita
@@ -49,7 +49,7 @@ function Receitas() {
       }
     >
       {/* Filtros */}
-      <div className="mb-4 rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-card)] sm:p-5">
+      <div className="mb-4 rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-card)] sm:p-5">
         <div className="flex flex-col gap-3 sm:flex-row">
         <div className="relative flex-1">
           <Search size={16} strokeWidth={1.5} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-neutral-400)]" />
@@ -58,13 +58,13 @@ function Receitas() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar receitas..."
-            className="flex h-10 w-full rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-2 pl-9 text-sm placeholder:text-[var(--color-neutral-400)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+            className="flex h-10 w-full rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-2 pl-9 text-sm placeholder:text-[var(--color-neutral-400)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
           />
         </div>
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="flex h-10 rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-2 text-sm text-[var(--color-neutral-800)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+          className="flex h-10 rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-2 text-sm text-[var(--color-neutral-800)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
         >
           <option value="">Todos os status</option>
           <option value="pending">Pendente</option>
@@ -87,7 +87,7 @@ function Receitas() {
           description="Ainda não há receitas registradas"
         />
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] shadow-[var(--shadow-card)]">
+        <div className="overflow-hidden rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] shadow-[var(--shadow-card)]">
           <table className="w-full">
             <thead>
               <tr className="border-b border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)]/70">

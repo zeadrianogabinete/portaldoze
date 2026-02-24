@@ -58,7 +58,7 @@ function NotificationsPage() {
       }
     >
       {/* Tabs */}
-      <div className="mb-4 flex gap-1 overflow-x-auto rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-1.5 shadow-[var(--shadow-card)]">
+      <div className="mb-4 flex gap-1 overflow-x-auto rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-1.5 shadow-[var(--shadow-card)]">
         {tabs.map((tab) => (
           <button
             key={tab.value}
@@ -92,7 +92,7 @@ function NotificationsPage() {
               <div
                 key={notification.id}
                 className={cn(
-                  'flex items-start gap-3 rounded-2xl border p-4 transition-colors shadow-[var(--shadow-xs)]',
+                  'flex items-start gap-3 rounded-lg border p-4 transition-colors shadow-[var(--shadow-xs)]',
                   notification.read
                     ? 'border-[var(--color-neutral-200)] bg-[var(--surface-card)]'
                     : 'border-primary-200 bg-primary-50/30',

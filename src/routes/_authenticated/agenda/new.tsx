@@ -91,7 +91,7 @@ function NovaAgenda() {
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="mx-auto max-w-2xl space-y-6 rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-6 shadow-[var(--shadow-card)]"
+        className="mx-auto max-w-2xl space-y-6 rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-6 shadow-[var(--shadow-card)]"
       >
         {/* Título */}
         <div className="space-y-1.5">

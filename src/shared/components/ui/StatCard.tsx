@@ -37,17 +37,17 @@ export function StatCard({ title, value, description, icon: Icon, tone = 'primar
   const palette = toneMap[tone];
 
   return (
-    <Card className="p-6 group hover:border-primary-200/50 hover:shadow-md transition-all">
-      <div className="flex items-center justify-between mb-4">
-        <div className={cn('flex h-12 w-12 items-center justify-center rounded-2xl border transition-transform group-hover:scale-110', palette.chip)}>
-          <Icon size={22} strokeWidth={2} className={palette.icon} />
+    <Card className="p-5 group hover:border-primary-200/50 hover:shadow-md transition-all">
+      <div className="flex items-center justify-between mb-3">
+        <div className={cn('flex h-10 w-10 items-center justify-center rounded-lg border transition-transform group-hover:scale-110', palette.chip)}>
+          <Icon size={20} strokeWidth={2} className={palette.icon} />
         </div>
       </div>
       <div>
         <p className="text-[11px] font-bold uppercase tracking-widest text-[var(--color-neutral-400)] mb-1">
           {title}
         </p>
-        <p className="text-3xl font-bold tracking-tight text-[var(--color-neutral-900)]">
+        <p className="text-2xl font-bold tracking-tight text-[var(--color-neutral-900)]">
           {value}
         </p>
         {description && (

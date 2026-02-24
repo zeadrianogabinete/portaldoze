@@ -49,7 +49,7 @@ function PropostasDeAgenda() {
           {proposals.map((proposal) => (
             <div
               key={proposal.id}
-              className="rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-5 shadow-[var(--shadow-card)]"
+              className="rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-5 shadow-[var(--shadow-card)]"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">

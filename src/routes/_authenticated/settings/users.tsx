@@ -116,7 +116,7 @@ function Usuarios() {
       }
     >
       {/* Tabs */}
-      <div className="mb-4 flex gap-1 rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-1.5 shadow-[var(--shadow-card)]">
+      <div className="mb-4 flex gap-1 rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-1.5 shadow-[var(--shadow-card)]">
         <button
           type="button"
           onClick={() => setTab('all')}
@@ -159,7 +159,7 @@ function Usuarios() {
           {filteredUsers.map((user) => (
             <div
               key={user.id}
-              className="rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-card)]"
+              className="rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-card)]"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">

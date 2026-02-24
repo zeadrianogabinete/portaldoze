@@ -74,7 +74,7 @@ function AgendaDetalhe() {
         </div>
 
         {/* Card principal */}
-        <div className="rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-6 shadow-[var(--shadow-card)]">
+        <div className="rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-6 shadow-[var(--shadow-card)]">
           {agenda.description && (
             <p className="mb-4 text-sm text-[var(--color-neutral-600)]">{agenda.description}</p>
           )}
@@ -168,7 +168,7 @@ function AgendaDetalhe() {
               </button>
               {showDeleteConfirm && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--surface-overlay)]">
-                  <div className="mx-4 max-w-md rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] p-6 shadow-[var(--shadow-lg)]">
+                  <div className="mx-4 max-w-md rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] p-6 shadow-[var(--shadow-lg)]">
                     <h3 className="font-heading text-lg font-semibold text-[var(--color-neutral-800)]">
                       Excluir agenda?
                     </h3>

@@ -62,7 +62,7 @@ function TransacaoDetalhe() {
         </div>
 
         {/* Card */}
-        <div className="rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-6 shadow-[var(--shadow-card)]">
+        <div className="rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-6 shadow-[var(--shadow-card)]">
           <div className="mb-4 flex items-center justify-between">
             <span className="text-xs text-[var(--color-neutral-400)]">#{transaction.transaction_number}</span>
             <span className={cn(
@@ -122,7 +122,7 @@ function TransacaoDetalhe() {
           <button
             type="button"
             onClick={() => setShowDeleteConfirm(true)}
-            className="flex items-center gap-1.5 rounded-xl bg-red-50 px-3 py-2 text-sm font-semibold text-[var(--color-error)] transition-colors hover:bg-red-100"
+            className="flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-2 text-sm font-semibold text-[var(--color-error)] transition-colors hover:bg-red-100"
           >
             <Trash2 size={14} strokeWidth={1.5} />
             Excluir
@@ -132,16 +132,16 @@ function TransacaoDetalhe() {
         {/* Confirmação de exclusão */}
         {showDeleteConfirm && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--surface-overlay)]">
-            <div className="mx-4 max-w-md rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] p-6 shadow-[var(--shadow-lg)]">
+            <div className="mx-4 max-w-md rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] p-6 shadow-[var(--shadow-lg)]">
               <h3 className="font-heading text-lg font-semibold text-[var(--color-neutral-800)]">Excluir transação?</h3>
               <p className="mt-2 text-sm text-[var(--color-neutral-500)]">Esta ação não pode ser desfeita.</p>
               <div className="mt-4 flex justify-end gap-3">
-                <button type="button" onClick={() => setShowDeleteConfirm(false)} className="rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] px-4 py-2 text-sm font-semibold text-[var(--color-neutral-700)]">Cancelar</button>
+                <button type="button" onClick={() => setShowDeleteConfirm(false)} className="rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] px-4 py-2 text-sm font-semibold text-[var(--color-neutral-700)]">Cancelar</button>
                 <button
                   type="button"
                   onClick={() => remove.mutate(transaction.id, { onSuccess: () => navigate({ to: '/financial' }) })}
                   disabled={remove.isPending}
-                  className="rounded-xl bg-[var(--color-error)] px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+                  className="rounded-lg bg-[var(--color-error)] px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
                 >
                   {remove.isPending ? 'Excluindo...' : 'Excluir'}
                 </button>

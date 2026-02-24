@@ -17,10 +17,10 @@ function FinancialPage() {
 
   return (
     <PageContainer>
-      <div className="mb-6 rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-5 shadow-[var(--shadow-card)]">
+      <div className="mb-6 rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-5 shadow-[var(--shadow-card)]">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="rounded-xl bg-primary-500/12 p-2.5 text-primary-600">
+            <div className="rounded-lg bg-primary-500/12 p-2.5 text-primary-600">
               <Wallet size={20} strokeWidth={1.75} />
             </div>
             <div>
@@ -40,7 +40,7 @@ function FinancialPage() {
           <button
             type="button"
             onClick={() => setCurrentMonth((d) => subMonths(d, 1))}
-            className="rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] p-2 text-[var(--color-neutral-600)] transition-colors hover:bg-[var(--color-neutral-100)]"
+            className="rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] p-2 text-[var(--color-neutral-600)] transition-colors hover:bg-[var(--color-neutral-100)]"
             aria-label="Mês anterior"
           >
             <ChevronLeft size={20} strokeWidth={1.5} />
@@ -51,7 +51,7 @@ function FinancialPage() {
           <button
             type="button"
             onClick={() => setCurrentMonth((d) => addMonths(d, 1))}
-            className="rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] p-2 text-[var(--color-neutral-600)] transition-colors hover:bg-[var(--color-neutral-100)]"
+            className="rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] p-2 text-[var(--color-neutral-600)] transition-colors hover:bg-[var(--color-neutral-100)]"
             aria-label="Próximo mês"
           >
             <ChevronRight size={20} strokeWidth={1.5} />
@@ -82,7 +82,7 @@ function FinancialTabs() {
   ];
 
   return (
-    <div className="mb-6 overflow-x-auto rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-1.5 shadow-[var(--shadow-card)]">
+    <div className="mb-6 overflow-x-auto rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-1.5 shadow-[var(--shadow-card)]">
       <div className="flex gap-1">
         {tabs.map((tab) => {
           const active = !!matchRoute({ to: tab.href });
@@ -91,7 +91,7 @@ function FinancialTabs() {
               key={tab.href}
               to={tab.href}
               className={cn(
-                'whitespace-nowrap rounded-xl px-3 py-2 text-xs font-medium transition-colors sm:px-4 sm:py-2.5 sm:text-sm',
+                'whitespace-nowrap rounded-lg px-3 py-2 text-xs font-medium transition-colors sm:px-4 sm:py-2.5 sm:text-sm',
                 active
                   ? 'bg-primary-500/12 text-primary-700'
                   : 'text-[var(--color-neutral-500)] hover:bg-[var(--color-neutral-100)] hover:text-[var(--color-neutral-700)]',

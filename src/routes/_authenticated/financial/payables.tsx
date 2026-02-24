@@ -107,7 +107,7 @@ function PayablesSection({
       </div>
 
       {/* Tabela desktop */}
-      <div className="hidden overflow-hidden rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] shadow-[var(--shadow-card)] sm:block">
+      <div className="hidden overflow-hidden rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] shadow-[var(--shadow-card)] sm:block">
         <table className="w-full">
           <thead>
             <tr className="border-b border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)]/70">
@@ -291,7 +291,7 @@ function ContasAPagar() {
       </div>
 
       {/* Busca */}
-      <div className="mb-4 rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-card)] sm:p-5">
+      <div className="mb-4 rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-card)] sm:p-5">
         <div className="relative">
           <Search size={16} strokeWidth={1.5} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-neutral-400)]" />
           <input
@@ -299,7 +299,7 @@ function ContasAPagar() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar contas a pagar..."
-            className="flex h-10 w-full rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-2 pl-9 text-sm placeholder:text-[var(--color-neutral-400)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+            className="flex h-10 w-full rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-2 pl-9 text-sm placeholder:text-[var(--color-neutral-400)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
           />
         </div>
       </div>

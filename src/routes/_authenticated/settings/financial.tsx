@@ -63,14 +63,14 @@ function ConfigFinanceiro() {
       <div className="space-y-6">
         {/* Cota CEAP */}
         {quotaConfig && (
-          <div className="rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-5 shadow-[var(--shadow-card)]">
+          <div className="rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-5 shadow-[var(--shadow-card)]">
             <h3 className="font-heading text-base font-semibold text-[var(--color-neutral-800)]">Cota CEAP</h3>
             <p className="mt-1 text-sm text-[var(--color-neutral-500)]">Limite mensal: {formatCurrency(quotaConfig.monthly_limit)}</p>
           </div>
         )}
 
         {/* Naturezas */}
-        <div className="rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-5 shadow-[var(--shadow-card)]">
+        <div className="rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-5 shadow-[var(--shadow-card)]">
           <h3 className="mb-3 font-heading text-base font-semibold text-[var(--color-neutral-800)]">
             Naturezas de Despesa ({natures?.length ?? 0})
           </h3>
@@ -98,7 +98,7 @@ function ConfigFinanceiro() {
         </div>
 
         {/* Categorias */}
-        <div className="rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-5 shadow-[var(--shadow-card)]">
+        <div className="rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-5 shadow-[var(--shadow-card)]">
           <h3 className="mb-3 font-heading text-base font-semibold text-[var(--color-neutral-800)]">
             Categorias ({categories?.length ?? 0})
           </h3>
@@ -112,7 +112,7 @@ function ConfigFinanceiro() {
         </div>
 
         {/* Fontes de Recurso */}
-        <div className="rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-5 shadow-[var(--shadow-card)]">
+        <div className="rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-5 shadow-[var(--shadow-card)]">
           <h3 className="mb-3 font-heading text-base font-semibold text-[var(--color-neutral-800)]">
             Fontes de Recurso ({sources?.length ?? 0})
           </h3>

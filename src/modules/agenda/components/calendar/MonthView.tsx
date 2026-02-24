@@ -46,7 +46,7 @@ export function MonthView({ currentDate }: MonthViewProps) {
   };
 
   return (
-    <div className="overflow-hidden rounded-2xl">
+    <div className="overflow-hidden rounded-lg">
       {/* Header dias da semana */}
       <div className="grid grid-cols-7 border-b border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)]/70">
         {weekDays.map((day) => (

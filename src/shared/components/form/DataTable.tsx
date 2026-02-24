@@ -45,7 +45,7 @@ export function DataTable<T>({
   }
 
   return (
-    <div className="overflow-x-auto rounded-2xl border border-[var(--color-neutral-200)]/60 bg-[var(--surface-card)] shadow-card">
+    <div className="overflow-x-auto rounded-lg border border-[var(--color-neutral-200)]/60 bg-[var(--surface-card)] shadow-card">
       <table className="w-full">
         <thead>
           <tr className="border-b border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)]">

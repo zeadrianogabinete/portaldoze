@@ -61,7 +61,7 @@ function AgendaPage() {
         </div>
       }
     >
-      <div className="mb-4 rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-card)] sm:p-5">
+      <div className="mb-4 rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-card)] sm:p-5">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <CalendarDays size={18} className="text-primary-600" />
@@ -104,7 +104,7 @@ function AgendaPage() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] shadow-[var(--shadow-card)]">
+      <div className="rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] shadow-[var(--shadow-card)]">
         {viewMode === 'month' && <MonthView currentDate={currentDate} />}
         {viewMode === 'list' && <ListView currentDate={currentDate} />}
         {(viewMode === 'week' || viewMode === 'day') && (

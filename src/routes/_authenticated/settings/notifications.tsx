@@ -99,7 +99,7 @@ function ConfigNotificacoes() {
         </div>
       ) : (
         <div className="mx-auto max-w-xl space-y-4">
-          <div className="overflow-hidden rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] shadow-[var(--shadow-card)]">
+          <div className="overflow-hidden rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] shadow-[var(--shadow-card)]">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)]/70">

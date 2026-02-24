@@ -73,7 +73,7 @@ function Permissoes() {
         </Link>
       }
     >
-      <div className="overflow-x-auto rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] shadow-[var(--shadow-card)]">
+      <div className="overflow-x-auto rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] shadow-[var(--shadow-card)]">
         <table className="w-full">
           <thead>
             <tr className="border-b border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)]/70">

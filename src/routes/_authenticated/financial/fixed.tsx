@@ -30,7 +30,7 @@ function DespesasFixas() {
           {fixedExpenses.map((expense) => (
             <div
               key={expense.id}
-              className="flex items-center justify-between rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-card)]"
+              className="flex items-center justify-between rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-card)]"
             >
               <div>
                 <p className="text-sm font-medium text-[var(--color-neutral-800)]">{expense.description}</p>

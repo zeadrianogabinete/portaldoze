@@ -31,7 +31,7 @@ export function Header({ title, onMenuClick }: HeaderProps) {
             <button
               type="button"
               onClick={onMenuClick}
-              className="rounded-xl p-2.5 text-[var(--color-neutral-500)] transition-all hover:bg-[var(--color-neutral-100)] hover:text-[var(--color-neutral-800)] lg:hidden"
+              className="rounded-lg p-2.5 text-[var(--color-neutral-500)] transition-all hover:bg-[var(--color-neutral-100)] hover:text-[var(--color-neutral-800)] lg:hidden"
               aria-label="Abrir menu"
             >
               <Menu size={22} strokeWidth={2} />
@@ -73,7 +73,7 @@ export function Header({ title, onMenuClick }: HeaderProps) {
           <button
             type="button"
             onClick={toggleTheme}
-            className="rounded-xl p-2.5 text-[var(--color-neutral-500)] transition-all hover:bg-[var(--color-neutral-100)] hover:text-primary-500"
+            className="rounded-lg p-2.5 text-[var(--color-neutral-500)] transition-all hover:bg-[var(--color-neutral-100)] hover:text-primary-500"
             aria-label={isDark ? 'Ativar tema claro' : 'Ativar tema escuro'}
           >
             {isDark ? <Sun size={20} /> : <Moon size={20} />}
@@ -82,7 +82,7 @@ export function Header({ title, onMenuClick }: HeaderProps) {
           {/* Notifications */}
           <Link
             to="/notifications"
-            className="relative rounded-xl p-2.5 text-[var(--color-neutral-500)] transition-all hover:bg-[var(--color-neutral-100)] hover:text-primary-500 group"
+            className="relative rounded-lg p-2.5 text-[var(--color-neutral-500)] transition-all hover:bg-[var(--color-neutral-100)] hover:text-primary-500 group"
           >
             <Bell size={20} className="transition-transform group-hover:rotate-12" />
             {unreadCount > 0 && (
@@ -97,9 +97,9 @@ export function Header({ title, onMenuClick }: HeaderProps) {
             <button
               type="button"
               onClick={() => setShowUserMenu(!showUserMenu)}
-              className="flex items-center gap-2.5 rounded-2xl border border-[var(--color-neutral-200)] bg-white p-1 pr-3 shadow-sm transition-all hover:border-primary-200 hover:shadow-md active:scale-95"
+              className="flex items-center gap-2.5 rounded-lg border border-[var(--color-neutral-200)] bg-white p-1 pr-3 shadow-sm transition-all hover:border-primary-200 hover:shadow-md active:scale-95"
             >
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-sm font-bold text-white shadow-md shadow-primary-500/10">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500 to-primary-600 text-sm font-bold text-white shadow-md shadow-primary-500/10">
                 {profile?.full_name?.charAt(0)?.toUpperCase() || '?'}
               </div>
               <div className="hidden flex-col items-start md:flex">
@@ -123,7 +123,7 @@ export function Header({ title, onMenuClick }: HeaderProps) {
                 <motion.div
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  className="absolute right-0 top-full z-50 mt-3 w-64 rounded-3xl border border-[var(--color-neutral-200)]/80 bg-white p-2 shadow-float backdrop-blur-sm"
+                  className="absolute right-0 top-full z-50 mt-3 w-64 rounded-xl border border-[var(--color-neutral-200)]/80 bg-white p-2 shadow-float backdrop-blur-sm"
                 >
                   <div className="px-4 py-3 mb-2">
                     <p className="text-sm font-bold text-[var(--color-neutral-900)]">
@@ -137,7 +137,7 @@ export function Header({ title, onMenuClick }: HeaderProps) {
                   <Link
                     to="/settings"
                     onClick={() => setShowUserMenu(false)}
-                    className="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-[var(--color-neutral-600)] transition-all rounded-2xl hover:bg-primary-50 hover:text-primary-600 group"
+                    className="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-[var(--color-neutral-600)] transition-all rounded-lg hover:bg-primary-50 hover:text-primary-600 group"
                   >
                     <Settings size={18} className="transition-transform group-hover:rotate-45" />
                     Configurações
@@ -148,7 +148,7 @@ export function Header({ title, onMenuClick }: HeaderProps) {
                       setShowUserMenu(false);
                       logout();
                     }}
-                    className="flex w-full items-center gap-3 px-4 py-3 text-sm font-semibold text-red-500 transition-all rounded-2xl hover:bg-red-50"
+                    className="flex w-full items-center gap-3 px-4 py-3 text-sm font-semibold text-red-500 transition-all rounded-lg hover:bg-red-50"
                   >
                     <LogOut size={18} />
                     Sair da conta

@@ -76,7 +76,7 @@ function ConfigAgenda() {
         </Link>
       }
     >
-      <div className="mx-auto max-w-xl space-y-6 rounded-2xl border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-6 shadow-[var(--shadow-card)]">
+      <div className="mx-auto max-w-xl space-y-6 rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-6 shadow-[var(--shadow-card)]">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm font-medium text-[var(--color-neutral-800)]">Exigir aprovação</p>
