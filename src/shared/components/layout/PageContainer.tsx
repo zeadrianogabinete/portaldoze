@@ -35,6 +35,8 @@ export function PageContainer({
     };
   }, [title, breadcrumbs, setPageTitle, setBreadcrumbs]);
 
+  const hasSubHeader = subtitle || actions;
+
   return (
     <div className={cn('min-h-full bg-transparent', className)}>
       <motion.div
@@ -42,23 +44,15 @@ export function PageContainer({
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -10 }}
         transition={{ duration: 0.35, ease: 'easeOut' }}
-        className={cn('mx-auto w-full px-4 py-6 sm:px-6 lg:px-10 lg:py-8', !fullWidth && maxWidth)}
+        className={cn('mx-auto w-full px-4 py-6 sm:px-6 lg:px-8 lg:py-8', !fullWidth && maxWidth)}
       >
-        {/* Modern Page Header */}
-        {(title || actions) && (
-          <div className="mb-8 flex flex-col gap-4 pb-6 border-b border-[var(--color-neutral-200)]/50 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              {title && (
-                <h1 className="font-heading text-3xl font-bold tracking-tight text-[var(--color-neutral-900)] sm:text-4xl">
-                  {title}
-                </h1>
-              )}
-              {subtitle && (
-                <p className="mt-2 text-base font-medium text-[var(--color-neutral-500)]">
-                  {subtitle}
-                </p>
-              )}
-            </div>
+        {hasSubHeader && (
+          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            {subtitle && (
+              <p className="text-sm font-medium text-[var(--color-neutral-500)]">
+                {subtitle}
+              </p>
+            )}
             {actions && (
               <div className="flex items-center gap-3 self-start sm:self-center">
                 {actions}

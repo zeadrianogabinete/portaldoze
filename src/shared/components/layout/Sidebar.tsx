@@ -57,7 +57,7 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-2 text-[var(--color-neutral-400)] transition-colors hover:bg-white/10 hover:text-white"
+            className="rounded-lg p-2 text-[var(--sidebar-text)] transition-colors hover:bg-white/10 hover:text-white"
             aria-label="Fechar menu lateral"
           >
             <X size={20} />
@@ -90,7 +90,7 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
 
         {/* Config Section */}
         <div className="pt-5 border-t border-white/10">
-          <p className="mb-3 px-4 text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-neutral-400)]">
+          <p className="mb-3 px-4 text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--sidebar-text-disabled)]">
             Configurar
           </p>
           <div className="space-y-1">
@@ -137,7 +137,7 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
         <button
           type="button"
           onClick={() => logout()}
-          className="mt-2 flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-[var(--color-neutral-400)] transition-all hover:bg-red-500/10 hover:text-red-400 group"
+          className="mt-2 flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-[var(--sidebar-text)] transition-all hover:bg-red-500/10 hover:text-red-400 group"
         >
           <LogOut size={18} className="transition-transform group-hover:translate-x-0.5" />
           Sair
