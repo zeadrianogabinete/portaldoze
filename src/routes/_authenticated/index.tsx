@@ -227,7 +227,7 @@ function DashboardPage() {
                 <Link
                   key={link.href}
                   to={link.href}
-                  className="group flex items-center gap-4 rounded-xl border border-[var(--color-neutral-200)]/60 bg-white p-4 shadow-sm transition-all hover:border-primary-200 hover:shadow-md active:scale-98"
+                  className="group flex items-center gap-4 rounded-xl border border-[var(--color-neutral-200)]/60 bg-[var(--surface-card)] p-4 shadow-sm transition-all hover:border-primary-200 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98]"
                 >
                   <div className={cn('flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border transition-colors', link.color)}>
                     <link.icon size={22} strokeWidth={2} />
@@ -265,7 +265,7 @@ function DashboardPage() {
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--color-neutral-50)] text-[var(--color-neutral-400)] transition-all group-hover:bg-primary-50 group-hover:text-primary-500 border border-[var(--color-neutral-200)]/40">
                 <activity.icon size={22} />
               </div>
-              <div className="flex-1 pt-0.5 border-b border-[var(--color-neutral-100)] pb-6 last:border-0">
+              <div className="flex-1 pt-0.5 border-b border-[var(--color-neutral-100)] pb-6 last:border-b-0 last:pb-0">
                 <p className="text-base font-bold text-[var(--color-neutral-800)] group-hover:text-primary-600 transition-colors">
                   {activity.text}
                 </p>

@@ -66,7 +66,7 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto px-4 py-4 space-y-2 custom-scrollbar">
+      <nav className="flex-1 overflow-y-auto px-4 py-4 space-y-2 scrollbar-sidebar">
         <div className="space-y-1">
           {navGroups.map((group) => {
             if (
@@ -164,8 +164,8 @@ function SidebarGroup({
       <div className="px-4 py-3 rounded-lg">
         <div className="flex items-center gap-3.5 text-[var(--sidebar-text-disabled)]">
           <group.icon size={19} className="shrink-0 text-[var(--sidebar-text-disabled)]" />
-          <span className="flex-1 text-sm font-medium">{group.title}</span>
-          <Badge variant="neutral" className="border-white/8 bg-white/5 text-[9px] font-semibold tracking-wide py-0.5 px-2">
+          <span className="flex-1 truncate text-sm font-medium">{group.title}</span>
+          <Badge variant="neutral" className="shrink-0 border-white/8 bg-white/5 text-[9px] font-semibold tracking-wide py-0.5 px-2">
             EM BREVE
           </Badge>
         </div>
@@ -197,7 +197,7 @@ function SidebarGroup({
       </Collapsible.Trigger>
 
       <Collapsible.Content className="overflow-hidden data-[state=closed]:animate-collapse data-[state=open]:animate-expand">
-        <div className="ml-6 mt-1.5 space-y-0.5 border-l border-white/8 py-1.5 pl-4">
+        <div className="ml-5 mt-1.5 space-y-0.5 border-l border-white/8 py-1.5 pl-3">
           {group.items.map((subItem) => {
             const active = isActive(subItem.href);
             return (
@@ -218,7 +218,7 @@ function SidebarGroup({
                     className="absolute inset-y-1.5 left-0 w-1 rounded-full bg-primary-500"
                   />
                 )}
-                <span>{subItem.title}</span>
+                <span className="truncate">{subItem.title}</span>
               </Link>
             );
           })}

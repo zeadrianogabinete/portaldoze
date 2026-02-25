@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from '@tanstack/react-router';
 import { Menu, Bell, LogOut, Settings, Moon, Sun, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -19,12 +19,24 @@ export function Header({ title, onMenuClick }: HeaderProps) {
   const { pageTitle, breadcrumbs } = usePageContext();
   const [showUserMenu, setShowUserMenu] = useState(false);
 
+  const closeUserMenu = useCallback(() => setShowUserMenu(false), []);
+
+  // Fechar menu com Escape
+  useEffect(() => {
+    if (!showUserMenu) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeUserMenu();
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [showUserMenu, closeUserMenu]);
+
   const displayTitle = title || pageTitle || 'Painel Administrativo';
   const hasBreadcrumbs = breadcrumbs.length > 0;
 
   return (
-    <header className="sticky top-0 z-30 border-b border-[var(--color-neutral-200)]/40 bg-[var(--surface-card)]/85 backdrop-blur-xl shadow-[var(--shadow-header)]">
-      <div className="relative flex h-[72px] items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-30 relative border-b border-[var(--color-neutral-200)]/40 bg-[var(--surface-card)]/85 backdrop-blur-xl shadow-[var(--shadow-header)]">
+      <div className="flex h-[72px] items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Left Section */}
         <div className="flex items-center gap-4">
           {onMenuClick && (
@@ -97,7 +109,9 @@ export function Header({ title, onMenuClick }: HeaderProps) {
             <button
               type="button"
               onClick={() => setShowUserMenu(!showUserMenu)}
-              className="flex items-center gap-2.5 rounded-lg border border-[var(--color-neutral-200)] bg-white p-1 pr-3 shadow-sm transition-all hover:border-primary-200 hover:shadow-md active:scale-95"
+              className="flex items-center gap-2.5 rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-1 pr-3 shadow-sm transition-all hover:border-primary-200 hover:shadow-md active:scale-95"
+              aria-expanded={showUserMenu}
+              aria-haspopup="true"
             >
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500 to-primary-600 text-sm font-bold text-white shadow-md shadow-primary-500/10">
                 {profile?.full_name?.charAt(0)?.toUpperCase() || '?'}
@@ -118,12 +132,13 @@ export function Header({ title, onMenuClick }: HeaderProps) {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   className="fixed inset-0 z-40"
-                  onClick={() => setShowUserMenu(false)}
+                  onClick={closeUserMenu}
                 />
                 <motion.div
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  className="absolute right-0 top-full z-50 mt-3 w-64 rounded-xl border border-[var(--color-neutral-200)]/80 bg-white p-2 shadow-float backdrop-blur-sm"
+                  className="absolute right-0 top-full z-50 mt-3 w-64 rounded-xl border border-[var(--color-neutral-200)]/80 bg-[var(--surface-card)] p-2 shadow-[var(--shadow-float)] backdrop-blur-sm"
+                  role="menu"
                 >
                   <div className="px-4 py-3 mb-2">
                     <p className="text-sm font-bold text-[var(--color-neutral-900)]">
@@ -136,8 +151,9 @@ export function Header({ title, onMenuClick }: HeaderProps) {
                   <div className="h-px bg-[var(--color-neutral-100)] mx-2 mb-2" />
                   <Link
                     to="/settings"
-                    onClick={() => setShowUserMenu(false)}
-                    className="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-[var(--color-neutral-600)] transition-all rounded-lg hover:bg-primary-50 hover:text-primary-600 group"
+                    onClick={closeUserMenu}
+                    className="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-[var(--color-neutral-600)] transition-all rounded-lg hover:bg-primary-500/10 hover:text-primary-500 group"
+                    role="menuitem"
                   >
                     <Settings size={18} className="transition-transform group-hover:rotate-45" />
                     Configurações
@@ -145,10 +161,11 @@ export function Header({ title, onMenuClick }: HeaderProps) {
                   <button
                     type="button"
                     onClick={() => {
-                      setShowUserMenu(false);
+                      closeUserMenu();
                       logout();
                     }}
-                    className="flex w-full items-center gap-3 px-4 py-3 text-sm font-semibold text-red-500 transition-all rounded-lg hover:bg-red-50"
+                    className="flex w-full items-center gap-3 px-4 py-3 text-sm font-semibold text-red-500 transition-all rounded-lg hover:bg-red-500/10"
+                    role="menuitem"
                   >
                     <LogOut size={18} />
                     Sair da conta
@@ -158,6 +175,12 @@ export function Header({ title, onMenuClick }: HeaderProps) {
             )}
           </div>
         </div>
+      </div>
+
+      {/* Faixas de identidade visual */}
+      <div className="absolute bottom-0 left-0 w-full">
+        <div className="h-[3px] w-full bg-[var(--color-accent-yellow)]" />
+        <div className="h-[3px] w-full bg-[var(--color-accent-green)]" />
       </div>
     </header>
   );

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Outlet } from '@tanstack/react-router';
+import { useState, useRef, useEffect } from 'react';
+import { Outlet, useLocation } from '@tanstack/react-router';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
@@ -9,6 +9,13 @@ import { PageProvider } from '@/shared/context/PageContext';
 export function AppShell() {
   const isMobile = useIsMobile();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const mainRef = useRef<HTMLElement>(null);
+  const { pathname } = useLocation();
+
+  // Scroll para o topo ao mudar de rota
+  useEffect(() => {
+    mainRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [pathname]);
 
   return (
     <PageProvider>
@@ -47,7 +54,7 @@ export function AppShell() {
         {/* Conteúdo principal */}
         <div className="flex flex-1 flex-col overflow-x-hidden">
           <Header onMenuClick={() => setSidebarOpen(true)} />
-          <main className="flex-1 overflow-y-auto bg-[var(--surface-page)] custom-scrollbar">
+          <main ref={mainRef} className="flex-1 overflow-y-auto bg-[var(--surface-page)] custom-scrollbar">
             <Outlet />
           </main>
         </div>
