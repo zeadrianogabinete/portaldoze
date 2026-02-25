@@ -34,7 +34,7 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
   return (
     <aside
       className={cn(
-        'flex h-full flex-col border-r border-white/5 bg-[var(--sidebar-bg)] shadow-[var(--shadow-float)] transition-all duration-300',
+        'flex h-full flex-col border-r border-white/5 bg-sidebar shadow-float transition-all duration-300',
         mobile ? 'w-full' : 'w-[280px]',
       )}
     >
@@ -57,7 +57,7 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-2 text-[var(--sidebar-text)] transition-colors hover:bg-white/10 hover:text-white"
+            className="rounded-lg p-2 text-sidebar-text transition-colors hover:bg-white/10 hover:text-white"
             aria-label="Fechar menu lateral"
           >
             <X size={20} />
@@ -90,7 +90,7 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
 
         {/* Config Section */}
         <div className="pt-5 border-t border-white/10">
-          <p className="mb-3 px-4 text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--sidebar-text-disabled)]">
+          <p className="mb-3 px-4 text-[10px] font-bold uppercase tracking-[0.2em] text-sidebar-muted">
             Configurar
           </p>
           <div className="space-y-1">
@@ -107,10 +107,10 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
                     'group flex items-center gap-3.5 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200',
                     active
                       ? 'bg-primary-500/10 text-primary-400 shadow-[inset_0_0_0_1px_rgba(59,130,246,0.2)]'
-                      : 'text-[var(--sidebar-text)] hover:bg-white/5 hover:text-white',
+                      : 'text-sidebar-text hover:bg-white/5 hover:text-white',
                   )}
                 >
-                  <item.icon size={19} className={cn('transition-colors', active ? 'text-primary-400' : 'text-[var(--sidebar-text)] group-hover:text-white')} />
+                  <item.icon size={19} className={cn('transition-colors', active ? 'text-primary-400' : 'text-sidebar-text group-hover:text-white')} />
                   {item.title}
                 </Link>
               );
@@ -129,7 +129,7 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
             <p className="truncate text-sm font-semibold text-white">
               {profile?.full_name}
             </p>
-            <p className="truncate text-[11px] font-medium text-[var(--sidebar-text)]">
+            <p className="truncate text-[11px] font-medium text-sidebar-text">
               {profile?.role}
             </p>
           </div>
@@ -137,7 +137,7 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
         <button
           type="button"
           onClick={() => logout()}
-          className="mt-2 flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-[var(--sidebar-text)] transition-all hover:bg-red-500/10 hover:text-red-400 group"
+          className="mt-2 flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-sidebar-text transition-all hover:bg-red-500/10 hover:text-red-400 group"
         >
           <LogOut size={18} className="transition-transform group-hover:translate-x-0.5" />
           Sair
@@ -162,8 +162,8 @@ function SidebarGroup({
   if (group.disabled) {
     return (
       <div className="px-4 py-3 rounded-lg">
-        <div className="flex items-center gap-3.5 text-[var(--sidebar-text-disabled)]">
-          <group.icon size={19} className="shrink-0 text-[var(--sidebar-text-disabled)]" />
+        <div className="flex items-center gap-3.5 text-sidebar-muted">
+          <group.icon size={19} className="shrink-0 text-sidebar-muted" />
           <span className="flex-1 truncate text-sm font-medium">{group.title}</span>
           <Badge variant="neutral" className="shrink-0 border-white/8 bg-white/5 text-[9px] font-semibold tracking-wide py-0.5 px-2">
             EM BREVE
@@ -183,15 +183,15 @@ function SidebarGroup({
           type="button"
           className={cn(
             'flex w-full items-center gap-3.5 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 group/btn',
-            'text-[var(--sidebar-text)] hover:bg-white/5 hover:text-white',
+            'text-sidebar-text hover:bg-white/5 hover:text-white',
             groupActive && 'bg-white/[0.06] text-white',
           )}
         >
-          <group.icon size={19} className={cn('shrink-0 transition-colors', groupActive ? 'text-primary-400' : 'text-[var(--sidebar-text)] group-hover/btn:text-white')} />
+          <group.icon size={19} className={cn('shrink-0 transition-colors', groupActive ? 'text-primary-400' : 'text-sidebar-text group-hover/btn:text-white')} />
           <span className="flex-1 text-left">{group.title}</span>
           <ChevronDown
             size={16}
-            className="shrink-0 text-[var(--sidebar-text)] transition-transform duration-200 group-data-[state=closed]/collapsible:-rotate-90 group-data-[state=open]/collapsible:rotate-0"
+            className="shrink-0 text-sidebar-text transition-transform duration-200 group-data-[state=closed]/collapsible:-rotate-90 group-data-[state=open]/collapsible:rotate-0"
           />
         </button>
       </Collapsible.Trigger>
@@ -209,7 +209,7 @@ function SidebarGroup({
                   'relative flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium transition-all duration-200',
                   active
                     ? 'bg-primary-500/10 text-primary-400'
-                    : 'text-[var(--sidebar-text)] hover:bg-white/5 hover:text-white',
+                    : 'text-sidebar-text hover:bg-white/5 hover:text-white',
                 )}
               >
                 {active && (

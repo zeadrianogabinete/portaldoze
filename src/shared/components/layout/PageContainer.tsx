@@ -49,7 +49,7 @@ export function PageContainer({
         {hasSubHeader && (
           <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             {subtitle && (
-              <p className="text-sm font-medium text-[var(--color-neutral-500)]">
+              <p className="text-sm font-medium text-neutral-500">
                 {subtitle}
               </p>
             )}

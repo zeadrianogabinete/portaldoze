@@ -14,16 +14,42 @@
   --color-primary-900: #1d2888;
   --color-primary-950: #161c53;
 
-  /* === COLORS === */
+  /* === ACCENT === */
   --color-accent-yellow: #facc15;
   --color-accent-green: #22c55e;
   --color-accent-blue: #3b82f6;
-  
+
   /* === SEMANTICS === */
   --color-success: #10b981;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
   --color-info: #3b82f6;
+
+  /* === NEUTRALS (Slate based — overrides Tailwind default neutrals) === */
+  --color-neutral-0: #ffffff;
+  --color-neutral-50: #f8fafc;
+  --color-neutral-100: #f1f5f9;
+  --color-neutral-200: #e2e8f0;
+  --color-neutral-300: #cbd5e1;
+  --color-neutral-400: #94a3b8;
+  --color-neutral-500: #64748b;
+  --color-neutral-600: #475569;
+  --color-neutral-700: #334155;
+  --color-neutral-800: #1e293b;
+  --color-neutral-900: #0f172a;
+  --color-neutral-950: #020617;
+
+  /* === SIDEBAR === */
+  --color-sidebar: #0f172a;
+  --color-sidebar-text: #cbd5e1;
+  --color-sidebar-active: #ffffff;
+  --color-sidebar-accent: #3b82f6;
+  --color-sidebar-muted: #94a3b8;
+
+  /* === SURFACES === */
+  --color-surface-page: #f1f5f9;
+  --color-surface-card: #ffffff;
+  --color-surface-elevated: #ffffff;
 
   /* === TYPOGRAPHY === */
   --font-heading: 'Outfit', 'Plus Jakarta Sans', sans-serif;
@@ -42,30 +68,19 @@
 }
 
 :root {
-  /* === NEUTRALS (Slate based) === */
-  --color-neutral-0: #ffffff;
-  --color-neutral-50: #f8fafc;
-  --color-neutral-100: #f1f5f9;
-  --color-neutral-200: #e2e8f0;
-  --color-neutral-300: #cbd5e1;
-  --color-neutral-400: #94a3b8;
-  --color-neutral-500: #64748b;
-  --color-neutral-600: #475569;
-  --color-neutral-700: #334155;
-  --color-neutral-800: #1e293b;
-  --color-neutral-900: #0f172a;
-  --color-neutral-950: #020617;
+  /*
+   * Aliases para compatibilidade com componentes que usam var(--nome).
+   * Novos componentes devem usar utilities nativas: bg-surface-card, text-neutral-500, etc.
+   */
+  --sidebar-bg: var(--color-sidebar);
+  --sidebar-text: var(--color-sidebar-text);
+  --sidebar-text-active: var(--color-sidebar-active);
+  --sidebar-accent: var(--color-sidebar-accent);
+  --sidebar-text-disabled: var(--color-sidebar-muted);
 
-  /* === UI BASICS === */
-  --sidebar-bg: #0f172a;
-  --sidebar-text: #cbd5e1;
-  --sidebar-text-active: #ffffff;
-  --sidebar-accent: #3b82f6;
-  --sidebar-text-disabled: #94a3b8;
-
-  --surface-page: #f1f5f9;
-  --surface-card: #ffffff;
-  --surface-elevated: #ffffff;
+  --surface-page: var(--color-surface-page);
+  --surface-card: var(--color-surface-card);
+  --surface-elevated: var(--color-surface-elevated);
   --surface-overlay: rgba(15, 23, 42, 0.6);
 
   /* === BORDER RADIUS === */
@@ -90,10 +105,10 @@
   --color-neutral-800: #f1f5f9;
   --color-neutral-900: #f8fafc;
 
-  --sidebar-bg: #020617;
-  --surface-page: #080e1d;
-  --surface-card: #0f172a;
-  --surface-elevated: #1e293b;
+  --color-sidebar: #020617;
+  --color-surface-page: #080e1d;
+  --color-surface-card: #0f172a;
+  --color-surface-elevated: #1e293b;
   --surface-overlay: rgba(2, 6, 23, 0.8);
 
   --shadow-card: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 4px 12px rgba(0, 0, 0, 0.4);
@@ -108,7 +123,7 @@
 
 body {
   font-family: var(--font-body);
-  background-color: var(--surface-page);
+  background-color: var(--color-surface-page);
   color: var(--color-neutral-800);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

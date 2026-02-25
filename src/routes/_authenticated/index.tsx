@@ -181,7 +181,7 @@ function DashboardPage() {
       <div className="grid gap-6 lg:grid-cols-3 mb-8">
         <div className="lg:col-span-2">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="font-heading text-2xl font-bold text-[var(--color-neutral-900)] tracking-tight">
+            <h2 className="font-heading text-2xl font-bold text-neutral-900 tracking-tight">
               Atividades do Mandato
             </h2>
           </div>
@@ -217,7 +217,7 @@ function DashboardPage() {
         </div>
 
         <div>
-          <h2 className="font-heading text-2xl font-bold text-[var(--color-neutral-900)] mb-6 tracking-tight">
+          <h2 className="font-heading text-2xl font-bold text-neutral-900 mb-6 tracking-tight">
             Acesso Rápido
           </h2>
           <div className="grid gap-4">
@@ -227,20 +227,20 @@ function DashboardPage() {
                 <Link
                   key={link.href}
                   to={link.href}
-                  className="group flex items-center gap-4 rounded-xl border border-[var(--color-neutral-200)]/60 bg-[var(--surface-card)] p-4 shadow-sm transition-all hover:border-primary-200 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98]"
+                  className="group flex items-center gap-4 rounded-xl border border-neutral-200/60 bg-surface-card p-4 shadow-sm transition-all hover:border-primary-200 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98]"
                 >
                   <div className={cn('flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border transition-colors', link.color)}>
                     <link.icon size={22} strokeWidth={2} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-[var(--color-neutral-800)] text-sm">
+                    <h3 className="font-bold text-neutral-800 text-sm">
                       {link.title}
                     </h3>
-                    <p className="text-xs text-[var(--color-neutral-500)] truncate">
+                    <p className="text-xs text-neutral-500 truncate">
                       {link.description}
                     </p>
                   </div>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-neutral-50)] text-[var(--color-neutral-400)] transition-all group-hover:bg-primary-50 group-hover:text-primary-500">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-50 text-neutral-400 transition-all group-hover:bg-primary-50 group-hover:text-primary-500">
                     <ArrowRight size={16} />
                   </div>
                 </Link>
@@ -252,24 +252,24 @@ function DashboardPage() {
       <Card className="p-6">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="font-heading text-2xl font-bold text-[var(--color-neutral-900)] tracking-tight">
+            <h2 className="font-heading text-2xl font-bold text-neutral-900 tracking-tight">
               Últimas Campanhas & Atividades
             </h2>
-            <p className="text-sm text-[var(--color-neutral-500)] mt-1">Registros recentes de todas as frentes de trabalho</p>
+            <p className="text-sm text-neutral-500 mt-1">Registros recentes de todas as frentes de trabalho</p>
           </div>
           <button className="text-sm font-bold text-primary-500 hover:text-primary-600 transition-colors">Ver histórico completo</button>
         </div>
         <div className="space-y-6">
           {recentActivities.map((activity) => (
             <div key={activity.text} className="flex items-start gap-5 group">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--color-neutral-50)] text-[var(--color-neutral-400)] transition-all group-hover:bg-primary-50 group-hover:text-primary-500 border border-[var(--color-neutral-200)]/40">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-neutral-50 text-neutral-400 transition-all group-hover:bg-primary-50 group-hover:text-primary-500 border border-neutral-200/40">
                 <activity.icon size={22} />
               </div>
-              <div className="flex-1 pt-0.5 border-b border-[var(--color-neutral-100)] pb-6 last:border-b-0 last:pb-0">
-                <p className="text-base font-bold text-[var(--color-neutral-800)] group-hover:text-primary-600 transition-colors">
+              <div className="flex-1 pt-0.5 border-b border-neutral-100 pb-6 last:border-b-0 last:pb-0">
+                <p className="text-base font-bold text-neutral-800 group-hover:text-primary-600 transition-colors">
                   {activity.text}
                 </p>
-                <div className="mt-1 flex items-center gap-2 text-xs font-semibold text-[var(--color-neutral-400)]">
+                <div className="mt-1 flex items-center gap-2 text-xs font-semibold text-neutral-400">
                   <span>{activity.time}</span>
                   <span>•</span>
                   <span className="text-primary-500/80">Confirmado</span>

@@ -19,7 +19,7 @@ export function AppShell() {
 
   return (
     <PageProvider>
-      <div className="flex h-screen overflow-hidden bg-[var(--surface-page)]">
+      <div className="flex h-screen w-full overflow-hidden bg-surface-page">
         {/* Sidebar desktop */}
         {!isMobile && (
           <div className="hidden lg:block lg:shrink-0">
@@ -52,9 +52,9 @@ export function AppShell() {
         </AnimatePresence>
 
         {/* Conteúdo principal */}
-        <div className="flex flex-1 flex-col overflow-x-hidden">
+        <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
           <Header onMenuClick={() => setSidebarOpen(true)} />
-          <main ref={mainRef} className="flex-1 overflow-y-auto bg-[var(--surface-page)] custom-scrollbar">
+          <main ref={mainRef} className="flex-1 overflow-y-auto bg-surface-page custom-scrollbar">
             <Outlet />
           </main>
         </div>
