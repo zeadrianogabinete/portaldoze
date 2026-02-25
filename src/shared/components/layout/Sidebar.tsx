@@ -34,7 +34,7 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
   return (
     <aside
       className={cn(
-        'flex h-full flex-col border-r border-white/5 bg-sidebar shadow-float transition-all duration-300',
+        'flex h-full flex-col border-r border-white/5 bg-sidebar text-sidebar-text shadow-float transition-all duration-300',
         mobile ? 'w-full' : 'w-[280px]',
       )}
     >
@@ -165,7 +165,7 @@ function SidebarGroup({
         <div className="flex items-center gap-3.5 text-sidebar-muted">
           <group.icon size={19} className="shrink-0 text-sidebar-muted" />
           <span className="flex-1 truncate text-sm font-medium">{group.title}</span>
-          <Badge variant="neutral" className="shrink-0 border-white/8 bg-white/5 text-[9px] font-semibold tracking-wide py-0.5 px-2">
+          <Badge variant="neutral" className="shrink-0 border-white/8 bg-white/5 text-sidebar-muted text-[9px] font-semibold tracking-wide py-0.5 px-2">
             EM BREVE
           </Badge>
         </div>
