@@ -3,28 +3,28 @@ import type { User } from '@supabase/supabase-js';
 export interface Profile {
   id: string;
   email: string;
-  full_name: string;
-  phone: string | null;
+  nome_completo: string;
+  telefone: string | null;
   avatar_url: string | null;
-  role: string;
-  status: 'pending' | 'active' | 'disabled';
-  approved_by: string | null;
-  approved_at: string | null;
-  created_at: string;
-  updated_at: string;
+  papel: string;
+  situacao: 'pending' | 'active' | 'disabled';
+  aprovado_por: string | null;
+  aprovado_em: string | null;
+  criado_em: string;
+  atualizado_em: string;
 }
 
 export interface Permission {
   id: string;
-  resource: string;
-  action: string;
-  description: string | null;
+  recurso: string;
+  acao: string;
+  descricao: string | null;
 }
 
 export interface UserPermission {
-  user_id: string;
-  permission_id: string;
-  granted: boolean;
+  usuario_id: string;
+  permissao_id: string;
+  concedida: boolean;
 }
 
 export interface AuthState {

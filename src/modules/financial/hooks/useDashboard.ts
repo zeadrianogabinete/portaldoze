@@ -14,7 +14,7 @@ export function useDashboard(monthStr: string) {
   const { data, isLoading, error } = useQuery({
     queryKey: ['financial', 'dashboard', monthStr],
     queryFn: async (): Promise<MonthlySummary> => {
-      const { data, error } = await supabase.rpc('get_monthly_summary', {
+      const { data, error } = await supabase.rpc('obter_resumo_mensal', {
         p_month: monthStr,
       });
 

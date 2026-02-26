@@ -26,7 +26,7 @@ function ConfigNotificacoes() {
     queryKey: ['settings', 'notification-prefs'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('notification_preferences')
+        .from('notif_preferencias')
         .select('*')
         .eq('user_id', user?.id);
       if (error) throw error;
@@ -53,7 +53,7 @@ function ConfigNotificacoes() {
     mutationFn: async () => {
       for (const pref of localPrefs) {
         const { error } = await supabase
-          .from('notification_preferences')
+          .from('notif_preferencias')
           .update({
             email_enabled: pref.email_enabled,
             push_enabled: pref.push_enabled,

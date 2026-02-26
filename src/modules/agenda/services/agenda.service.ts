@@ -4,11 +4,11 @@ import type { Agenda, CreateAgendaInput, AgendaAttendee } from '../types/agenda.
 export const agendaService = {
   async list(startDate: Date, endDate: Date): Promise<Agenda[]> {
     const { data, error } = await supabase
-      .from('agendas')
+      .from('agend_eventos')
       .select('*')
-      .gte('start_at', startDate.toISOString())
-      .lte('start_at', endDate.toISOString())
-      .order('start_at', { ascending: true });
+      .gte('inicio_em', startDate.toISOString())
+      .lte('inicio_em', endDate.toISOString())
+      .order('inicio_em', { ascending: true });
 
     if (error) throw error;
     return data as Agenda[];
@@ -16,7 +16,7 @@ export const agendaService = {
 
   async getById(id: string): Promise<Agenda> {
     const { data, error } = await supabase
-      .from('agendas')
+      .from('agend_eventos')
       .select('*')
       .eq('id', id)
       .single();
@@ -30,10 +30,10 @@ export const agendaService = {
     const userId = session.data.session?.user?.id;
 
     const { data, error } = await supabase
-      .from('agendas')
+      .from('agend_eventos')
       .insert({
         ...input,
-        created_by: userId,
+        criado_por: userId,
       })
       .select()
       .single();
@@ -44,7 +44,7 @@ export const agendaService = {
 
   async update(id: string, input: Partial<CreateAgendaInput>): Promise<Agenda> {
     const { data, error } = await supabase
-      .from('agendas')
+      .from('agend_eventos')
       .update(input)
       .eq('id', id)
       .select()
@@ -56,7 +56,7 @@ export const agendaService = {
 
   async delete(id: string): Promise<void> {
     const { error } = await supabase
-      .from('agendas')
+      .from('agend_eventos')
       .delete()
       .eq('id', id);
 
@@ -72,13 +72,13 @@ export const agendaService = {
     const userId = session.data.session?.user?.id;
 
     const { data, error } = await supabase
-      .from('agendas')
+      .from('agend_eventos')
       .update({
-        status: 'approved',
-        approved_by: userId,
-        approved_at: new Date().toISOString(),
-        politician_presence: presence,
-        representative_name: representativeName,
+        situacao: 'approved',
+        aprovado_por: userId,
+        aprovado_em: new Date().toISOString(),
+        presenca_parlamentar: presence,
+        nome_representante: representativeName,
       })
       .eq('id', id)
       .select()
@@ -90,8 +90,8 @@ export const agendaService = {
 
   async cancel(id: string): Promise<Agenda> {
     const { data, error } = await supabase
-      .from('agendas')
-      .update({ status: 'cancelled' })
+      .from('agend_eventos')
+      .update({ situacao: 'cancelled' })
       .eq('id', id)
       .select()
       .single();
@@ -102,38 +102,38 @@ export const agendaService = {
 
   async getProposals(): Promise<Agenda[]> {
     const { data, error } = await supabase
-      .from('agendas')
+      .from('agend_eventos')
       .select('*')
-      .eq('status', 'proposed')
-      .order('start_at', { ascending: true });
+      .eq('situacao', 'proposed')
+      .order('inicio_em', { ascending: true });
 
     if (error) throw error;
     return data as Agenda[];
   },
 
-  async getAttendees(agendaId: string): Promise<AgendaAttendee[]> {
+  async getAttendees(eventoId: string): Promise<AgendaAttendee[]> {
     const { data, error } = await supabase
-      .from('agenda_attendees')
+      .from('agend_participantes')
       .select('*')
-      .eq('agenda_id', agendaId);
+      .eq('evento_id', eventoId);
 
     if (error) throw error;
     return data as AgendaAttendee[];
   },
 
   async addAttendee(
-    agendaId: string,
+    eventoId: string,
     attendee: {
-      user_id?: string;
-      contact_id?: string;
-      external_name?: string;
-      external_phone?: string;
-      role?: string;
+      usuario_id?: string;
+      contato_id?: string;
+      nome_externo?: string;
+      telefone_externo?: string;
+      funcao?: string;
     },
   ): Promise<AgendaAttendee> {
     const { data, error } = await supabase
-      .from('agenda_attendees')
-      .insert({ agenda_id: agendaId, ...attendee })
+      .from('agend_participantes')
+      .insert({ evento_id: eventoId, ...attendee })
       .select()
       .single();
 
@@ -143,7 +143,7 @@ export const agendaService = {
 
   async removeAttendee(attendeeId: string): Promise<void> {
     const { error } = await supabase
-      .from('agenda_attendees')
+      .from('agend_participantes')
       .delete()
       .eq('id', attendeeId);
 

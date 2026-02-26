@@ -14,7 +14,7 @@ import { PageContainer } from '@/shared/components/layout/PageContainer';
 import { Card } from '@/shared/components/ui/Card';
 import { EmptyState } from '@/shared/components/feedback/EmptyState';
 import { usePayables } from '@/modules/financial/hooks/usePayables';
-import { useTransactionMutations } from '@/modules/financial/hooks/useFinancial';
+import { PaymentConfirmDialog } from '@/modules/financial/components/transactions/PaymentConfirmDialog';
 import { formatCurrency, formatDate } from '@/shared/utils/format';
 import { cn } from '@/shared/utils/cn';
 import type { Transaction } from '@/modules/financial/types/financial.types';
@@ -29,9 +29,9 @@ export const Route = createFileRoute('/_authenticated/financial/payables')({
 // ---------------------------------------------------------------------------
 
 function getUrgencyInfo(transaction: Transaction) {
-  if (transaction.status === 'overdue') {
-    const days = transaction.due_date
-      ? differenceInDays(new Date(), parseISO(transaction.due_date))
+  if (transaction.situacao === 'overdue') {
+    const days = transaction.data_vencimento
+      ? differenceInDays(new Date(), parseISO(transaction.data_vencimento))
       : 0;
     return {
       className: 'bg-red-50 text-red-700',
@@ -39,15 +39,15 @@ function getUrgencyInfo(transaction: Transaction) {
     };
   }
 
-  if (transaction.due_date && isToday(parseISO(transaction.due_date))) {
+  if (transaction.data_vencimento && isToday(parseISO(transaction.data_vencimento))) {
     return {
       className: 'bg-yellow-50 text-yellow-700',
       daysText: 'Vence hoje',
     };
   }
 
-  if (transaction.due_date) {
-    const days = differenceInDays(parseISO(transaction.due_date), new Date());
+  if (transaction.data_vencimento) {
+    const days = differenceInDays(parseISO(transaction.data_vencimento), new Date());
     if (days <= 3) {
       return {
         className: 'bg-orange-50 text-orange-700',
@@ -81,15 +81,13 @@ function PayablesSection({
   icon: Icon,
   accentColor,
   transactions,
-  onMarkAsPaid,
-  isPaying,
+  onPayClick,
 }: {
   title: string;
   icon: LucideIcon;
   accentColor: string;
   transactions: Transaction[];
-  onMarkAsPaid: (id: string) => void;
-  isPaying: boolean;
+  onPayClick: (t: Transaction) => void;
 }) {
   if (transactions.length === 0) return null;
 
@@ -130,17 +128,17 @@ function PayablesSection({
                       params={{ id: t.id }}
                       className="text-sm font-medium text-[var(--color-neutral-800)] hover:text-primary-600 hover:underline"
                     >
-                      {t.description}
+                      {t.descricao}
                     </Link>
                   </td>
                   <td className="px-4 py-3 text-sm text-[var(--color-neutral-500)]">
-                    {t.nature?.name ?? '—'}
+                    {t.natureza?.nome ?? '—'}
                   </td>
                   <td className="px-4 py-3 text-sm text-[var(--color-neutral-600)]">
-                    {t.due_date ? formatDate(t.due_date) : '—'}
+                    {t.data_vencimento ? formatDate(t.data_vencimento) : '—'}
                   </td>
                   <td className="px-4 py-3 text-right text-sm font-semibold text-red-600">
-                    {formatCurrency(t.amount)}
+                    {formatCurrency(t.valor)}
                   </td>
                   <td className="px-4 py-3 text-center">
                     <span className={cn('inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold', urgency.className)}>
@@ -150,9 +148,8 @@ function PayablesSection({
                   <td className="px-4 py-3 text-center">
                     <button
                       type="button"
-                      onClick={() => onMarkAsPaid(t.id)}
-                      disabled={isPaying}
-                      className="inline-flex items-center gap-1 rounded-lg bg-green-500 px-2.5 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-green-600 disabled:opacity-50"
+                      onClick={() => onPayClick(t)}
+                      className="inline-flex items-center gap-1 rounded-lg bg-green-500 px-2.5 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-green-600"
                     >
                       <Check size={12} strokeWidth={2} />
                       Pagar
@@ -178,21 +175,21 @@ function PayablesSection({
                     params={{ id: t.id }}
                     className="text-sm font-medium text-[var(--color-neutral-800)] hover:text-primary-600"
                   >
-                    {t.description}
+                    {t.descricao}
                   </Link>
                   <p className="mt-0.5 text-xs text-[var(--color-neutral-500)]">
-                    {t.nature?.name ?? 'Sem natureza'}
+                    {t.natureza?.nome ?? 'Sem natureza'}
                   </p>
                 </div>
                 <span className="text-sm font-bold text-red-600 whitespace-nowrap">
-                  {formatCurrency(t.amount)}
+                  {formatCurrency(t.valor)}
                 </span>
               </div>
               <div className="mt-3 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  {t.due_date && (
+                  {t.data_vencimento && (
                     <span className="text-xs text-[var(--color-neutral-500)]">
-                      {formatDate(t.due_date)}
+                      {formatDate(t.data_vencimento)}
                     </span>
                   )}
                   <span className={cn('rounded-full px-2 py-0.5 text-xs font-semibold', urgency.className)}>
@@ -201,9 +198,8 @@ function PayablesSection({
                 </div>
                 <button
                   type="button"
-                  onClick={() => onMarkAsPaid(t.id)}
-                  disabled={isPaying}
-                  className="flex items-center gap-1 rounded-lg bg-green-500 px-2.5 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-green-600 disabled:opacity-50"
+                  onClick={() => onPayClick(t)}
+                  className="flex items-center gap-1 rounded-lg bg-green-500 px-2.5 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-green-600"
                 >
                   <Check size={12} strokeWidth={2} />
                   Pagar
@@ -223,10 +219,10 @@ function PayablesSection({
 
 function ContasAPagar() {
   const [search, setSearch] = useState('');
+  const [payingTransaction, setPayingTransaction] = useState<Transaction | null>(null);
   const { summary, grouped, isLoading } = usePayables({
     search: search || undefined,
   });
-  const { markAsPaid } = useTransactionMutations();
 
   const hasPayables =
     grouped.overdue.length > 0 ||
@@ -322,26 +318,35 @@ function ContasAPagar() {
             icon={AlertTriangle}
             accentColor="text-red-500"
             transactions={grouped.overdue}
-            onMarkAsPaid={(id) => markAsPaid.mutate(id)}
-            isPaying={markAsPaid.isPending}
+            onPayClick={setPayingTransaction}
           />
           <PayablesSection
             title="Vencem Hoje"
             icon={Calendar}
             accentColor="text-yellow-600"
             transactions={grouped.dueToday}
-            onMarkAsPaid={(id) => markAsPaid.mutate(id)}
-            isPaying={markAsPaid.isPending}
+            onPayClick={setPayingTransaction}
           />
           <PayablesSection
             title="Próximas"
             icon={CalendarClock}
             accentColor="text-blue-500"
             transactions={grouped.upcoming}
-            onMarkAsPaid={(id) => markAsPaid.mutate(id)}
-            isPaying={markAsPaid.isPending}
+            onPayClick={setPayingTransaction}
           />
         </div>
+      )}
+
+      {/* Dialog de confirmação de pagamento */}
+      {payingTransaction && (
+        <PaymentConfirmDialog
+          open={!!payingTransaction}
+          onOpenChange={(v) => { if (!v) setPayingTransaction(null); }}
+          transactionId={payingTransaction.id}
+          transactionDescricao={payingTransaction.descricao}
+          transactionValor={payingTransaction.valor}
+          onSuccess={() => setPayingTransaction(null)}
+        />
       )}
     </PageContainer>
   );

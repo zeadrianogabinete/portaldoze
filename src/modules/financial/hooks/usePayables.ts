@@ -25,24 +25,24 @@ export interface GroupedPayables {
 }
 
 const sortByDueDate = (a: Transaction, b: Transaction) => {
-  const da = a.due_date ? parseISO(a.due_date).getTime() : Infinity;
-  const db = b.due_date ? parseISO(b.due_date).getTime() : Infinity;
+  const da = a.data_vencimento ? parseISO(a.data_vencimento).getTime() : Infinity;
+  const db = b.data_vencimento ? parseISO(b.data_vencimento).getTime() : Infinity;
   return da - db;
 };
 
-const sum = (arr: Transaction[]) => arr.reduce((acc, t) => acc + t.amount, 0);
+const sum = (arr: Transaction[]) => arr.reduce((acc, t) => acc + t.valor, 0);
 
 export function usePayables(filters: PayablesFilters = {}) {
   const pendingQuery = useTransactions({
-    type: 'expense',
-    status: 'pending',
-    search: filters.search || undefined,
+    tipo: 'expense',
+    situacao: 'pending',
+    busca: filters.search || undefined,
   });
 
   const overdueQuery = useTransactions({
-    type: 'expense',
-    status: 'overdue',
-    search: filters.search || undefined,
+    tipo: 'expense',
+    situacao: 'overdue',
+    busca: filters.search || undefined,
   });
 
   const isLoading = pendingQuery.isLoading || overdueQuery.isLoading;
@@ -60,22 +60,22 @@ export function usePayables(filters: PayablesFilters = {}) {
     const upcoming: Transaction[] = [];
 
     for (const t of pending) {
-      if (t.due_date && isToday(parseISO(t.due_date))) {
+      if (t.data_vencimento && isToday(parseISO(t.data_vencimento))) {
         dueToday.push(t);
       } else {
         upcoming.push(t);
       }
     }
 
-    // Ordenar cada grupo por due_date ASC
+    // Ordenar cada grupo por data_vencimento ASC
     overdue.sort(sortByDueDate);
     dueToday.sort(sortByDueDate);
     upcoming.sort(sortByDueDate);
 
     // Contas que vencem nos próximos 7 dias (excluindo hoje)
     const dueThisWeek = pending.filter((t) => {
-      if (!t.due_date) return false;
-      const d = parseISO(t.due_date);
+      if (!t.data_vencimento) return false;
+      const d = parseISO(t.data_vencimento);
       return !isToday(d) && !isBefore(d, today) && isBefore(d, weekEnd);
     });
 

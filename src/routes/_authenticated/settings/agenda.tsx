@@ -18,14 +18,14 @@ function ConfigAgenda() {
     queryKey: ['settings', 'agenda'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('system_settings')
+        .from('confi_configuracoes')
         .select('*')
-        .in('key', ['agenda_require_approval', 'agenda_default_presence', 'agenda_approvers']);
+        .in('chave', ['agenda_require_approval', 'agenda_default_presence', 'agenda_approvers']);
       if (error) throw error;
       const result: Record<string, string | boolean> = {};
       for (const s of data ?? []) {
-        const item = s as { key: string; value: string | boolean };
-        result[item.key] = item.value;
+        const item = s as { chave: string; valor: string | boolean };
+        result[item.chave] = item.valor;
       }
       return result;
     },
@@ -44,13 +44,13 @@ function ConfigAgenda() {
   const saveMutation = useMutation({
     mutationFn: async () => {
       const updates = [
-        { key: 'agenda_require_approval', value: requireApproval },
-        { key: 'agenda_default_presence', value: defaultPresence },
+        { chave: 'agenda_require_approval', valor: requireApproval },
+        { chave: 'agenda_default_presence', valor: defaultPresence },
       ];
       for (const u of updates) {
         const { error } = await supabase
-          .from('system_settings')
-          .upsert({ key: u.key, value: u.value }, { onConflict: 'key' });
+          .from('confi_configuracoes')
+          .upsert({ chave: u.chave, valor: u.valor }, { onConflict: 'chave' });
         if (error) throw error;
       }
     },

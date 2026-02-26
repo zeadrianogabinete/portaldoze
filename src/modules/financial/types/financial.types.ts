@@ -1,130 +1,146 @@
 export interface ExpenseCategory {
   id: string;
-  name: string;
-  code: string;
-  description: string | null;
-  is_active: boolean;
-  created_at: string;
+  nome: string;
+  codigo: string;
+  descricao: string | null;
+  ativo: boolean;
+  criado_em: string;
 }
 
 export interface ExpenseNature {
   id: string;
-  name: string;
-  code: string;
-  description: string | null;
-  ceap_eligible: boolean;
-  has_quota: boolean;
-  monthly_quota: number | null;
-  category_id: string | null;
-  is_active: boolean;
-  sort_order: number;
-  created_at: string;
+  nome: string;
+  codigo: string;
+  descricao: string | null;
+  elegivel_ceap: boolean;
+  tem_cota: boolean;
+  cota_mensal: number | null;
+  categoria_id: string | null;
+  ativo: boolean;
+  ordem: number;
+  criado_em: string;
 }
 
 export interface FundingSource {
   id: string;
-  name: string;
-  code: string;
-  description: string | null;
-  is_active: boolean;
-  created_at: string;
+  nome: string;
+  codigo: string;
+  descricao: string | null;
+  ativo: boolean;
+  criado_em: string;
 }
 
 export interface BankAccount {
   id: string;
-  name: string;
-  bank_name: string;
-  agency: string;
-  account_number: string;
-  account_type: 'checking' | 'savings';
-  is_active: boolean;
-  created_at: string;
+  nome: string;
+  nome_banco: string;
+  agencia: string;
+  numero_conta: string;
+  tipo_conta: 'checking' | 'savings';
+  ativo: boolean;
+  criado_em: string;
 }
 
 export interface Transaction {
   id: string;
-  transaction_number: string;
-  type: 'expense' | 'revenue';
-  description: string;
-  amount: number;
-  date: string;
-  due_date: string | null;
-  paid_at: string | null;
-  status: 'pending' | 'paid' | 'overdue' | 'cancelled';
-  payment_method: 'pix' | 'transfer' | 'boleto' | 'credit_card' | 'debit_card' | 'cash' | 'check' | 'other';
-  receipt_type: 'nota_fiscal' | 'recibo' | 'cupom_fiscal' | 'contrato' | 'outros';
-  receipt_number: string | null;
-  category_id: string | null;
-  nature_id: string | null;
-  funding_source_id: string | null;
-  bank_account_id: string | null;
-  contact_id: string | null;
-  reimbursement_report_id: string | null;
-  fixed_expense_id: string | null;
-  notes: string | null;
-  created_by: string;
-  created_at: string;
-  updated_at: string;
-  // Relations (optional, populated via select)
-  category?: ExpenseCategory;
-  nature?: ExpenseNature;
-  funding_source?: FundingSource;
+  numero: string;
+  tipo: 'expense' | 'revenue';
+  descricao: string;
+  valor: number;
+  data: string;
+  data_vencimento: string | null;
+  pago_em: string | null;
+  situacao: 'pending' | 'paid' | 'overdue' | 'cancelled';
+  forma_pagamento: 'pix' | 'transfer' | 'boleto' | 'credit_card' | 'debit_card' | 'cash' | 'check' | 'other';
+  tipo_comprovante: 'nota_fiscal' | 'recibo' | 'cupom_fiscal' | 'contrato' | 'outros';
+  categoria_id: string | null;
+  natureza_id: string | null;
+  fonte_recurso_id: string | null;
+  conta_bancaria_id: string | null;
+  contato_id: string | null;
+  relatorio_reembolso_id: string | null;
+  despesa_fixa_id: string | null;
+  observacoes: string | null;
+  criado_por: string;
+  criado_em: string;
+  atualizado_em: string;
+  // Relações (opcional, populado via select)
+  categoria?: ExpenseCategory;
+  natureza?: ExpenseNature;
+  fonte_recurso?: FundingSource;
+  conta_bancaria?: BankAccount;
 }
 
 export interface TransactionDocument {
   id: string;
-  transaction_id: string;
-  file_name: string;
-  file_path: string;
-  file_size: number;
-  mime_type: string;
-  document_type: 'receipt' | 'invoice' | 'contract' | 'report' | 'other';
-  created_at: string;
+  movimentacao_id: string;
+  nome_arquivo: string;
+  caminho_arquivo: string;
+  tamanho_arquivo: number;
+  tipo_arquivo: string;
+  criado_em: string;
 }
 
 export interface FixedExpense {
   id: string;
-  description: string;
-  amount: number;
-  day_of_month: number;
-  category_id: string | null;
-  nature_id: string | null;
-  funding_source_id: string | null;
-  is_active: boolean;
-  notes: string | null;
-  created_at: string;
-  updated_at: string;
+  descricao: string;
+  valor: number;
+  natureza_id: string | null;
+  fonte_recurso_id: string | null;
+  conta_bancaria_id: string | null;
+  forma_pagamento: 'pix' | 'transfer' | 'boleto' | 'card' | null;
+  contato_nome: string;
+  contato_telefone: string | null;
+  contato_email: string | null;
+  contato_dados_pagamento: string | null;
+  contato_id: string | null;
+  parcelado: boolean;
+  total_parcelas: number | null;
+  data_inicio: string | null;
+  dia_vencimento: number | null;
+  ativo: boolean;
+  observacoes: string | null;
+  criado_por: string;
+  criado_em: string;
+  atualizado_em: string;
+  // Relações (opcional, populado via select)
+  natureza?: ExpenseNature;
+  fonte_recurso?: FundingSource;
 }
 
 export interface ReimbursementReport {
   id: string;
-  month: string;
-  status: 'draft' | 'submitted' | 'approved' | 'rejected';
-  total_amount: number;
-  submitted_at: string | null;
-  approved_at: string | null;
-  approved_by: string | null;
-  notes: string | null;
-  created_by: string;
-  created_at: string;
-  updated_at: string;
+  nome: string;
+  periodo_inicio: string;
+  periodo_fim: string;
+  situacao: 'draft' | 'sent' | 'received';
+  enviado_em: string | null;
+  recebido_em: string | null;
+  valor_recebido: number | null;
+  valor_total: number | null;
+  total_movimentacoes: number | null;
+  caminho_exportacao: string | null;
+  observacoes: string | null;
+  criado_por: string;
+  criado_em: string;
+  atualizado_em: string;
 }
 
 export interface QuotaConfig {
   id: string;
-  name: string;
-  monthly_limit: number;
-  year: number;
-  is_active: boolean;
-  created_at: string;
+  nome: string;
+  total_mensal: number;
+  ativo: boolean;
+  descricao: string | null;
+  atualizado_em: string;
 }
 
 export interface QuotaUsage {
-  nature_name: string;
-  nature_code: string;
-  total_used: number;
-  monthly_limit: number;
-  percentage: number;
+  natureza_nome: string;
+  natureza_codigo: string;
+  total_gasto: number;
+  cota_mensal: number;
+  percentual_uso: number;
 }
 
 export interface MonthlySummary {
@@ -137,29 +153,28 @@ export interface MonthlySummary {
 }
 
 export interface TransactionFilters {
-  type?: 'expense' | 'revenue';
-  status?: string;
-  category_id?: string;
-  nature_id?: string;
-  start_date?: string;
-  end_date?: string;
-  search?: string;
+  tipo?: 'expense' | 'revenue';
+  situacao?: string;
+  categoria_id?: string;
+  natureza_id?: string;
+  data_inicio?: string;
+  data_fim?: string;
+  busca?: string;
 }
 
 export interface CreateTransactionInput {
-  type: 'expense' | 'revenue';
-  description: string;
-  amount: number;
-  date: string;
-  due_date?: string;
-  status?: 'pending' | 'paid';
-  payment_method?: string;
-  receipt_type?: string;
-  receipt_number?: string;
-  category_id?: string;
-  nature_id?: string;
-  funding_source_id?: string;
-  bank_account_id?: string;
-  contact_id?: string;
-  notes?: string;
+  tipo: 'expense' | 'revenue';
+  descricao: string;
+  valor: number;
+  data: string;
+  data_vencimento?: string;
+  situacao?: 'pending' | 'paid';
+  forma_pagamento?: string;
+  tipo_comprovante?: string;
+  categoria_id?: string;
+  natureza_id?: string;
+  fonte_recurso_id?: string;
+  conta_bancaria_id?: string;
+  contato_id?: string;
+  observacoes?: string;
 }

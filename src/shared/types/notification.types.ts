@@ -12,36 +12,36 @@ export type NotificationType =
 
 export interface Notification {
   id: string;
-  user_id: string;
-  module: NotificationModule;
-  type: NotificationType;
-  title: string;
-  body: string;
-  data: Record<string, unknown>;
-  read: boolean;
-  read_at: string | null;
-  created_at: string;
+  usuario_id: string;
+  modulo: NotificationModule;
+  tipo: NotificationType;
+  titulo: string;
+  corpo: string;
+  dados: Record<string, unknown>;
+  lida: boolean;
+  lida_em: string | null;
+  criado_em: string;
 }
 
 export interface NotificationPreferences {
-  user_id: string;
+  usuario_id: string;
   agenda_in_app: boolean;
   agenda_push: boolean;
-  financial_in_app: boolean;
-  financial_push: boolean;
-  system_in_app: boolean;
-  system_push: boolean;
-  updated_at: string;
+  financeiro_in_app: boolean;
+  financeiro_push: boolean;
+  sistema_in_app: boolean;
+  sistema_push: boolean;
+  atualizado_em: string;
 }
 
 export interface PushSubscriptionData {
   id: string;
-  user_id: string;
+  usuario_id: string;
   endpoint: string;
-  keys: {
+  chaves: {
     p256dh: string;
     auth: string;
   };
   user_agent: string | null;
-  created_at: string;
+  criado_em: string;
 }

@@ -7,21 +7,21 @@ import { cn } from '@/shared/utils/cn';
 
 interface Permission {
   id: string;
-  resource: string;
-  action: string;
-  description: string;
+  recurso: string;
+  acao: string;
+  descricao: string;
 }
 
 interface RolePermission {
-  role_id: string;
-  permission_id: string;
+  papel_id: string;
+  permissao_id: string;
 }
 
 interface Role {
   id: string;
-  name: string;
-  display_name: string;
-  description: string;
+  nome: string;
+  nome_exibicao: string;
+  descricao: string;
 }
 
 export const Route = createFileRoute('/_authenticated/settings/permissions')({
@@ -32,7 +32,7 @@ function Permissoes() {
   const { data: roles } = useQuery({
     queryKey: ['settings', 'roles'],
     queryFn: async () => {
-      const { data, error } = await supabase.from('roles').select('*').order('name');
+      const { data, error } = await supabase.from('confi_papeis').select('*').order('nome');
       if (error) throw error;
       return data as Role[];
     },
@@ -41,7 +41,7 @@ function Permissoes() {
   const { data: permissions } = useQuery({
     queryKey: ['settings', 'permissions'],
     queryFn: async () => {
-      const { data, error } = await supabase.from('permissions').select('*').order('resource, action');
+      const { data, error } = await supabase.from('confi_permissoes').select('*').order('recurso, acao');
       if (error) throw error;
       return data as Permission[];
     },
@@ -50,14 +50,14 @@ function Permissoes() {
   const { data: rolePermissions } = useQuery({
     queryKey: ['settings', 'role-permissions'],
     queryFn: async () => {
-      const { data, error } = await supabase.from('role_permissions').select('*');
+      const { data, error } = await supabase.from('confi_papel_permissoes').select('*');
       if (error) throw error;
       return data as RolePermission[];
     },
   });
 
   const hasPermission = (roleId: string, permissionId: string) =>
-    rolePermissions?.some((rp) => rp.role_id === roleId && rp.permission_id === permissionId) ?? false;
+    rolePermissions?.some((rp) => rp.papel_id === roleId && rp.permissao_id === permissionId) ?? false;
 
   return (
     <PageContainer
@@ -85,7 +85,7 @@ function Permissoes() {
                   key={role.id}
                   className="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider text-[var(--color-neutral-500)]"
                 >
-                  {role.display_name}
+                  {role.nome_exibicao}
                 </th>
               ))}
             </tr>
@@ -95,9 +95,9 @@ function Permissoes() {
               <tr key={perm.id}>
                 <td className="sticky left-0 bg-[var(--surface-card)] px-4 py-3">
                   <p className="text-sm font-medium text-[var(--color-neutral-800)]">
-                    {perm.resource}.{perm.action}
+                    {perm.recurso}.{perm.acao}
                   </p>
-                  <p className="text-xs text-[var(--color-neutral-500)]">{perm.description}</p>
+                  <p className="text-xs text-[var(--color-neutral-500)]">{perm.descricao}</p>
                 </td>
                 {roles?.map((role) => (
                   <td key={role.id} className="px-3 py-3 text-center">

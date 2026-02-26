@@ -11,13 +11,13 @@ import { EmptyState } from '@/shared/components/feedback/EmptyState';
 
 interface UserProfile {
   id: string;
-  full_name: string;
+  nome_completo: string;
   email: string;
   phone: string | null;
-  role: string;
-  status: 'pending' | 'active' | 'disabled';
+  papel: string;
+  situacao: 'pending' | 'active' | 'disabled';
   avatar_url: string | null;
-  created_at: string;
+  criado_em: string;
 }
 
 export const Route = createFileRoute('/_authenticated/settings/users')({
@@ -32,9 +32,9 @@ function Usuarios() {
     queryKey: ['settings', 'users'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('profiles')
+        .from('confi_perfis')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('criado_em', { ascending: false });
       if (error) throw error;
       return data as UserProfile[];
     },
@@ -43,8 +43,8 @@ function Usuarios() {
   const updateStatus = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
       const { error } = await supabase
-        .from('profiles')
-        .update({ status })
+        .from('confi_perfis')
+        .update({ situacao: status })
         .eq('id', id);
       if (error) throw error;
     },
@@ -60,8 +60,8 @@ function Usuarios() {
   const updateRole = useMutation({
     mutationFn: async ({ id, role }: { id: string; role: string }) => {
       const { error } = await supabase
-        .from('profiles')
-        .update({ role })
+        .from('confi_perfis')
+        .update({ papel: role })
         .eq('id', id);
       if (error) throw error;
     },
@@ -75,10 +75,10 @@ function Usuarios() {
   });
 
   const filteredUsers = tab === 'pending'
-    ? users?.filter((u) => u.status === 'pending')
+    ? users?.filter((u) => u.situacao === 'pending')
     : users;
 
-  const pendingCount = users?.filter((u) => u.status === 'pending').length ?? 0;
+  const pendingCount = users?.filter((u) => u.situacao === 'pending').length ?? 0;
 
   const statusLabels: Record<string, string> = {
     pending: 'Pendente',
@@ -164,17 +164,17 @@ function Usuarios() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-500 text-sm font-semibold text-white">
-                    {user.full_name?.charAt(0)?.toUpperCase() || '?'}
+                    {user.nome_completo?.charAt(0)?.toUpperCase() || '?'}
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-[var(--color-neutral-800)]">{user.full_name}</p>
+                    <p className="text-sm font-medium text-[var(--color-neutral-800)]">{user.nome_completo}</p>
                     <p className="text-xs text-[var(--color-neutral-500)]">{user.email}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   {/* Role */}
                   <select
-                    value={user.role}
+                    value={user.papel}
                     onChange={(e) => updateRole.mutate({ id: user.id, role: e.target.value })}
                     className="rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-2 py-1 text-xs text-[var(--color-neutral-700)] focus:outline-none focus:ring-2 focus:ring-primary-500/20"
                   >
@@ -183,18 +183,18 @@ function Usuarios() {
                     ))}
                   </select>
                   {/* Status badge */}
-                  <span className={cn('rounded-full px-2.5 py-0.5 text-xs font-semibold', statusColors[user.status] ?? '')}>
-                    {statusLabels[user.status] ?? user.status}
+                  <span className={cn('rounded-full px-2.5 py-0.5 text-xs font-semibold', statusColors[user.situacao] ?? '')}>
+                    {statusLabels[user.situacao] ?? user.situacao}
                   </span>
                   {/* Actions */}
-                  {user.status === 'pending' && (
+                  {user.situacao === 'pending' && (
                     <div className="flex gap-1">
                       <button
                         type="button"
                         onClick={() => updateStatus.mutate({ id: user.id, status: 'active' })}
                         className="rounded-lg bg-green-50 p-1.5 text-green-600 transition-colors hover:bg-green-100"
                         title="Aprovar"
-                        aria-label={`Aprovar usuário ${user.full_name}`}
+                        aria-label={`Aprovar usuário ${user.nome_completo}`}
                       >
                         <Check size={14} strokeWidth={2} />
                       </button>
@@ -203,30 +203,30 @@ function Usuarios() {
                         onClick={() => updateStatus.mutate({ id: user.id, status: 'disabled' })}
                         className="rounded-lg bg-red-50 p-1.5 text-[var(--color-error)] transition-colors hover:bg-red-100"
                         title="Rejeitar"
-                        aria-label={`Rejeitar usuário ${user.full_name}`}
+                        aria-label={`Rejeitar usuário ${user.nome_completo}`}
                       >
                         <X size={14} strokeWidth={2} />
                       </button>
                     </div>
                   )}
-                  {user.status === 'active' && (
+                  {user.situacao === 'active' && (
                     <button
                       type="button"
                       onClick={() => updateStatus.mutate({ id: user.id, status: 'disabled' })}
                       className="rounded-lg bg-red-50 p-1.5 text-[var(--color-error)] transition-colors hover:bg-red-100"
                       title="Desativar"
-                      aria-label={`Desativar usuário ${user.full_name}`}
+                      aria-label={`Desativar usuário ${user.nome_completo}`}
                     >
                       <UserX size={14} strokeWidth={1.5} />
                     </button>
                   )}
-                  {user.status === 'disabled' && (
+                  {user.situacao === 'disabled' && (
                     <button
                       type="button"
                       onClick={() => updateStatus.mutate({ id: user.id, status: 'active' })}
                       className="rounded-lg bg-green-50 p-1.5 text-green-600 transition-colors hover:bg-green-100"
                       title="Reativar"
-                      aria-label={`Reativar usuário ${user.full_name}`}
+                      aria-label={`Reativar usuário ${user.nome_completo}`}
                     >
                       <UserCheck size={14} strokeWidth={1.5} />
                     </button>
@@ -234,7 +234,7 @@ function Usuarios() {
                 </div>
               </div>
               <p className="mt-2 text-xs text-[var(--color-neutral-400)]">
-                Cadastrado em {formatDate(user.created_at)}
+                Cadastrado em {formatDate(user.criado_em)}
               </p>
             </div>
           ))}

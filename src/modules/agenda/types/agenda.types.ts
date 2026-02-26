@@ -1,41 +1,41 @@
 export interface Agenda {
   id: string;
-  title: string;
-  description: string | null;
-  agenda_topic: string | null;
-  start_at: string;
-  end_at: string;
-  all_day: boolean;
-  recurrence_rule: RecurrenceRule | null;
-  recurrence_parent_id: string | null;
-  recurrence_exception: boolean;
-  location_name: string | null;
-  location_address: string | null;
-  location_lat: number | null;
-  location_lng: number | null;
-  location_place_id: string | null;
-  status: 'proposed' | 'approved' | 'cancelled';
-  approved_by: string | null;
-  approved_at: string | null;
-  politician_presence: 'politician' | 'representative' | 'none';
-  representative_name: string | null;
-  advisory_notes: string | null;
-  created_by: string;
-  color: string | null;
-  created_at: string;
-  updated_at: string;
+  titulo: string;
+  descricao: string | null;
+  pauta: string | null;
+  inicio_em: string;
+  fim_em: string;
+  dia_inteiro: boolean;
+  regra_recorrencia: RecurrenceRule | null;
+  recorrencia_pai_id: string | null;
+  excecao_recorrencia: boolean;
+  local_nome: string | null;
+  local_endereco: string | null;
+  local_lat: number | null;
+  local_lng: number | null;
+  local_place_id: string | null;
+  situacao: 'proposed' | 'approved' | 'cancelled';
+  aprovado_por: string | null;
+  aprovado_em: string | null;
+  presenca_parlamentar: 'politician' | 'representative' | 'none';
+  nome_representante: string | null;
+  notas_assessoria: string | null;
+  criado_por: string;
+  cor: string | null;
+  criado_em: string;
+  atualizado_em: string;
 }
 
 export interface AgendaAttendee {
   id: string;
-  agenda_id: string;
-  user_id: string | null;
-  contact_id: string | null;
-  external_name: string | null;
-  external_phone: string | null;
-  role: 'admin' | 'member' | 'observer';
-  rsvp: 'pending' | 'accepted' | 'declined' | 'tentative';
-  created_at: string;
+  evento_id: string;
+  usuario_id: string | null;
+  contato_id: string | null;
+  nome_externo: string | null;
+  telefone_externo: string | null;
+  funcao: 'admin' | 'member' | 'observer';
+  confirmacao: 'pending' | 'accepted' | 'declined' | 'tentative';
+  criado_em: string;
 }
 
 export interface RecurrenceRule {
@@ -55,21 +55,21 @@ export interface AgendaFilters {
 }
 
 export interface CreateAgendaInput {
-  title: string;
-  description?: string;
-  agenda_topic?: string;
-  start_at: string;
-  end_at: string;
-  all_day?: boolean;
-  recurrence_rule?: RecurrenceRule;
-  location_name?: string;
-  location_address?: string;
-  location_lat?: number;
-  location_lng?: number;
-  location_place_id?: string;
-  status?: 'proposed' | 'approved';
-  politician_presence?: 'politician' | 'representative' | 'none';
-  representative_name?: string;
-  advisory_notes?: string;
-  color?: string;
+  titulo: string;
+  descricao?: string;
+  pauta?: string;
+  inicio_em: string;
+  fim_em: string;
+  dia_inteiro?: boolean;
+  regra_recorrencia?: RecurrenceRule;
+  local_nome?: string;
+  local_endereco?: string;
+  local_lat?: number;
+  local_lng?: number;
+  local_place_id?: string;
+  situacao?: 'proposed' | 'approved';
+  presenca_parlamentar?: 'politician' | 'representative' | 'none';
+  nome_representante?: string;
+  notas_assessoria?: string;
+  cor?: string;
 }

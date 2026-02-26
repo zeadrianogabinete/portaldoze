@@ -15,15 +15,15 @@ export function useNotifications() {
     queryFn: async () => {
       if (!user) return 0;
       const { count, error } = await supabase
-        .from('notifications')
+        .from('notif_notificacoes')
         .select('*', { count: 'exact', head: true })
-        .eq('user_id', user.id)
-        .eq('read', false);
+        .eq('usuario_id', user.id)
+        .eq('lida', false);
       if (error) throw error;
       return count ?? 0;
     },
     enabled: !!user,
-    refetchInterval: 30000, // Refetch a cada 30s
+    refetchInterval: 30000,
   });
 
   useEffect(() => {
@@ -35,14 +35,14 @@ export function useNotifications() {
     if (!user) return;
 
     const channel = supabase
-      .channel('notifications')
+      .channel('notif_notificacoes')
       .on(
         'postgres_changes',
         {
           event: 'INSERT',
           schema: 'public',
-          table: 'notifications',
-          filter: `user_id=eq.${user.id}`,
+          table: 'notif_notificacoes',
+          filter: `usuario_id=eq.${user.id}`,
         },
         () => {
           queryClient.invalidateQueries({ queryKey: ['notifications'] });
@@ -62,10 +62,10 @@ export function useNotifications() {
     queryFn: async () => {
       if (!user) return [];
       const { data, error } = await supabase
-        .from('notifications')
+        .from('notif_notificacoes')
         .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
+        .eq('usuario_id', user.id)
+        .order('criado_em', { ascending: false })
         .limit(10);
       if (error) throw error;
       return data as Notification[];
@@ -77,8 +77,8 @@ export function useNotifications() {
   const markAsRead = useMutation({
     mutationFn: async (notificationId: string) => {
       const { error } = await supabase
-        .from('notifications')
-        .update({ read: true, read_at: new Date().toISOString() })
+        .from('notif_notificacoes')
+        .update({ lida: true, lida_em: new Date().toISOString() })
         .eq('id', notificationId);
       if (error) throw error;
     },
@@ -92,10 +92,10 @@ export function useNotifications() {
     mutationFn: async () => {
       if (!user) return;
       const { error } = await supabase
-        .from('notifications')
-        .update({ read: true, read_at: new Date().toISOString() })
-        .eq('user_id', user.id)
-        .eq('read', false);
+        .from('notif_notificacoes')
+        .update({ lida: true, lida_em: new Date().toISOString() })
+        .eq('usuario_id', user.id)
+        .eq('lida', false);
       if (error) throw error;
     },
     onSuccess: () => {

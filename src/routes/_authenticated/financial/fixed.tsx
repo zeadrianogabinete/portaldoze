@@ -33,20 +33,20 @@ function DespesasFixas() {
               className="flex items-center justify-between rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-card)]"
             >
               <div>
-                <p className="text-sm font-medium text-[var(--color-neutral-800)]">{expense.description}</p>
+                <p className="text-sm font-medium text-[var(--color-neutral-800)]">{expense.descricao}</p>
                 <p className="mt-0.5 text-xs text-[var(--color-neutral-500)]">
-                  Dia {expense.day_of_month} de cada mês
+                  Dia {expense.dia_vencimento} de cada mês
                 </p>
               </div>
               <div className="flex items-center gap-4">
                 <span className="text-sm font-semibold text-[var(--color-neutral-800)]">
-                  {formatCurrency(expense.amount)}
+                  {formatCurrency(expense.valor)}
                 </span>
                 <span className={cn(
                   'rounded-full px-2 py-0.5 text-xs font-semibold',
-                  expense.is_active ? 'bg-[var(--color-success)]/12 text-[var(--color-success)]' : 'bg-[var(--color-neutral-100)] text-[var(--color-neutral-500)]'
+                  expense.ativo ? 'bg-[var(--color-success)]/12 text-[var(--color-success)]' : 'bg-[var(--color-neutral-100)] text-[var(--color-neutral-500)]'
                 )}>
-                  {expense.is_active ? 'Ativa' : 'Inativa'}
+                  {expense.ativo ? 'Ativa' : 'Inativa'}
                 </span>
               </div>
             </div>

@@ -9,8 +9,8 @@ export interface LoginCredentials {
 export interface RegisterData {
   email: string;
   password: string;
-  full_name: string;
-  phone?: string;
+  nome_completo: string;
+  telefone?: string;
 }
 
 export const authService = {
@@ -23,12 +23,12 @@ export const authService = {
     return data;
   },
 
-  async register({ email, password, full_name, phone }: RegisterData) {
+  async register({ email, password, nome_completo, telefone }: RegisterData) {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { full_name, phone },
+        data: { full_name: nome_completo, phone: telefone },
       },
     });
     if (error) throw error;
@@ -48,7 +48,7 @@ export const authService = {
 
   async getProfile(userId: string): Promise<Profile | null> {
     const { data, error } = await supabase
-      .from('profiles')
+      .from('confi_perfis')
       .select('*')
       .eq('id', userId)
       .single();
@@ -61,7 +61,7 @@ export const authService = {
 
   async updateProfile(userId: string, updates: Partial<Profile>) {
     const { data, error } = await supabase
-      .from('profiles')
+      .from('confi_perfis')
       .update(updates)
       .eq('id', userId)
       .select()
@@ -71,67 +71,65 @@ export const authService = {
   },
 
   async getUserPermissions(userId: string): Promise<Permission[]> {
-    // Buscar role do usuário
+    // Buscar papel do usuário
     const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
+      .from('confi_perfis')
+      .select('papel')
       .eq('id', userId)
       .single();
 
     if (!profile) return [];
 
-    // Buscar permissões do role
+    // Buscar permissões do papel
     const { data: rolePerms } = await supabase
-      .from('role_permissions')
+      .from('confi_papel_permissoes')
       .select(`
-        permissions (
+        confi_permissoes (
           id,
-          resource,
-          action,
-          description
+          recurso,
+          acao,
+          descricao
         )
       `)
-      .eq('role_id', (
+      .eq('papel_id', (
         await supabase
-          .from('roles')
+          .from('confi_papeis')
           .select('id')
-          .eq('name', profile.role)
+          .eq('nome', profile.papel)
           .single()
       ).data?.id);
 
     // Buscar permissões diretas do usuário
     const { data: userPerms } = await supabase
-      .from('user_permissions')
+      .from('confi_usuario_permissoes')
       .select(`
-        granted,
-        permissions (
+        concedida,
+        confi_permissoes (
           id,
-          resource,
-          action,
-          description
+          recurso,
+          acao,
+          descricao
         )
       `)
-      .eq('user_id', userId);
+      .eq('usuario_id', userId);
 
-    // Merge: role permissions + user overrides
+    // Merge: permissões do papel + overrides do usuário
     const permMap = new Map<string, Permission>();
 
-    // Adicionar permissões do role
     if (rolePerms) {
       for (const rp of rolePerms) {
-        const perm = (rp as Record<string, unknown>).permissions as Permission;
+        const perm = (rp as Record<string, unknown>).confi_permissoes as Permission;
         if (perm) {
           permMap.set(perm.id, perm);
         }
       }
     }
 
-    // Aplicar overrides do usuário
     if (userPerms) {
       for (const up of userPerms) {
-        const perm = (up as Record<string, unknown>).permissions as Permission;
+        const perm = (up as Record<string, unknown>).confi_permissoes as Permission;
         if (perm) {
-          if (up.granted) {
+          if (up.concedida) {
             permMap.set(perm.id, perm);
           } else {
             permMap.delete(perm.id);

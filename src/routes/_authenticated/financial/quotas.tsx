@@ -13,8 +13,8 @@ function CotasCEAP() {
   const { data: quotaConfig } = useQuotaConfig();
   const { data: usage, isLoading } = useQuotaUsage(now.getFullYear(), now.getMonth() + 1);
 
-  const monthlyLimit = quotaConfig?.monthly_limit ?? 45612.53;
-  const totalUsed = usage?.reduce((sum: number, item: { total_used?: number }) => sum + (item.total_used ?? 0), 0) ?? 0;
+  const monthlyLimit = quotaConfig?.total_mensal ?? 45612.53;
+  const totalUsed = usage?.reduce((sum: number, item: { total_gasto?: number; total_used?: number }) => sum + (item.total_gasto ?? item.total_used ?? 0), 0) ?? 0;
   const remaining = monthlyLimit - totalUsed;
   const percentage = monthlyLimit > 0 ? (totalUsed / monthlyLimit) * 100 : 0;
 
@@ -68,11 +68,11 @@ function CotasCEAP() {
         </div>
       ) : (
         <div className="space-y-2">
-          {usage.map((item: { nature_name: string; total_used: number }, idx: number) => (
+          {usage.map((item: { natureza_nome?: string; nature_name?: string; total_gasto?: number; total_used?: number }, idx: number) => (
             <div key={idx} className="rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-card)]">
               <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-[var(--color-neutral-800)]">{item.nature_name}</p>
-                <p className="text-sm font-semibold text-[var(--color-neutral-800)]">{formatCurrency(item.total_used)}</p>
+                <p className="text-sm font-medium text-[var(--color-neutral-800)]">{item.natureza_nome ?? item.nature_name}</p>
+                <p className="text-sm font-semibold text-[var(--color-neutral-800)]">{formatCurrency(item.total_gasto ?? item.total_used ?? 0)}</p>
               </div>
             </div>
           ))}
