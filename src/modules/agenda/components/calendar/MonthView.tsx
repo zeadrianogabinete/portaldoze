@@ -40,7 +40,7 @@ export function MonthView({ currentDate }: MonthViewProps) {
 
   const getAgendasForDay = (day: Date) => {
     return agendas.filter((agenda) => {
-      const start = new Date(agenda.start_at);
+      const start = new Date(agenda.inicio_em);
       return isSameDay(start, day);
     });
   };
@@ -96,14 +96,14 @@ export function MonthView({ currentDate }: MonthViewProps) {
                     key={agenda.id}
                     className={cn(
                       'truncate rounded-md px-1 py-0.5 text-[9px] font-semibold leading-tight sm:px-1.5 sm:text-[10px] lg:text-xs',
-                      agenda.status === 'approved'
+                      agenda.situacao === 'approved'
                         ? 'bg-primary-100 text-primary-700'
                         : 'bg-[var(--color-warning)]/20 text-[var(--color-warning)]',
                     )}
-                    title={agenda.title}
+                    title={agenda.titulo}
                   >
                     <span className="sm:hidden">• evento</span>
-                    <span className="hidden sm:inline">{agenda.title}</span>
+                    <span className="hidden sm:inline">{agenda.titulo}</span>
                   </div>
                 ))}
                 {dayAgendas.length > 3 && (

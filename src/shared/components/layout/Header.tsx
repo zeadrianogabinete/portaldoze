@@ -114,14 +114,14 @@ export function Header({ title, onMenuClick }: HeaderProps) {
               aria-haspopup="true"
             >
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500 to-primary-600 text-sm font-bold text-white shadow-md shadow-primary-500/10">
-                {profile?.full_name?.charAt(0)?.toUpperCase() || '?'}
+                {profile?.nome_completo?.charAt(0)?.toUpperCase() || '?'}
               </div>
               <div className="hidden flex-col items-start md:flex">
                 <span className="text-sm font-bold text-neutral-800 leading-none">
-                  {profile?.full_name?.split(' ')[0]}
+                  {profile?.nome_completo?.split(' ')[0]}
                 </span>
                 <span className="text-[10px] font-medium text-neutral-400 mt-0.5">
-                  {profile?.role}
+                  {profile?.papel}
                 </span>
               </div>
             </button>
@@ -142,7 +142,7 @@ export function Header({ title, onMenuClick }: HeaderProps) {
                 >
                   <div className="px-4 py-3 mb-2">
                     <p className="text-sm font-bold text-neutral-900">
-                      {profile?.full_name}
+                      {profile?.nome_completo}
                     </p>
                     <p className="text-[11px] font-medium text-neutral-500 truncate">
                       {profile?.email}

@@ -31,7 +31,7 @@ function NotificationsPage() {
 
   const filteredNotifications = filter === 'all'
     ? notifications
-    : notifications.filter((n) => n.module === filter);
+    : notifications.filter((n) => n.modulo === filter);
 
   const tabs = [
     { label: 'Todas', value: 'all' as const },
@@ -86,14 +86,14 @@ function NotificationsPage() {
       ) : (
         <div className="space-y-2">
           {filteredNotifications.map((notification) => {
-            const Icon = moduleIcons[notification.module];
-            const colorClass = moduleColors[notification.module];
+            const Icon = moduleIcons[notification.modulo];
+            const colorClass = moduleColors[notification.modulo];
             return (
               <div
                 key={notification.id}
                 className={cn(
                   'flex items-start gap-3 rounded-lg border p-4 transition-colors shadow-[var(--shadow-xs)]',
-                  notification.read
+                  notification.lida
                     ? 'border-[var(--color-neutral-200)] bg-[var(--surface-card)]'
                     : 'border-primary-200 bg-primary-50/30',
                 )}
@@ -104,18 +104,18 @@ function NotificationsPage() {
                 <div className="flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <p className="text-sm font-medium text-[var(--color-neutral-800)]">
-                      {notification.title}
+                      {notification.titulo}
                     </p>
-                    {!notification.read && <Badge>Nova</Badge>}
+                    {!notification.lida && <Badge>Nova</Badge>}
                   </div>
                   <p className="mt-0.5 text-sm text-[var(--color-neutral-500)]">
-                    {notification.body}
+                    {notification.corpo}
                   </p>
                   <p className="mt-1 text-xs text-[var(--color-neutral-400)]">
-                    {formatRelativeTime(notification.created_at)}
+                    {formatRelativeTime(notification.criado_em)}
                   </p>
                 </div>
-                {!notification.read && (
+                {!notification.lida && (
                   <button
                     type="button"
                     onClick={() => markAsRead(notification.id)}

@@ -54,29 +54,29 @@ function PropostasDeAgenda() {
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
                   <h3 className="font-heading text-base font-semibold text-[var(--color-neutral-800)]">
-                    {proposal.title}
+                    {proposal.titulo}
                   </h3>
-                  {proposal.description && (
-                    <p className="mt-1 text-sm text-[var(--color-neutral-500)]">{proposal.description}</p>
+                  {proposal.descricao && (
+                    <p className="mt-1 text-sm text-[var(--color-neutral-500)]">{proposal.descricao}</p>
                   )}
                   <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-[var(--color-neutral-500)]">
                     <span className="flex items-center gap-1">
                       <Calendar size={12} strokeWidth={1.5} />
-                      {format(new Date(proposal.start_at), 'dd/MM/yyyy', { locale: ptBR })}
+                      {format(new Date(proposal.inicio_em), 'dd/MM/yyyy', { locale: ptBR })}
                     </span>
                     <span className="flex items-center gap-1">
                       <Clock size={12} strokeWidth={1.5} />
-                      {format(new Date(proposal.start_at), 'HH:mm')} - {format(new Date(proposal.end_at), 'HH:mm')}
+                      {format(new Date(proposal.inicio_em), 'HH:mm')} - {format(new Date(proposal.fim_em), 'HH:mm')}
                     </span>
-                    {proposal.location_name && (
+                    {proposal.local_nome && (
                       <span className="flex items-center gap-1">
                         <MapPin size={12} strokeWidth={1.5} />
-                        {proposal.location_name}
+                        {proposal.local_nome}
                       </span>
                     )}
                     <span className="flex items-center gap-1">
                       <User size={12} strokeWidth={1.5} />
-                      {presenceLabels[proposal.politician_presence]}
+                      {presenceLabels[proposal.presenca_parlamentar]}
                     </span>
                   </div>
                 </div>
@@ -91,7 +91,7 @@ function PropostasDeAgenda() {
                   <button
                     type="button"
                     onClick={() => {
-                      approve.mutate({ id: proposal.id, presence: proposal.politician_presence });
+                      approve.mutate({ id: proposal.id, presence: proposal.presenca_parlamentar });
                     }}
                     disabled={approve.isPending}
                     className="flex items-center gap-1 rounded-xl bg-[var(--color-accent-green)] px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:opacity-90 disabled:opacity-50"

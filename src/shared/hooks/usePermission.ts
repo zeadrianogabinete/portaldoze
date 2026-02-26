@@ -8,7 +8,7 @@ export function usePermission() {
   const can: PermissionCheck = useCallback(
     (resource: string, action: string) => {
       return permissions.some(
-        (p) => p.resource === resource && p.action === action,
+        (p) => p.recurso === resource && p.acao === action,
       );
     },
     [permissions],

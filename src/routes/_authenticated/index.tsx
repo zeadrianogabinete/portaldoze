@@ -90,7 +90,7 @@ const recentActivities = [
 function DashboardPage() {
   const { profile, can } = useCurrentUser();
   const { unreadCount } = useNotifications();
-  const firstName = profile?.full_name?.split(' ')[0] || 'Equipe';
+  const firstName = profile?.nome_completo?.split(' ')[0] || 'Equipe';
 
   const quickLinks = [
     {

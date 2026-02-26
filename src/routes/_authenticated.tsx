@@ -22,12 +22,12 @@ function AuthenticatedLayout() {
   }
 
   // Usuário pendente
-  if (profile?.status === 'pending') {
+  if (profile?.situacao === 'pending') {
     return <PendingApproval />;
   }
 
   // Usuário desativado
-  if (profile?.status === 'disabled') {
+  if (profile?.situacao === 'disabled') {
     return <DisabledAccount />;
   }
 

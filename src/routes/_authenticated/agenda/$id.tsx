@@ -43,7 +43,7 @@ function AgendaDetalhe() {
 
   const handleApprove = () => {
     approve.mutate(
-      { id: agenda.id, presence: agenda.politician_presence },
+      { id: agenda.id, presence: agenda.presenca_parlamentar },
       { onSuccess: () => navigate({ to: '/agenda' }) },
     );
   };
@@ -54,7 +54,7 @@ function AgendaDetalhe() {
 
   return (
     <PageContainer
-      title={agenda.title}
+      title={agenda.titulo}
       actions={
         <Link
           to="/agenda"
@@ -68,59 +68,59 @@ function AgendaDetalhe() {
       <div className="mx-auto max-w-2xl space-y-6">
         {/* Status */}
         <div className="flex items-center gap-3">
-          <span className={cn('rounded-full px-3 py-1 text-xs font-semibold', statusColors[agenda.status])}>
-            {statusLabels[agenda.status]}
+          <span className={cn('rounded-full px-3 py-1 text-xs font-semibold', statusColors[agenda.situacao])}>
+            {statusLabels[agenda.situacao]}
           </span>
         </div>
 
         {/* Card principal */}
         <div className="rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-6 shadow-[var(--shadow-card)]">
-          {agenda.description && (
-            <p className="mb-4 text-sm text-[var(--color-neutral-600)]">{agenda.description}</p>
+          {agenda.descricao && (
+            <p className="mb-4 text-sm text-[var(--color-neutral-600)]">{agenda.descricao}</p>
           )}
 
           <div className="space-y-3">
             <div className="flex items-center gap-2 text-sm text-[var(--color-neutral-600)]">
               <Calendar size={16} strokeWidth={1.5} className="text-[var(--color-neutral-400)]" />
               <span>
-                {format(new Date(agenda.start_at), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
+                {format(new Date(agenda.inicio_em), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
               </span>
             </div>
             <div className="flex items-center gap-2 text-sm text-[var(--color-neutral-600)]">
               <Clock size={16} strokeWidth={1.5} className="text-[var(--color-neutral-400)]" />
               <span>
-                {format(new Date(agenda.start_at), 'HH:mm')} - {format(new Date(agenda.end_at), 'HH:mm')}
+                {format(new Date(agenda.inicio_em), 'HH:mm')} - {format(new Date(agenda.fim_em), 'HH:mm')}
               </span>
             </div>
-            {agenda.location_name && (
+            {agenda.local_nome && (
               <div className="flex items-center gap-2 text-sm text-[var(--color-neutral-600)]">
                 <MapPin size={16} strokeWidth={1.5} className="text-[var(--color-neutral-400)]" />
                 <span>
-                  {agenda.location_name}
-                  {agenda.location_address && ` — ${agenda.location_address}`}
+                  {agenda.local_nome}
+                  {agenda.local_endereco && ` — ${agenda.local_endereco}`}
                 </span>
               </div>
             )}
             <div className="flex items-center gap-2 text-sm text-[var(--color-neutral-600)]">
               <User size={16} strokeWidth={1.5} className="text-[var(--color-neutral-400)]" />
               <span>
-                {presenceLabels[agenda.politician_presence]}
-                {agenda.representative_name && `: ${agenda.representative_name}`}
+                {presenceLabels[agenda.presenca_parlamentar]}
+                {agenda.nome_representante && `: ${agenda.nome_representante}`}
               </span>
             </div>
           </div>
 
-          {agenda.agenda_topic && (
+          {agenda.pauta && (
             <div className="mt-4 border-t border-[var(--color-neutral-100)] pt-4">
               <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--color-neutral-500)]">Pauta</h4>
-              <p className="mt-1 text-sm text-[var(--color-neutral-700)]">{agenda.agenda_topic}</p>
+              <p className="mt-1 text-sm text-[var(--color-neutral-700)]">{agenda.pauta}</p>
             </div>
           )}
 
-          {agenda.advisory_notes && (
+          {agenda.notas_assessoria && (
             <div className="mt-4 border-t border-[var(--color-neutral-100)] pt-4">
               <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--color-neutral-500)]">Notas da Assessoria</h4>
-              <p className="mt-1 text-sm text-[var(--color-neutral-700)]">{agenda.advisory_notes}</p>
+              <p className="mt-1 text-sm text-[var(--color-neutral-700)]">{agenda.notas_assessoria}</p>
             </div>
           )}
         </div>
@@ -136,7 +136,7 @@ function AgendaDetalhe() {
               Editar
             </button>
           )}
-          {can('agenda', 'approve') && agenda.status === 'proposed' && (
+          {can('agenda', 'approve') && agenda.situacao === 'proposed' && (
             <button
               type="button"
               onClick={handleApprove}
@@ -147,7 +147,7 @@ function AgendaDetalhe() {
               Aprovar
             </button>
           )}
-          {can('agenda', 'approve') && agenda.status === 'approved' && (
+          {can('agenda', 'approve') && agenda.situacao === 'approved' && (
             <button
               type="button"
               className="flex items-center gap-1.5 rounded-xl bg-[var(--color-neutral-100)] px-3 py-2 text-sm font-semibold text-[var(--color-neutral-600)] transition-colors hover:bg-[var(--color-neutral-200)]"

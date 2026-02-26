@@ -123,14 +123,14 @@ export function Sidebar({ mobile, onClose }: SidebarProps) {
       <div className="p-4 bg-white/[0.03] border-t border-white/8">
         <div className="flex items-center gap-3.5 rounded-lg bg-white/[0.05] p-3.5 border border-white/8">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-tr from-primary-500 to-primary-400 text-sm font-bold text-white shadow-md">
-            {profile?.full_name?.charAt(0)?.toUpperCase() || '?'}
+            {profile?.nome_completo?.charAt(0)?.toUpperCase() || '?'}
           </div>
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-semibold text-white">
-              {profile?.full_name}
+              {profile?.nome_completo}
             </p>
             <p className="truncate text-[11px] font-medium text-sidebar-text">
-              {profile?.role}
+              {profile?.papel}
             </p>
           </div>
         </div>

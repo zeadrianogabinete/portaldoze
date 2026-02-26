@@ -36,7 +36,7 @@ export function ListView({ currentDate }: ListViewProps) {
 
   // Agrupar por dia
   const grouped = agendas.reduce<Record<string, typeof agendas>>((acc, agenda) => {
-    const dayKey = format(new Date(agenda.start_at), 'yyyy-MM-dd');
+    const dayKey = format(new Date(agenda.inicio_em), 'yyyy-MM-dd');
     if (!acc[dayKey]) acc[dayKey] = [];
     acc[dayKey].push(agenda);
     return acc;
@@ -79,34 +79,34 @@ export function ListView({ currentDate }: ListViewProps) {
                   <div
                     className={cn(
                       'mt-1.5 h-2.5 w-2.5 flex-shrink-0 rounded-full',
-                      agenda.status === 'approved' ? 'bg-primary-500' : 'bg-[var(--color-accent-yellow)]',
+                      agenda.situacao === 'approved' ? 'bg-primary-500' : 'bg-[var(--color-accent-yellow)]',
                     )}
                   />
 
                   <div className="flex-1">
                     <div className="flex items-baseline gap-2">
                       <span className="text-sm font-medium text-[var(--color-neutral-800)]">
-                        {format(new Date(agenda.start_at), 'HH:mm')}-{format(new Date(agenda.end_at), 'HH:mm')}
+                        {format(new Date(agenda.inicio_em), 'HH:mm')}-{format(new Date(agenda.fim_em), 'HH:mm')}
                       </span>
                       <span className="text-sm font-semibold text-[var(--color-neutral-800)]">
-                        {agenda.title}
+                        {agenda.titulo}
                       </span>
-                      {agenda.status === 'proposed' && (
+                      {agenda.situacao === 'proposed' && (
                         <span className="rounded-full bg-yellow-100 px-2 py-0.5 text-[10px] font-semibold text-yellow-700">
                           PROPOSTA
                         </span>
                       )}
                     </div>
                     <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-[var(--color-neutral-500)]">
-                      {agenda.location_name && (
+                      {agenda.local_nome && (
                         <span className="flex items-center gap-1">
                           <MapPin size={12} strokeWidth={1.5} />
-                          {agenda.location_name}
+                          {agenda.local_nome}
                         </span>
                       )}
-                      <span className={cn('flex items-center gap-1', presenceColors[agenda.politician_presence])}>
+                      <span className={cn('flex items-center gap-1', presenceColors[agenda.presenca_parlamentar])}>
                         <User size={12} strokeWidth={1.5} />
-                        {presenceLabels[agenda.politician_presence]}
+                        {presenceLabels[agenda.presenca_parlamentar]}
                       </span>
                     </div>
                   </div>

@@ -9,19 +9,19 @@ import { usePermission } from '@/shared/hooks/usePermission';
 import { format } from 'date-fns';
 
 const agendaSchema = z.object({
-  title: z.string().min(1, 'Título é obrigatório'),
-  description: z.string().optional(),
-  agenda_topic: z.string().optional(),
-  start_at: z.string().min(1, 'Data de início é obrigatória'),
-  end_at: z.string().min(1, 'Data de término é obrigatória'),
-  all_day: z.boolean(),
-  location_name: z.string().optional(),
-  location_address: z.string().optional(),
-  status: z.enum(['proposed', 'approved']),
-  politician_presence: z.enum(['politician', 'representative', 'none']),
-  representative_name: z.string().optional(),
-  advisory_notes: z.string().optional(),
-  color: z.string().optional(),
+  titulo: z.string().min(1, 'Título é obrigatório'),
+  descricao: z.string().optional(),
+  pauta: z.string().optional(),
+  inicio_em: z.string().min(1, 'Data de início é obrigatória'),
+  fim_em: z.string().min(1, 'Data de término é obrigatória'),
+  dia_inteiro: z.boolean(),
+  local_nome: z.string().optional(),
+  local_endereco: z.string().optional(),
+  situacao: z.enum(['proposed', 'approved']),
+  presenca_parlamentar: z.enum(['politician', 'representative', 'none']),
+  nome_representante: z.string().optional(),
+  notas_assessoria: z.string().optional(),
+  cor: z.string().optional(),
 });
 
 type AgendaFormData = z.infer<typeof agendaSchema>;
@@ -47,26 +47,26 @@ function NovaAgenda() {
   } = useForm<AgendaFormData>({
     resolver: zodResolver(agendaSchema),
     defaultValues: {
-      start_at: defaultStart,
-      end_at: defaultEnd,
-      all_day: false,
-      status: can('agenda', 'approve') ? 'approved' : 'proposed',
-      politician_presence: 'politician',
+      inicio_em: defaultStart,
+      fim_em: defaultEnd,
+      dia_inteiro: false,
+      situacao: can('agenda', 'approve') ? 'approved' : 'proposed',
+      presenca_parlamentar: 'politician',
     },
   });
 
-  const watchPresence = watch('politician_presence');
-  const watchAllDay = watch('all_day');
+  const watchPresence = watch('presenca_parlamentar');
+  const watchAllDay = watch('dia_inteiro');
 
   const onSubmit = (data: AgendaFormData) => {
-    const startDate = new Date(data.start_at);
-    const endDate = new Date(data.end_at);
+    const startDate = new Date(data.inicio_em);
+    const endDate = new Date(data.fim_em);
 
     create.mutate(
       {
         ...data,
-        start_at: startDate.toISOString(),
-        end_at: endDate.toISOString(),
+        inicio_em: startDate.toISOString(),
+        fim_em: endDate.toISOString(),
       },
       {
         onSuccess: () => {
@@ -99,18 +99,18 @@ function NovaAgenda() {
             Título <span className="text-[var(--color-error)]">*</span>
           </label>
           <input
-            {...register('title')}
+            {...register('titulo')}
             className="flex h-10 w-full rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-2 text-sm text-[var(--color-neutral-800)] transition-colors placeholder:text-[var(--color-neutral-400)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
             placeholder="Título do compromisso"
           />
-          {errors.title && <p className="text-xs text-[var(--color-error)]">{errors.title.message}</p>}
+          {errors.titulo && <p className="text-xs text-[var(--color-error)]">{errors.titulo.message}</p>}
         </div>
 
         {/* Descrição */}
         <div className="space-y-1.5">
           <label className="text-sm font-medium text-[var(--color-neutral-700)]">Descrição</label>
           <textarea
-            {...register('description')}
+            {...register('descricao')}
             rows={3}
             className="flex min-h-[80px] w-full rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-2 text-sm text-[var(--color-neutral-800)] transition-colors placeholder:text-[var(--color-neutral-400)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
             placeholder="Detalhes do compromisso"
@@ -121,7 +121,7 @@ function NovaAgenda() {
         <div className="space-y-1.5">
           <label className="text-sm font-medium text-[var(--color-neutral-700)]">Pauta</label>
           <input
-            {...register('agenda_topic')}
+            {...register('pauta')}
             className="flex h-10 w-full rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-2 text-sm text-[var(--color-neutral-800)] transition-colors placeholder:text-[var(--color-neutral-400)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
             placeholder="Tema da pauta"
           />
@@ -131,7 +131,7 @@ function NovaAgenda() {
         <div className="flex items-center gap-2">
           <input
             type="checkbox"
-            {...register('all_day')}
+            {...register('dia_inteiro')}
             className="h-4 w-4 rounded border-[var(--color-neutral-300)] text-primary-500 focus:ring-primary-500"
           />
           <label className="text-sm text-[var(--color-neutral-700)]">Dia inteiro</label>
@@ -145,10 +145,10 @@ function NovaAgenda() {
             </label>
             <input
               type={watchAllDay ? 'date' : 'datetime-local'}
-              {...register('start_at')}
+              {...register('inicio_em')}
               className="flex h-10 w-full rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-2 text-sm text-[var(--color-neutral-800)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
             />
-            {errors.start_at && <p className="text-xs text-[var(--color-error)]">{errors.start_at.message}</p>}
+            {errors.inicio_em && <p className="text-xs text-[var(--color-error)]">{errors.inicio_em.message}</p>}
           </div>
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-[var(--color-neutral-700)]">
@@ -156,10 +156,10 @@ function NovaAgenda() {
             </label>
             <input
               type={watchAllDay ? 'date' : 'datetime-local'}
-              {...register('end_at')}
+              {...register('fim_em')}
               className="flex h-10 w-full rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-2 text-sm text-[var(--color-neutral-800)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
             />
-            {errors.end_at && <p className="text-xs text-[var(--color-error)]">{errors.end_at.message}</p>}
+            {errors.fim_em && <p className="text-xs text-[var(--color-error)]">{errors.fim_em.message}</p>}
           </div>
         </div>
 
@@ -168,7 +168,7 @@ function NovaAgenda() {
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-[var(--color-neutral-700)]">Local</label>
             <input
-              {...register('location_name')}
+              {...register('local_nome')}
               className="flex h-10 w-full rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-2 text-sm text-[var(--color-neutral-800)] placeholder:text-[var(--color-neutral-400)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
               placeholder="Nome do local"
             />
@@ -176,7 +176,7 @@ function NovaAgenda() {
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-[var(--color-neutral-700)]">Endereço</label>
             <input
-              {...register('location_address')}
+              {...register('local_endereco')}
               className="flex h-10 w-full rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-2 text-sm text-[var(--color-neutral-800)] placeholder:text-[var(--color-neutral-400)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
               placeholder="Endereço completo"
             />
@@ -188,7 +188,7 @@ function NovaAgenda() {
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-[var(--color-neutral-700)]">Status</label>
             <select
-              {...register('status')}
+              {...register('situacao')}
               className="flex h-10 w-full appearance-none rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-2 text-sm text-[var(--color-neutral-800)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
             >
               <option value="proposed">Proposta</option>
@@ -201,7 +201,7 @@ function NovaAgenda() {
         <div className="space-y-1.5">
           <label className="text-sm font-medium text-[var(--color-neutral-700)]">Presença do Político</label>
           <select
-            {...register('politician_presence')}
+            {...register('presenca_parlamentar')}
             className="flex h-10 w-full appearance-none rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-2 text-sm text-[var(--color-neutral-800)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
           >
             <option value="politician">Político presente</option>
@@ -215,7 +215,7 @@ function NovaAgenda() {
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-[var(--color-neutral-700)]">Nome do Representante</label>
             <input
-              {...register('representative_name')}
+              {...register('nome_representante')}
               className="flex h-10 w-full rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-2 text-sm text-[var(--color-neutral-800)] placeholder:text-[var(--color-neutral-400)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
               placeholder="Nome completo"
             />
@@ -226,7 +226,7 @@ function NovaAgenda() {
         <div className="space-y-1.5">
           <label className="text-sm font-medium text-[var(--color-neutral-700)]">Notas da Assessoria</label>
           <textarea
-            {...register('advisory_notes')}
+            {...register('notas_assessoria')}
             rows={2}
             className="flex min-h-[60px] w-full rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-2 text-sm text-[var(--color-neutral-800)] placeholder:text-[var(--color-neutral-400)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
             placeholder="Observações internas"
@@ -238,7 +238,7 @@ function NovaAgenda() {
           <label className="text-sm font-medium text-[var(--color-neutral-700)]">Cor (opcional)</label>
           <input
             type="color"
-            {...register('color')}
+            {...register('cor')}
             className="h-10 w-14 cursor-pointer rounded-xl border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] p-1"
           />
         </div>

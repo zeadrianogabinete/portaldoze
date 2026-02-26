@@ -45,8 +45,8 @@ function RegisterPage() {
       await authService.register({
         email: data.email,
         password: data.password,
-        full_name: data.full_name,
-        phone: data.phone,
+        nome_completo: data.full_name,
+        telefone: data.phone,
       });
       setSuccess(true);
     } catch (err) {
