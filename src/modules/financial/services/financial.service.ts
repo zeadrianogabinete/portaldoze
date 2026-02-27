@@ -134,7 +134,7 @@ export const financialService = {
       .from('finan_contas_bancarias')
       .select('*')
       .eq('ativo', true)
-      .order('nome');
+      .order('nome_banco');
 
     if (error) throw error;
     return data as BankAccount[];
@@ -235,9 +235,12 @@ export const financialService = {
     periodo_inicio: string;
     periodo_fim: string;
   }): Promise<ReimbursementReport> {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('Usuário não autenticado');
+
     const { data, error } = await supabase
       .from('finan_relatorios_reembolso')
-      .insert({ ...input, situacao: 'draft' })
+      .insert({ ...input, situacao: 'draft', criado_por: user.id })
       .select()
       .single();
 

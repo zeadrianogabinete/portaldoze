@@ -286,7 +286,7 @@ export function TransactionForm({
           <select {...register('conta_bancaria_id')} className={selectClasses}>
             <option value="">Selecione</option>
             {bankAccounts?.map((b) => (
-              <option key={b.id} value={b.id}>{b.nome} — {b.nome_banco}</option>
+              <option key={b.id} value={b.id}>{b.nome_banco}</option>
             ))}
           </select>
         </FormField>

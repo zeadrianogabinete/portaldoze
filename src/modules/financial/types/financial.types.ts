@@ -32,7 +32,6 @@ export interface FundingSource {
 
 export interface BankAccount {
   id: string;
-  nome: string;
   nome_banco: string;
   agencia: string;
   numero_conta: string;
