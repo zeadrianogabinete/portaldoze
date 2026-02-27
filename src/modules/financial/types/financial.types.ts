@@ -1,9 +1,12 @@
 export interface ExpenseCategory {
   id: string;
   nome: string;
-  codigo: string;
+  codigo: string | null;
   descricao: string | null;
+  tem_cota: boolean;
+  cota_mensal: number | null;
   ativo: boolean;
+  ordem: number;
   criado_em: string;
 }
 
@@ -24,18 +27,22 @@ export interface ExpenseNature {
 export interface FundingSource {
   id: string;
   nome: string;
-  codigo: string;
+  tipo: 'expense' | 'revenue';
+  codigo: string | null;
   descricao: string | null;
   ativo: boolean;
+  ordem: number;
   criado_em: string;
 }
 
 export interface BankAccount {
   id: string;
   nome_banco: string;
-  agencia: string;
-  numero_conta: string;
-  tipo_conta: 'checking' | 'savings';
+  agencia: string | null;
+  numero_conta: string | null;
+  tipo_conta: string | null;
+  titular: string | null;
+  descricao: string | null;
   ativo: boolean;
   criado_em: string;
 }
@@ -176,4 +183,39 @@ export interface CreateTransactionInput {
   conta_bancaria_id?: string;
   contato_id?: string;
   observacoes?: string;
+}
+
+// === Input types para CRUD de configurações ===
+
+export interface CreateCategoryInput {
+  nome: string;
+  descricao?: string;
+  tem_cota?: boolean;
+  cota_mensal?: number;
+}
+
+export interface CreateNatureInput {
+  codigo: string;
+  nome: string;
+  descricao?: string;
+  elegivel_ceap?: boolean;
+  tem_cota?: boolean;
+  cota_mensal?: number;
+  categoria_id?: string;
+}
+
+export interface CreateFundingSourceInput {
+  nome: string;
+  tipo: 'expense' | 'revenue';
+  codigo?: string;
+  descricao?: string;
+}
+
+export interface CreateBankAccountInput {
+  nome_banco: string;
+  agencia?: string;
+  numero_conta?: string;
+  tipo_conta?: string;
+  titular?: string;
+  descricao?: string;
 }

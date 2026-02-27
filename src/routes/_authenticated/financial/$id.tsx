@@ -191,7 +191,7 @@ function TransacaoDetalhe() {
             <DetailRow icon={Tag} label="Natureza" value={transaction.natureza?.nome} />
             <DetailRow icon={Layers} label="Categoria" value={transaction.categoria?.nome} />
             <DetailRow icon={Wallet} label="Fonte de Recurso" value={transaction.fonte_recurso?.nome} />
-            <DetailRow icon={Hash} label="Conta Bancária" value={transaction.conta_bancaria?.nome ? `${transaction.conta_bancaria.nome} — ${transaction.conta_bancaria.nome_banco}` : null} />
+            <DetailRow icon={Hash} label="Conta Bancária" value={transaction.conta_bancaria?.nome_banco ?? null} />
           </div>
 
           {/* Separador */}

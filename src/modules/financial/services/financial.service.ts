@@ -11,6 +11,10 @@ import type {
   QuotaConfig,
   ReimbursementReport,
   TransactionDocument,
+  CreateCategoryInput,
+  CreateNatureInput,
+  CreateFundingSourceInput,
+  CreateBankAccountInput,
 } from '../types/financial.types';
 
 export const financialService = {
@@ -104,6 +108,48 @@ export const financialService = {
     return data as ExpenseCategory[];
   },
 
+  async listAllCategories(): Promise<ExpenseCategory[]> {
+    const { data, error } = await supabase
+      .from('finan_categorias')
+      .select('*')
+      .order('ordem', { ascending: true });
+
+    if (error) throw error;
+    return data as ExpenseCategory[];
+  },
+
+  async createCategory(input: CreateCategoryInput): Promise<ExpenseCategory> {
+    const { data, error } = await supabase
+      .from('finan_categorias')
+      .insert(input)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as ExpenseCategory;
+  },
+
+  async updateCategory(id: string, input: Partial<ExpenseCategory>): Promise<ExpenseCategory> {
+    const { data, error } = await supabase
+      .from('finan_categorias')
+      .update(input)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as ExpenseCategory;
+  },
+
+  async deleteCategory(id: string): Promise<void> {
+    const { error } = await supabase
+      .from('finan_categorias')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+  },
+
   // === Naturezas ===
   async listNatures(): Promise<ExpenseNature[]> {
     const { data, error } = await supabase
@@ -114,6 +160,39 @@ export const financialService = {
 
     if (error) throw error;
     return data as ExpenseNature[];
+  },
+
+  async listAllNatures(): Promise<ExpenseNature[]> {
+    const { data, error } = await supabase
+      .from('finan_naturezas')
+      .select('*')
+      .order('ordem', { ascending: true });
+
+    if (error) throw error;
+    return data as ExpenseNature[];
+  },
+
+  async createNature(input: CreateNatureInput): Promise<ExpenseNature> {
+    const { data, error } = await supabase
+      .from('finan_naturezas')
+      .insert(input)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as ExpenseNature;
+  },
+
+  async updateNature(id: string, input: Partial<ExpenseNature>): Promise<ExpenseNature> {
+    const { data, error } = await supabase
+      .from('finan_naturezas')
+      .update(input)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as ExpenseNature;
   },
 
   // === Fontes de Recurso ===
@@ -128,6 +207,39 @@ export const financialService = {
     return data as FundingSource[];
   },
 
+  async listAllFundingSources(): Promise<FundingSource[]> {
+    const { data, error } = await supabase
+      .from('finan_fontes_recurso')
+      .select('*')
+      .order('ordem', { ascending: true });
+
+    if (error) throw error;
+    return data as FundingSource[];
+  },
+
+  async createFundingSource(input: CreateFundingSourceInput): Promise<FundingSource> {
+    const { data, error } = await supabase
+      .from('finan_fontes_recurso')
+      .insert(input)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as FundingSource;
+  },
+
+  async updateFundingSource(id: string, input: Partial<FundingSource>): Promise<FundingSource> {
+    const { data, error } = await supabase
+      .from('finan_fontes_recurso')
+      .update(input)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as FundingSource;
+  },
+
   // === Contas Bancárias ===
   async listBankAccounts(): Promise<BankAccount[]> {
     const { data, error } = await supabase
@@ -138,6 +250,39 @@ export const financialService = {
 
     if (error) throw error;
     return data as BankAccount[];
+  },
+
+  async listAllBankAccounts(): Promise<BankAccount[]> {
+    const { data, error } = await supabase
+      .from('finan_contas_bancarias')
+      .select('*')
+      .order('nome_banco');
+
+    if (error) throw error;
+    return data as BankAccount[];
+  },
+
+  async createBankAccount(input: CreateBankAccountInput): Promise<BankAccount> {
+    const { data, error } = await supabase
+      .from('finan_contas_bancarias')
+      .insert(input)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as BankAccount;
+  },
+
+  async updateBankAccount(id: string, input: Partial<BankAccount>): Promise<BankAccount> {
+    const { data, error } = await supabase
+      .from('finan_contas_bancarias')
+      .update(input)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as BankAccount;
   },
 
   // === Despesas Fixas ===
@@ -196,6 +341,18 @@ export const financialService = {
 
     if (error && error.code !== 'PGRST116') throw error;
     return data as QuotaConfig | null;
+  },
+
+  async updateQuotaConfig(id: string, input: { total_mensal: number; descricao?: string }): Promise<QuotaConfig> {
+    const { data, error } = await supabase
+      .from('finan_cotas')
+      .update(input)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as QuotaConfig;
   },
 
   async getQuotaUsage(year: number, month: number): Promise<{ nature_name: string; total_used: number }[]> {
