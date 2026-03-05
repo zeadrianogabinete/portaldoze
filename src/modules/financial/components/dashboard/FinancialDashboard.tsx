@@ -1,17 +1,35 @@
 import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import { useNavigate } from '@tanstack/react-router';
 import { TrendingUp, TrendingDown, DollarSign, PieChart } from 'lucide-react';
 import { cn } from '@/shared/utils/cn';
-import { formatCurrency } from '@/shared/utils/format';
+import { formatCurrency, formatDate } from '@/shared/utils/format';
 import { useDashboard } from '@/modules/financial/hooks/useDashboard';
 import { Card, CardTitle } from '@/shared/components/ui/Card';
+
+const statusLabels: Record<string, string> = {
+  pending: 'Pendente',
+  paid: 'Pago',
+  overdue: 'Atrasado',
+  cancelled: 'Cancelado',
+};
+
+const statusColors: Record<string, string> = {
+  pending: 'bg-yellow-50 text-yellow-700',
+  paid: 'bg-green-50 text-green-700',
+  overdue: 'bg-red-50 text-red-700',
+  cancelled: 'bg-[var(--color-neutral-100)] text-[var(--color-neutral-500)]',
+};
 
 interface FinancialDashboardProps {
   currentMonth: Date;
 }
 
 export function FinancialDashboard({ currentMonth }: FinancialDashboardProps) {
+  const navigate = useNavigate();
   const monthStr = format(currentMonth, 'yyyy-MM-01');
-  const { summary, isLoading } = useDashboard(monthStr);
+  const monthLabel = format(currentMonth, 'MMMM yyyy', { locale: ptBR });
+  const { summary, overallBalance, recentTransactions, isLoading, isLoadingTransactions } = useDashboard(monthStr);
 
   if (isLoading) {
     return (
@@ -23,7 +41,7 @@ export function FinancialDashboard({ currentMonth }: FinancialDashboardProps) {
 
   const cards = [
     {
-      label: 'Receitas',
+      label: `Receitas de ${format(currentMonth, 'MMM', { locale: ptBR })}`,
       value: summary?.total_revenue ?? 0,
       icon: TrendingUp,
       bgColor: 'bg-green-50',
@@ -31,7 +49,7 @@ export function FinancialDashboard({ currentMonth }: FinancialDashboardProps) {
       iconColor: 'text-green-500',
     },
     {
-      label: 'Despesas',
+      label: `Despesas de ${format(currentMonth, 'MMM', { locale: ptBR })}`,
       value: summary?.total_expense ?? 0,
       icon: TrendingDown,
       bgColor: 'bg-red-50',
@@ -39,15 +57,15 @@ export function FinancialDashboard({ currentMonth }: FinancialDashboardProps) {
       iconColor: 'text-red-500',
     },
     {
-      label: 'Saldo',
-      value: summary?.balance ?? 0,
+      label: 'Saldo Geral',
+      value: overallBalance?.balance ?? 0,
       icon: DollarSign,
       bgColor: 'bg-blue-50',
-      textColor: 'text-blue-700',
+      textColor: (overallBalance?.balance ?? 0) >= 0 ? 'text-blue-700' : 'text-red-700',
       iconColor: 'text-blue-500',
     },
     {
-      label: 'Cota CEAP',
+      label: 'Movimentações do Mês',
       value: null,
       icon: PieChart,
       bgColor: 'bg-yellow-50',
@@ -63,10 +81,7 @@ export function FinancialDashboard({ currentMonth }: FinancialDashboardProps) {
         {cards.map((card) => (
           <Card
             key={card.label}
-            className={cn(
-              'p-5',
-              card.bgColor,
-            )}
+            className={cn('p-5', card.bgColor)}
           >
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-[var(--color-neutral-600)]">
@@ -87,18 +102,103 @@ export function FinancialDashboard({ currentMonth }: FinancialDashboardProps) {
         ))}
       </div>
 
-      <div className="mt-6 grid gap-4 lg:grid-cols-2">
+      {/* Movimentações recentes do mês */}
+      <div className="mt-6">
         <Card className="p-6">
-          <CardTitle>Receitas vs Despesas</CardTitle>
-          <div className="mt-8 flex items-center justify-center py-12 text-sm text-[var(--color-neutral-400)]">
-            Gráfico em desenvolvimento
-          </div>
-        </Card>
-        <Card className="p-6">
-          <CardTitle>Despesas por Natureza</CardTitle>
-          <div className="mt-8 flex items-center justify-center py-12 text-sm text-[var(--color-neutral-400)]">
-            Gráfico em desenvolvimento
-          </div>
+          <CardTitle>Movimentações de {monthLabel}</CardTitle>
+
+          {isLoadingTransactions ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary-500 border-t-transparent" />
+            </div>
+          ) : !recentTransactions || recentTransactions.length === 0 ? (
+            <div className="mt-4 py-8 text-center text-sm text-[var(--color-neutral-400)]">
+              Nenhuma movimentação registrada neste mês
+            </div>
+          ) : (
+            <>
+              {/* Desktop */}
+              <div className="mt-4 hidden overflow-hidden rounded-lg border border-[var(--color-neutral-200)] sm:block">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)]/70">
+                      <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-[var(--color-neutral-500)]">Data</th>
+                      <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-[var(--color-neutral-500)]">Descrição</th>
+                      <th className="px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-[var(--color-neutral-500)]">Tipo</th>
+                      <th className="px-4 py-2.5 text-right text-xs font-semibold uppercase tracking-wider text-[var(--color-neutral-500)]">Valor</th>
+                      <th className="px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-wider text-[var(--color-neutral-500)]">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[var(--color-neutral-100)]">
+                    {recentTransactions.map((t) => (
+                      <tr
+                        key={t.id}
+                        className="cursor-pointer transition-colors hover:bg-[var(--color-neutral-50)]"
+                        onClick={() => navigate({ to: '/financial/$id', params: { id: t.id } })}
+                      >
+                        <td className="px-4 py-2.5 text-sm text-[var(--color-neutral-600)]">{formatDate(t.data)}</td>
+                        <td className="px-4 py-2.5 text-sm font-medium text-[var(--color-neutral-800)]">{t.descricao}</td>
+                        <td className="px-4 py-2.5 text-center">
+                          <span className={cn(
+                            'inline-flex rounded-full px-2 py-0.5 text-xs font-semibold',
+                            t.tipo === 'revenue' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700',
+                          )}>
+                            {t.tipo === 'revenue' ? 'Receita' : 'Despesa'}
+                          </span>
+                        </td>
+                        <td className={cn(
+                          'px-4 py-2.5 text-right text-sm font-semibold',
+                          t.tipo === 'revenue' ? 'text-green-600' : 'text-red-600',
+                        )}>
+                          {formatCurrency(t.valor)}
+                        </td>
+                        <td className="px-4 py-2.5 text-center">
+                          <span className={cn('inline-flex rounded-full px-2 py-0.5 text-xs font-semibold', statusColors[t.situacao] ?? '')}>
+                            {statusLabels[t.situacao] ?? t.situacao}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile */}
+              <div className="mt-4 space-y-2 sm:hidden">
+                {recentTransactions.map((t) => (
+                  <div
+                    key={t.id}
+                    className="cursor-pointer rounded-lg border border-[var(--color-neutral-200)] p-3 transition-colors active:bg-[var(--color-neutral-50)]"
+                    onClick={() => navigate({ to: '/financial/$id', params: { id: t.id } })}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-medium text-[var(--color-neutral-800)]">{t.descricao}</p>
+                        <p className="mt-0.5 text-xs text-[var(--color-neutral-500)]">{formatDate(t.data)}</p>
+                      </div>
+                      <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold', statusColors[t.situacao] ?? '')}>
+                        {statusLabels[t.situacao] ?? t.situacao}
+                      </span>
+                    </div>
+                    <div className="mt-1.5 flex items-center justify-between">
+                      <span className={cn(
+                        'text-xs font-semibold',
+                        t.tipo === 'revenue' ? 'text-green-600' : 'text-red-600',
+                      )}>
+                        {t.tipo === 'revenue' ? 'Receita' : 'Despesa'}
+                      </span>
+                      <span className={cn(
+                        'text-sm font-bold',
+                        t.tipo === 'revenue' ? 'text-green-600' : 'text-red-600',
+                      )}>
+                        {formatCurrency(t.valor)}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </Card>
       </div>
     </div>

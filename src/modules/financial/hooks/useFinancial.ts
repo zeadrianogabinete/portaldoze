@@ -132,6 +132,21 @@ export function useQuotaUsage(year: number, month: number) {
   });
 }
 
+export function useCeapExpenses(year: number, month: number) {
+  return useQuery({
+    queryKey: ['financial', 'ceap-expenses', year, month],
+    queryFn: () => financialService.getCeapExpenses(year, month),
+  });
+}
+
+export function useDocumentCounts(ids: string[]) {
+  return useQuery({
+    queryKey: ['financial', 'document-counts', ids],
+    queryFn: () => financialService.getDocumentCounts(ids),
+    enabled: ids.length > 0,
+  });
+}
+
 export function useReimbursementReports() {
   return useQuery({
     queryKey: ['financial', 'reimbursement-reports'],
@@ -231,12 +246,25 @@ export function useReportMutations() {
     },
   });
 
+  const markReimbursementSentMutation = useMutation({
+    mutationFn: (reportId: string) => financialService.markReimbursementSent(reportId),
+    onSuccess: (_data, reportId) => {
+      queryClient.invalidateQueries({ queryKey: ['financial', 'report-transactions', reportId] });
+      queryClient.invalidateQueries({ queryKey: ['transactions'] });
+      toast.success('Transações marcadas como enviadas para reembolso');
+    },
+    onError: (error: Error) => {
+      toast.error(`Erro ao marcar reembolso: ${error.message}`);
+    },
+  });
+
   return {
     create: createMutation,
     update: updateMutation,
     remove: deleteMutation,
     link: linkMutation,
     unlink: unlinkMutation,
+    markReimbursementSent: markReimbursementSentMutation,
   };
 }
 

@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
-import { Copy, Eye, MoreHorizontal, Plus, Search, Trash2, Wallet } from 'lucide-react';
+import { Copy, Eye, MoreHorizontal, Paperclip, Plus, Trash2 } from 'lucide-react';
 import { PageContainer } from '@/shared/components/layout/PageContainer';
-import { useTransactions, useTransactionMutations } from '@/modules/financial/hooks/useFinancial';
+import { useTransactions, useTransactionMutations, useDocumentCounts } from '@/modules/financial/hooks/useFinancial';
 import { ConfirmDialog } from '@/shared/components/form/ConfirmDialog';
+import { DataTable, type Column } from '@/shared/components/form/DataTable';
 import { formatCurrency, formatDate } from '@/shared/utils/format';
 import { cn } from '@/shared/utils/cn';
-import { EmptyState } from '@/shared/components/feedback/EmptyState';
+import type { Transaction } from '@/modules/financial/types/financial.types';
 
 export const Route = createFileRoute('/_authenticated/financial/expenses')({
   component: Despesas,
@@ -26,204 +27,184 @@ const statusColors: Record<string, string> = {
   cancelled: 'bg-[var(--color-neutral-100)] text-[var(--color-neutral-500)]',
 };
 
+const paymentLabels: Record<string, string> = {
+  pix: 'PIX',
+  transfer: 'Transferência',
+  boleto: 'Boleto',
+  credit_card: 'Cartão Créd.',
+  debit_card: 'Cartão Déb.',
+  cash: 'Dinheiro',
+  check: 'Cheque',
+  other: 'Outro',
+};
+
 function Despesas() {
   const navigate = useNavigate();
-  const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('');
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
 
-  const { data: transactions, isLoading } = useTransactions({
-    tipo: 'expense',
-    situacao: statusFilter || undefined,
-    busca: search || undefined,
-  });
-
+  const { data: transactions, isLoading } = useTransactions({ tipo: 'expense' });
   const { remove } = useTransactionMutations();
+
+  const transactionIds = useMemo(() => (transactions ?? []).map((t) => t.id), [transactions]);
+  const { data: docCounts } = useDocumentCounts(transactionIds);
+
+  const columns: Column<Transaction>[] = [
+    {
+      key: 'data',
+      header: 'Data',
+      sortable: true,
+      filterable: true,
+      filterType: 'date-range',
+      accessor: (t) => t.data,
+      render: (t) => <span className="text-[var(--color-neutral-600)]">{formatDate(t.data)}</span>,
+    },
+    {
+      key: 'descricao',
+      header: 'Descrição',
+      sortable: true,
+      filterable: true,
+      filterType: 'text',
+      accessor: (t) => t.descricao,
+      render: (t) => <span className="font-medium text-[var(--color-neutral-800)]">{t.descricao}</span>,
+    },
+    {
+      key: 'natureza',
+      header: 'Natureza',
+      sortable: true,
+      filterable: true,
+      filterType: 'select',
+      accessor: (t) => t.natureza?.nome ?? '',
+      render: (t) => <span className="text-[var(--color-neutral-500)]">{t.natureza?.nome ?? '—'}</span>,
+    },
+    {
+      key: 'valor',
+      header: 'Valor',
+      sortable: true,
+      filterable: true,
+      filterType: 'number-range',
+      className: 'text-right',
+      accessor: (t) => t.valor,
+      render: (t) => <span className="font-semibold text-red-600">{formatCurrency(t.valor)}</span>,
+    },
+    {
+      key: 'forma_pagamento',
+      header: 'Pagamento',
+      sortable: true,
+      filterable: true,
+      filterType: 'select',
+      accessor: (t) => t.forma_pagamento,
+      filterOptions: Object.entries(paymentLabels).map(([v, l]) => ({ value: v, label: l })),
+      render: (t) => <span className="text-xs text-[var(--color-neutral-500)]">{paymentLabels[t.forma_pagamento] ?? '—'}</span>,
+    },
+    {
+      key: 'situacao',
+      header: 'Status',
+      sortable: true,
+      filterable: true,
+      filterType: 'select',
+      className: 'text-center',
+      accessor: (t) => t.situacao,
+      filterOptions: Object.entries(statusLabels).map(([v, l]) => ({ value: v, label: l })),
+      render: (t) => (
+        <span className={cn('inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold', statusColors[t.situacao] ?? '')}>
+          {statusLabels[t.situacao] ?? t.situacao}
+        </span>
+      ),
+    },
+    {
+      key: 'comprovante',
+      header: 'Comp.',
+      className: 'text-center w-14',
+      render: (t) => {
+        const count = docCounts?.get(t.id) ?? 0;
+        return (
+          <Paperclip size={14} className={cn('mx-auto', count > 0 ? 'text-green-500' : 'text-[var(--color-neutral-300)]')} />
+        );
+      },
+    },
+    {
+      key: 'actions',
+      header: '',
+      className: 'w-12',
+      render: (t) => (
+        <div className="relative" onClick={(e) => e.stopPropagation()}>
+          <button
+            type="button"
+            className="rounded-lg p-1.5 text-[var(--color-neutral-400)] transition-colors hover:bg-[var(--color-neutral-100)] hover:text-[var(--color-neutral-600)]"
+            onClick={() => setOpenMenu(openMenu === t.id ? null : t.id)}
+          >
+            <MoreHorizontal size={16} />
+          </button>
+          {openMenu === t.id && (
+            <>
+              <div className="fixed inset-0 z-40" onClick={() => setOpenMenu(null)} />
+              <div className="absolute right-0 top-full z-50 mt-1 w-40 rounded-lg border border-[var(--color-neutral-200)] bg-white py-1 shadow-lg">
+                <button type="button" className="flex w-full items-center gap-2 px-3 py-2 text-sm text-[var(--color-neutral-700)] hover:bg-[var(--color-neutral-50)]" onClick={() => { setOpenMenu(null); navigate({ to: '/financial/$id', params: { id: t.id } }); }}>
+                  <Eye size={14} /> Ver detalhes
+                </button>
+                <button type="button" className="flex w-full items-center gap-2 px-3 py-2 text-sm text-[var(--color-neutral-700)] hover:bg-[var(--color-neutral-50)]" onClick={() => { setOpenMenu(null); navigate({ to: '/financial/new', search: { copyFrom: t.id } }); }}>
+                  <Copy size={14} /> Copiar
+                </button>
+                <button type="button" className="flex w-full items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50" onClick={() => { setOpenMenu(null); setDeleteId(t.id); }}>
+                  <Trash2 size={14} /> Excluir
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      ),
+    },
+  ];
 
   return (
     <PageContainer
       title="Despesas"
       actions={
-        <Link
-          to="/financial/new"
-          className="flex items-center gap-1.5 rounded-lg bg-primary-500 px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-600"
-        >
+        <Link to="/financial/new" className="flex items-center gap-1.5 rounded-lg bg-primary-500 px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-600">
           <Plus size={16} strokeWidth={2} />
           Nova Despesa
         </Link>
       }
     >
-      {/* Filtros */}
-      <div className="mb-4 rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-card)] sm:p-5">
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <div className="relative flex-1">
-            <Search size={16} strokeWidth={1.5} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-neutral-400)]" />
-            <input
-              type="search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Buscar despesas..."
-              className="flex h-10 w-full rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-2 pl-9 text-sm placeholder:text-[var(--color-neutral-400)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
-            />
-          </div>
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="flex h-10 rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-elevated)] px-3 py-2 text-sm text-[var(--color-neutral-800)] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
-          >
-            <option value="">Todos os status</option>
-            <option value="pending">Pendente</option>
-            <option value="paid">Pago</option>
-            <option value="overdue">Atrasado</option>
-            <option value="cancelled">Cancelado</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Lista */}
-      {isLoading ? (
-        <div className="flex items-center justify-center py-12">
-          <div className="h-8 w-8 animate-spin rounded-full border-3 border-primary-200 border-t-primary-500" />
-        </div>
-      ) : !transactions || transactions.length === 0 ? (
-        <EmptyState
-          icon={<Wallet size={40} strokeWidth={1.5} />}
-          title="Nenhuma despesa"
-          description="Ainda não há despesas registradas"
-        />
-      ) : (
-        <>
-          {/* Desktop: Tabela */}
-          <div className="hidden overflow-hidden rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] shadow-[var(--shadow-card)] sm:block">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-[var(--color-neutral-200)] bg-[var(--color-neutral-50)]/70">
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-[var(--color-neutral-500)]">Data</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-[var(--color-neutral-500)]">Descrição</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-[var(--color-neutral-500)]">Natureza</th>
-                  <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-[var(--color-neutral-500)]">Valor</th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-[var(--color-neutral-500)]">Status</th>
-                  <th className="w-12 px-2 py-3" />
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[var(--color-neutral-100)]">
-                {transactions.map((t) => (
-                  <tr
-                    key={t.id}
-                    className="cursor-pointer transition-colors hover:bg-[var(--color-neutral-50)]"
-                    onClick={() => navigate({ to: '/financial/$id', params: { id: t.id } })}
-                  >
-                    <td className="px-4 py-3 text-sm text-[var(--color-neutral-600)]">{formatDate(t.data)}</td>
-                    <td className="px-4 py-3 text-sm font-medium text-[var(--color-neutral-800)]">{t.descricao}</td>
-                    <td className="px-4 py-3 text-sm text-[var(--color-neutral-500)]">{t.natureza?.nome ?? '—'}</td>
-                    <td className="px-4 py-3 text-right text-sm font-semibold text-red-600">{formatCurrency(t.valor)}</td>
-                    <td className="px-4 py-3 text-center">
-                      <span className={cn('inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold', statusColors[t.situacao] ?? '')}>
-                        {statusLabels[t.situacao] ?? t.situacao}
-                      </span>
-                    </td>
-                    <td className="px-2 py-3 text-center" onClick={(e) => e.stopPropagation()}>
-                      <div className="relative">
-                        <button
-                          type="button"
-                          className="rounded-lg p-1.5 text-[var(--color-neutral-400)] transition-colors hover:bg-[var(--color-neutral-100)] hover:text-[var(--color-neutral-600)]"
-                          onClick={() => setOpenMenu(openMenu === t.id ? null : t.id)}
-                        >
-                          <MoreHorizontal size={16} />
-                        </button>
-                        {openMenu === t.id && (
-                          <>
-                            <div className="fixed inset-0 z-40" onClick={() => setOpenMenu(null)} />
-                            <div className="absolute right-0 top-full z-50 mt-1 w-40 rounded-lg border border-[var(--color-neutral-200)] bg-white py-1 shadow-lg">
-                              <button
-                                type="button"
-                                className="flex w-full items-center gap-2 px-3 py-2 text-sm text-[var(--color-neutral-700)] hover:bg-[var(--color-neutral-50)]"
-                                onClick={() => {
-                                  setOpenMenu(null);
-                                  navigate({ to: '/financial/$id', params: { id: t.id } });
-                                }}
-                              >
-                                <Eye size={14} /> Ver detalhes
-                              </button>
-                              <button
-                                type="button"
-                                className="flex w-full items-center gap-2 px-3 py-2 text-sm text-[var(--color-neutral-700)] hover:bg-[var(--color-neutral-50)]"
-                                onClick={() => {
-                                  setOpenMenu(null);
-                                  navigate({ to: '/financial/new', search: { copyFrom: t.id } });
-                                }}
-                              >
-                                <Copy size={14} /> Copiar
-                              </button>
-                              <button
-                                type="button"
-                                className="flex w-full items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50"
-                                onClick={() => {
-                                  setOpenMenu(null);
-                                  setDeleteId(t.id);
-                                }}
-                              >
-                                <Trash2 size={14} /> Excluir
-                              </button>
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Mobile: Cards */}
-          <div className="space-y-3 sm:hidden">
-            {transactions.map((t) => (
-              <div
-                key={t.id}
-                className="cursor-pointer rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-card)] transition-colors active:bg-[var(--color-neutral-50)]"
-                onClick={() => navigate({ to: '/financial/$id', params: { id: t.id } })}
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium text-[var(--color-neutral-800)]">{t.descricao}</p>
-                    <p className="mt-0.5 text-xs text-[var(--color-neutral-500)]">
-                      {formatDate(t.data)} {t.natureza?.nome ? `· ${t.natureza.nome}` : ''}
-                    </p>
-                  </div>
-                  <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold', statusColors[t.situacao] ?? '')}>
-                    {statusLabels[t.situacao] ?? t.situacao}
-                  </span>
-                </div>
-                <div className="mt-2 flex items-center justify-between">
-                  <span className="text-base font-bold text-red-600">{formatCurrency(t.valor)}</span>
-                  <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
-                    <button
-                      type="button"
-                      className="rounded-lg p-1.5 text-[var(--color-neutral-400)] hover:bg-[var(--color-neutral-100)]"
-                      title="Copiar"
-                      onClick={() => navigate({ to: '/financial/new', search: { copyFrom: t.id } })}
-                    >
-                      <Copy size={14} />
-                    </button>
-                    <button
-                      type="button"
-                      className="rounded-lg p-1.5 text-[var(--color-neutral-400)] hover:bg-red-50 hover:text-red-500"
-                      title="Excluir"
-                      onClick={() => setDeleteId(t.id)}
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-                </div>
+      <DataTable
+        columns={columns}
+        data={transactions ?? []}
+        keyExtractor={(t) => t.id}
+        loading={isLoading}
+        emptyMessage="Nenhuma despesa registrada"
+        onRowClick={(t) => navigate({ to: '/financial/$id', params: { id: t.id } })}
+        mobileRender={(t) => (
+          <div className="cursor-pointer rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-card)] transition-colors active:bg-[var(--color-neutral-50)]">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium text-[var(--color-neutral-800)]">{t.descricao}</p>
+                <p className="mt-0.5 text-xs text-[var(--color-neutral-500)]">
+                  {formatDate(t.data)} {t.natureza?.nome ? `· ${t.natureza.nome}` : ''}
+                </p>
               </div>
-            ))}
+              <div className="flex shrink-0 items-center gap-1.5">
+                <Paperclip size={12} className={(docCounts?.get(t.id) ?? 0) > 0 ? 'text-green-500' : 'text-[var(--color-neutral-300)]'} />
+                <span className={cn('rounded-full px-2 py-0.5 text-xs font-semibold', statusColors[t.situacao] ?? '')}>
+                  {statusLabels[t.situacao] ?? t.situacao}
+                </span>
+              </div>
+            </div>
+            <div className="mt-2 flex items-center justify-between">
+              <span className="text-base font-bold text-red-600">{formatCurrency(t.valor)}</span>
+              <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
+                <button type="button" className="rounded-lg p-1.5 text-[var(--color-neutral-400)] hover:bg-[var(--color-neutral-100)]" title="Copiar" onClick={() => navigate({ to: '/financial/new', search: { copyFrom: t.id } })}>
+                  <Copy size={14} />
+                </button>
+                <button type="button" className="rounded-lg p-1.5 text-[var(--color-neutral-400)] hover:bg-red-50 hover:text-red-500" title="Excluir" onClick={() => setDeleteId(t.id)}>
+                  <Trash2 size={14} />
+                </button>
+              </div>
+            </div>
           </div>
-        </>
-      )}
+        )}
+      />
 
-      {/* Dialog de exclusão */}
       <ConfirmDialog
         open={!!deleteId}
         onOpenChange={(v) => { if (!v) setDeleteId(null); }}
@@ -232,11 +213,7 @@ function Despesas() {
         confirmLabel="Excluir"
         variant="danger"
         loading={remove.isPending}
-        onConfirm={() => {
-          if (deleteId) {
-            remove.mutate(deleteId, { onSuccess: () => setDeleteId(null) });
-          }
-        }}
+        onConfirm={() => { if (deleteId) remove.mutate(deleteId, { onSuccess: () => setDeleteId(null) }); }}
       />
     </PageContainer>
   );

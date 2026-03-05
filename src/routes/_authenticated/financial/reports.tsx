@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { FileText, Plus } from 'lucide-react';
+import { FileCheck, FileText, Paperclip, Plus } from 'lucide-react';
 import { PageContainer } from '@/shared/components/layout/PageContainer';
 import { Button } from '@/shared/components/form/Button';
 import { useReimbursementReports } from '@/modules/financial/hooks/useFinancial';
@@ -74,11 +74,24 @@ function Relatorios() {
                     {formatDate(report.periodo_inicio)} — {formatDate(report.periodo_fim)}
                     {report.total_movimentacoes != null && ` · ${report.total_movimentacoes} lançamento(s)`}
                   </p>
-                  {report.enviado_em && (
-                    <p className="mt-0.5 text-xs text-[var(--color-neutral-400)]">
-                      Enviado em {formatDate(report.enviado_em)}
-                    </p>
-                  )}
+                  <div className="mt-1 flex flex-wrap items-center gap-2">
+                    {report.enviado_em && (
+                      <span className="text-xs text-[var(--color-neutral-400)]">
+                        Enviado em {formatDate(report.enviado_em)}
+                      </span>
+                    )}
+                    {report.total_movimentacoes != null && report.total_movimentacoes > 0 && (
+                      <span className="inline-flex items-center gap-1 text-xs text-[var(--color-neutral-400)]">
+                        <Paperclip size={11} />
+                        {report.total_movimentacoes} despesa(s)
+                      </span>
+                    )}
+                    {report.comprovantes_compilados && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700">
+                        <FileCheck size={11} /> PDF compilado
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <div className="flex shrink-0 items-center gap-3">
                   <span className="text-sm font-semibold text-[var(--color-neutral-800)]">

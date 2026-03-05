@@ -9,8 +9,11 @@ import type {
   FundingSource,
   BankAccount,
   QuotaConfig,
+  QuotaUsage,
   ReimbursementReport,
   TransactionDocument,
+  CeapExpense,
+  OverallBalance,
   CreateCategoryInput,
   CreateNatureInput,
   CreateFundingSourceInput,
@@ -29,11 +32,33 @@ export const financialService = {
     if (filters.situacao) query = query.eq('situacao', filters.situacao);
     if (filters.categoria_id) query = query.eq('categoria_id', filters.categoria_id);
     if (filters.natureza_id) query = query.eq('natureza_id', filters.natureza_id);
+    if (filters.fonte_recurso_id) query = query.eq('fonte_recurso_id', filters.fonte_recurso_id);
+    if (filters.forma_pagamento) query = query.eq('forma_pagamento', filters.forma_pagamento);
     if (filters.data_inicio) query = query.gte('data', filters.data_inicio);
     if (filters.data_fim) query = query.lte('data', filters.data_fim);
     if (filters.busca) query = query.ilike('descricao', `%${filters.busca}%`);
 
     const { data, error } = await query;
+    if (error) throw error;
+    return data as Transaction[];
+  },
+
+  async listRecentTransactions(monthStr: string, limit = 20): Promise<Transaction[]> {
+    const startDate = monthStr;
+    const d = new Date(monthStr);
+    d.setMonth(d.getMonth() + 1);
+    d.setDate(0);
+    const endDate = d.toISOString().split('T')[0];
+
+    const { data, error } = await supabase
+      .from('finan_movimentacoes')
+      .select('*, categoria:finan_categorias(*), natureza:finan_naturezas(*), fonte_recurso:finan_fontes_recurso(*)')
+      .gte('data', startDate)
+      .lte('data', endDate)
+      .neq('situacao', 'cancelled')
+      .order('data', { ascending: false })
+      .limit(limit);
+
     if (error) throw error;
     return data as Transaction[];
   },
@@ -355,14 +380,49 @@ export const financialService = {
     return data as QuotaConfig;
   },
 
-  async getQuotaUsage(year: number, month: number): Promise<{ nature_name: string; total_used: number }[]> {
+  async getQuotaUsage(year: number, month: number): Promise<QuotaUsage[]> {
     const { data, error } = await supabase.rpc('obter_uso_ceap', {
       p_year: year,
       p_month: month,
     });
 
     if (error) throw error;
-    return data ?? [];
+    return (data ?? []) as QuotaUsage[];
+  },
+
+  async getCeapExpenses(year: number, month: number): Promise<CeapExpense[]> {
+    const { data, error } = await supabase.rpc('obter_despesas_ceap_mes', {
+      p_year: year,
+      p_month: month,
+    });
+
+    if (error) throw error;
+    return (data ?? []) as CeapExpense[];
+  },
+
+  // === Saldo Geral ===
+  async getOverallBalance(): Promise<OverallBalance> {
+    const { data, error } = await supabase.rpc('obter_saldo_geral');
+
+    if (error) throw error;
+    if (data && data.length > 0) return data[0] as OverallBalance;
+    return { total_revenue: 0, total_expense: 0, balance: 0 };
+  },
+
+  // === Comprovantes (contagem por movimentação) ===
+  async getDocumentCounts(ids: string[]): Promise<Map<string, number>> {
+    if (ids.length === 0) return new Map();
+
+    const { data, error } = await supabase.rpc('obter_contagem_comprovantes', {
+      p_movimentacao_ids: ids,
+    });
+
+    if (error) throw error;
+    const map = new Map<string, number>();
+    (data ?? []).forEach((row: { movimentacao_id: string; total_documentos: number }) => {
+      map.set(row.movimentacao_id, row.total_documentos);
+    });
+    return map;
   },
 
   // === Relatórios de Reembolso ===
@@ -407,7 +467,7 @@ export const financialService = {
 
   async updateReimbursementReport(
     id: string,
-    input: Partial<Pick<ReimbursementReport, 'nome' | 'situacao' | 'enviado_em' | 'recebido_em' | 'valor_recebido' | 'observacoes'>>,
+    input: Partial<Pick<ReimbursementReport, 'nome' | 'situacao' | 'enviado_em' | 'recebido_em' | 'valor_recebido' | 'comprovantes_compilados' | 'observacoes'>>,
   ): Promise<ReimbursementReport> {
     const { data, error } = await supabase
       .from('finan_relatorios_reembolso')
@@ -505,6 +565,17 @@ export const financialService = {
       .from('finan_relatorios_reembolso')
       .update({ valor_total: total, total_movimentacoes: count })
       .eq('id', reportId);
+  },
+
+  async markReimbursementSent(reportId: string): Promise<void> {
+    const now = new Date().toISOString();
+    const { error } = await supabase
+      .from('finan_movimentacoes')
+      .update({ reembolso_enviado_em: now })
+      .eq('relatorio_reembolso_id', reportId)
+      .is('reembolso_enviado_em', null);
+
+    if (error) throw error;
   },
 
   // === Documentos ===

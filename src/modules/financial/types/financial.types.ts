@@ -66,6 +66,10 @@ export interface Transaction {
   contato_id: string | null;
   relatorio_reembolso_id: string | null;
   despesa_fixa_id: string | null;
+  reembolsavel: boolean | null;
+  reembolso_enviado_em: string | null;
+  valor_reembolso: number | null;
+  reembolso_recebido_em: string | null;
   observacoes: string | null;
   criado_por: string;
   criado_em: string;
@@ -126,6 +130,7 @@ export interface ReimbursementReport {
   valor_total: number | null;
   total_movimentacoes: number | null;
   caminho_exportacao: string | null;
+  comprovantes_compilados: boolean;
   observacoes: string | null;
   criado_por: string;
   criado_em: string;
@@ -142,6 +147,7 @@ export interface QuotaConfig {
 }
 
 export interface QuotaUsage {
+  natureza_id: string | null;
   natureza_nome: string;
   natureza_codigo: string;
   total_gasto: number;
@@ -163,9 +169,28 @@ export interface TransactionFilters {
   situacao?: string;
   categoria_id?: string;
   natureza_id?: string;
+  fonte_recurso_id?: string;
+  forma_pagamento?: string;
   data_inicio?: string;
   data_fim?: string;
   busca?: string;
+}
+
+export interface CeapExpense {
+  id: string;
+  descricao: string;
+  valor: number;
+  data: string;
+  situacao: string;
+  natureza_nome: string;
+  natureza_codigo: string;
+  tem_comprovante: boolean;
+}
+
+export interface OverallBalance {
+  total_revenue: number;
+  total_expense: number;
+  balance: number;
 }
 
 export interface CreateTransactionInput {
