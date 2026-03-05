@@ -1,3 +1,4 @@
+import { useState, useMemo } from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useNavigate } from '@tanstack/react-router';
@@ -5,6 +6,7 @@ import { TrendingUp, TrendingDown, DollarSign, PieChart } from 'lucide-react';
 import { cn } from '@/shared/utils/cn';
 import { formatCurrency, formatDate } from '@/shared/utils/format';
 import { useDashboard } from '@/modules/financial/hooks/useDashboard';
+import { useCategories, useNatures } from '@/modules/financial/hooks/useFinancial';
 import { Card, CardTitle } from '@/shared/components/ui/Card';
 
 const statusLabels: Record<string, string> = {
@@ -21,6 +23,8 @@ const statusColors: Record<string, string> = {
   cancelled: 'bg-[var(--color-neutral-100)] text-[var(--color-neutral-500)]',
 };
 
+type FilterType = 'all' | 'ceap' | 'category' | 'nature';
+
 interface FinancialDashboardProps {
   currentMonth: Date;
 }
@@ -30,6 +34,29 @@ export function FinancialDashboard({ currentMonth }: FinancialDashboardProps) {
   const monthStr = format(currentMonth, 'yyyy-MM-01');
   const monthLabel = format(currentMonth, 'MMMM yyyy', { locale: ptBR });
   const { summary, overallBalance, recentTransactions, isLoading, isLoadingTransactions } = useDashboard(monthStr);
+
+  const { data: categories } = useCategories();
+  const { data: natures } = useNatures();
+
+  const [filterType, setFilterType] = useState<FilterType>('all');
+  const [selectedCategoryId, setSelectedCategoryId] = useState('');
+  const [selectedNatureId, setSelectedNatureId] = useState('');
+
+  const filteredTransactions = useMemo(() => {
+    if (!recentTransactions) return [];
+    switch (filterType) {
+      case 'ceap':
+        return recentTransactions.filter((t) => t.natureza?.elegivel_ceap === true);
+      case 'category':
+        if (!selectedCategoryId) return recentTransactions;
+        return recentTransactions.filter((t) => t.categoria_id === selectedCategoryId);
+      case 'nature':
+        if (!selectedNatureId) return recentTransactions;
+        return recentTransactions.filter((t) => t.natureza_id === selectedNatureId);
+      default:
+        return recentTransactions;
+    }
+  }, [recentTransactions, filterType, selectedCategoryId, selectedNatureId]);
 
   if (isLoading) {
     return (
@@ -75,6 +102,17 @@ export function FinancialDashboard({ currentMonth }: FinancialDashboardProps) {
     },
   ];
 
+  const chipClass = (active: boolean) =>
+    cn(
+      'rounded-full px-3 py-1.5 text-xs font-semibold transition-colors',
+      active
+        ? 'bg-primary-500 text-white'
+        : 'bg-[var(--color-neutral-100)] text-[var(--color-neutral-600)] hover:bg-[var(--color-neutral-200)]',
+    );
+
+  const selectClass =
+    'h-8 rounded-lg border border-[var(--color-neutral-200)] bg-white px-2 text-xs text-[var(--color-neutral-700)] outline-none transition-colors focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20';
+
   return (
     <div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -102,8 +140,70 @@ export function FinancialDashboard({ currentMonth }: FinancialDashboardProps) {
         ))}
       </div>
 
-      {/* Movimentações recentes do mês */}
-      <div className="mt-6">
+      {/* Filtros */}
+      <div className="mt-6 flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          className={chipClass(filterType === 'all')}
+          onClick={() => setFilterType('all')}
+        >
+          Todas
+        </button>
+        <button
+          type="button"
+          className={chipClass(filterType === 'ceap')}
+          onClick={() => setFilterType('ceap')}
+        >
+          CEAP
+        </button>
+
+        <select
+          value={filterType === 'category' ? selectedCategoryId : ''}
+          onChange={(e) => {
+            if (e.target.value) {
+              setFilterType('category');
+              setSelectedCategoryId(e.target.value);
+            } else {
+              setFilterType('all');
+              setSelectedCategoryId('');
+            }
+          }}
+          className={cn(selectClass, filterType === 'category' && 'border-primary-500 ring-2 ring-primary-500/20')}
+        >
+          <option value="">Categoria</option>
+          {categories?.map((c) => (
+            <option key={c.id} value={c.id}>{c.nome}</option>
+          ))}
+        </select>
+
+        <select
+          value={filterType === 'nature' ? selectedNatureId : ''}
+          onChange={(e) => {
+            if (e.target.value) {
+              setFilterType('nature');
+              setSelectedNatureId(e.target.value);
+            } else {
+              setFilterType('all');
+              setSelectedNatureId('');
+            }
+          }}
+          className={cn(selectClass, filterType === 'nature' && 'border-primary-500 ring-2 ring-primary-500/20')}
+        >
+          <option value="">Natureza</option>
+          {natures?.map((n) => (
+            <option key={n.id} value={n.id}>{n.codigo} — {n.nome}</option>
+          ))}
+        </select>
+
+        {filterType !== 'all' && (
+          <span className="text-xs text-[var(--color-neutral-400)]">
+            {filteredTransactions.length} resultado{filteredTransactions.length !== 1 ? 's' : ''}
+          </span>
+        )}
+      </div>
+
+      {/* Movimentações do mês */}
+      <div className="mt-4">
         <Card className="p-6">
           <CardTitle>Movimentações de {monthLabel}</CardTitle>
 
@@ -111,9 +211,11 @@ export function FinancialDashboard({ currentMonth }: FinancialDashboardProps) {
             <div className="flex items-center justify-center py-12">
               <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary-500 border-t-transparent" />
             </div>
-          ) : !recentTransactions || recentTransactions.length === 0 ? (
+          ) : filteredTransactions.length === 0 ? (
             <div className="mt-4 py-8 text-center text-sm text-[var(--color-neutral-400)]">
-              Nenhuma movimentação registrada neste mês
+              {filterType === 'all'
+                ? 'Nenhuma movimentação registrada neste mês'
+                : 'Nenhuma movimentação encontrada com o filtro aplicado'}
             </div>
           ) : (
             <>
@@ -130,7 +232,7 @@ export function FinancialDashboard({ currentMonth }: FinancialDashboardProps) {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[var(--color-neutral-100)]">
-                    {recentTransactions.map((t) => (
+                    {filteredTransactions.map((t) => (
                       <tr
                         key={t.id}
                         className="cursor-pointer transition-colors hover:bg-[var(--color-neutral-50)]"
@@ -165,7 +267,7 @@ export function FinancialDashboard({ currentMonth }: FinancialDashboardProps) {
 
               {/* Mobile */}
               <div className="mt-4 space-y-2 sm:hidden">
-                {recentTransactions.map((t) => (
+                {filteredTransactions.map((t) => (
                   <div
                     key={t.id}
                     className="cursor-pointer rounded-lg border border-[var(--color-neutral-200)] p-3 transition-colors active:bg-[var(--color-neutral-50)]"

@@ -244,3 +244,18 @@ export interface CreateBankAccountInput {
   titular?: string;
   descricao?: string;
 }
+
+export interface MonthlyQuotaOverride {
+  id: string;
+  ano: number;
+  mes: number;
+  natureza_id: string | null;
+  valor: number;
+  criado_em: string;
+  atualizado_em: string;
+}
+
+export type CreateFixedExpenseInput = Omit<
+  FixedExpense,
+  'id' | 'criado_por' | 'criado_em' | 'atualizado_em' | 'natureza' | 'fonte_recurso'
+>;

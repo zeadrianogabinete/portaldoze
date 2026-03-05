@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { ChevronLeft, ChevronRight, Paperclip } from 'lucide-react';
+import * as Dialog from '@radix-ui/react-dialog';
+import { ChevronLeft, ChevronRight, Paperclip, Pencil, X } from 'lucide-react';
 import { format, addMonths, subMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { PageContainer } from '@/shared/components/layout/PageContainer';
-import { useQuotaConfig, useQuotaUsage, useCeapExpenses } from '@/modules/financial/hooks/useFinancial';
+import { Button } from '@/shared/components/form/Button';
+import { CurrencyInput } from '@/shared/components/form/CurrencyInput';
+import { useEffectiveGeneralQuota, useQuotaUsage, useCeapExpenses, useMonthlyQuotaMutations } from '@/modules/financial/hooks/useFinancial';
 import { formatCurrency, formatDate } from '@/shared/utils/format';
 import { cn } from '@/shared/utils/cn';
 
@@ -30,14 +33,44 @@ function CotasCEAP() {
   const year = currentMonth.getFullYear();
   const month = currentMonth.getMonth() + 1;
 
-  const { data: quotaConfig } = useQuotaConfig();
+  const { data: monthlyLimit, isLoading: isLoadingQuota } = useEffectiveGeneralQuota(year, month);
   const { data: usage, isLoading } = useQuotaUsage(year, month);
   const { data: ceapExpenses, isLoading: isLoadingExpenses } = useCeapExpenses(year, month);
 
-  const monthlyLimit = quotaConfig?.total_mensal ?? 45612.53;
+  const effectiveLimit = monthlyLimit ?? 0;
   const totalUsed = usage?.reduce((sum, item) => sum + (item.total_gasto ?? 0), 0) ?? 0;
-  const remaining = monthlyLimit - totalUsed;
-  const percentage = monthlyLimit > 0 ? (totalUsed / monthlyLimit) * 100 : 0;
+  const remaining = effectiveLimit - totalUsed;
+  const percentage = effectiveLimit > 0 ? (totalUsed / effectiveLimit) * 100 : 0;
+
+  // Estado para edição de cotas
+  const [editQuotaOpen, setEditQuotaOpen] = useState(false);
+  const [editQuotaValue, setEditQuotaValue] = useState(0);
+  const [editQuotaNatureId, setEditQuotaNatureId] = useState<string | null>(null);
+  const [editQuotaLabel, setEditQuotaLabel] = useState('');
+
+  const { upsert } = useMonthlyQuotaMutations();
+
+  function openEditGeneralQuota() {
+    setEditQuotaNatureId(null);
+    setEditQuotaValue(effectiveLimit);
+    setEditQuotaLabel('Cota Geral CEAP');
+    setEditQuotaOpen(true);
+  }
+
+  function openEditNatureQuota(naturezaId: string, nome: string, currentValue: number) {
+    setEditQuotaNatureId(naturezaId);
+    setEditQuotaValue(currentValue);
+    setEditQuotaLabel(nome);
+    setEditQuotaOpen(true);
+  }
+
+  function handleSaveQuota() {
+    if (editQuotaValue < 0) return;
+    upsert.mutate(
+      { ano: year, mes: month, natureza_id: editQuotaNatureId, valor: editQuotaValue },
+      { onSuccess: () => setEditQuotaOpen(false) },
+    );
+  }
 
   return (
     <PageContainer title="Cota CEAP" subtitle="Cota para Exercício da Atividade Parlamentar">
@@ -69,7 +102,19 @@ function CotasCEAP() {
         <div className="grid gap-4 sm:grid-cols-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-[var(--color-neutral-500)]">Limite Mensal</p>
-            <p className="mt-1 font-heading text-2xl font-bold text-[var(--color-neutral-800)]">{formatCurrency(monthlyLimit)}</p>
+            <div className="mt-1 flex items-center gap-2">
+              <p className="font-heading text-2xl font-bold text-[var(--color-neutral-800)]">
+                {isLoadingQuota ? '...' : formatCurrency(effectiveLimit)}
+              </p>
+              <button
+                type="button"
+                onClick={openEditGeneralQuota}
+                className="rounded-lg p-1.5 text-[var(--color-neutral-400)] transition-colors hover:bg-[var(--color-neutral-100)] hover:text-[var(--color-neutral-600)]"
+                title="Editar cota geral deste mês"
+              >
+                <Pencil size={14} />
+              </button>
+            </div>
           </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-[var(--color-neutral-500)]">Utilizado</p>
@@ -86,7 +131,7 @@ function CotasCEAP() {
         <div className="mt-4">
           <div className="flex items-center justify-between text-xs text-[var(--color-neutral-500)]">
             <span>{percentage.toFixed(1)}% utilizado</span>
-            <span>{formatCurrency(totalUsed)} / {formatCurrency(monthlyLimit)}</span>
+            <span>{formatCurrency(totalUsed)} / {formatCurrency(effectiveLimit)}</span>
           </div>
           <div className="mt-1 h-3 overflow-hidden rounded-full bg-[var(--color-neutral-100)]">
             <div
@@ -126,15 +171,27 @@ function CotasCEAP() {
                       {item.natureza_nome}
                     </p>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm font-semibold text-[var(--color-neutral-800)]">
-                      {formatCurrency(item.total_gasto)}
-                      {hasLimit && (
-                        <span className="ml-1 text-xs font-normal text-[var(--color-neutral-500)]">
-                          / {formatCurrency(item.cota_mensal)}
-                        </span>
-                      )}
-                    </p>
+                  <div className="flex items-center gap-2">
+                    <div className="text-right">
+                      <p className="text-sm font-semibold text-[var(--color-neutral-800)]">
+                        {formatCurrency(item.total_gasto)}
+                        {hasLimit && (
+                          <span className="ml-1 text-xs font-normal text-[var(--color-neutral-500)]">
+                            / {formatCurrency(item.cota_mensal)}
+                          </span>
+                        )}
+                      </p>
+                    </div>
+                    {item.natureza_id && (
+                      <button
+                        type="button"
+                        onClick={() => openEditNatureQuota(item.natureza_id!, item.natureza_nome, item.cota_mensal)}
+                        className="rounded-lg p-1 text-[var(--color-neutral-400)] transition-colors hover:bg-[var(--color-neutral-100)] hover:text-[var(--color-neutral-600)]"
+                        title="Editar cota desta natureza neste mês"
+                      >
+                        <Pencil size={12} />
+                      </button>
+                    )}
                   </div>
                 </div>
 
@@ -263,6 +320,53 @@ function CotasCEAP() {
           </div>
         </>
       )}
+
+      {/* Dialog de edição de cota */}
+      <Dialog.Root open={editQuotaOpen} onOpenChange={setEditQuotaOpen}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 z-50 bg-black/50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+          <Dialog.Content className="fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-xl border border-[var(--color-neutral-200)] bg-white p-6 shadow-lg">
+            <Dialog.Title className="font-heading text-lg font-semibold text-[var(--color-neutral-800)]">
+              Editar Cota — {format(currentMonth, 'MMM yyyy', { locale: ptBR })}
+            </Dialog.Title>
+            <Dialog.Description className="mt-1 text-sm text-[var(--color-neutral-500)]">
+              {editQuotaLabel}
+            </Dialog.Description>
+
+            <div className="mt-4">
+              <label htmlFor="edit-quota-valor" className="mb-1 block text-sm font-medium text-[var(--color-neutral-700)]">
+                Valor da cota para este mês
+              </label>
+              <CurrencyInput
+                value={editQuotaValue}
+                onChange={setEditQuotaValue}
+                placeholder="R$ 0,00"
+              />
+              <p className="mt-1.5 text-xs text-[var(--color-neutral-400)]">
+                Alterações afetam apenas {format(currentMonth, 'MMMM/yyyy', { locale: ptBR })}. Meses anteriores mantêm seus valores.
+              </p>
+            </div>
+
+            <div className="mt-6 flex justify-end gap-3">
+              <Button variant="secondary" onClick={() => setEditQuotaOpen(false)} disabled={upsert.isPending}>
+                Cancelar
+              </Button>
+              <Button onClick={handleSaveQuota} loading={upsert.isPending}>
+                Salvar
+              </Button>
+            </div>
+
+            <Dialog.Close asChild>
+              <button
+                type="button"
+                className="absolute right-4 top-4 rounded-sm p-1 text-[var(--color-neutral-400)] transition-colors hover:text-[var(--color-neutral-600)]"
+              >
+                <X size={16} />
+              </button>
+            </Dialog.Close>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
     </PageContainer>
   );
 }

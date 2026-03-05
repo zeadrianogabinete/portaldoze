@@ -1,7 +1,11 @@
+import { useState } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
+import { Plus, Pencil, Trash2 } from 'lucide-react';
 import { PageContainer } from '@/shared/components/layout/PageContainer';
-import { useFixedExpenses } from '@/modules/financial/hooks/useFinancial';
+import { useFixedExpenses, useFixedExpenseMutations } from '@/modules/financial/hooks/useFinancial';
 import { DataTable, type Column } from '@/shared/components/form/DataTable';
+import { Button } from '@/shared/components/form/Button';
+import { FixedExpenseDialog } from '@/modules/financial/components/fixed/FixedExpenseDialog';
 import { formatCurrency } from '@/shared/utils/format';
 import { cn } from '@/shared/utils/cn';
 import type { FixedExpense } from '@/modules/financial/types/financial.types';
@@ -12,6 +16,29 @@ export const Route = createFileRoute('/_authenticated/financial/fixed')({
 
 function DespesasFixas() {
   const { data: fixedExpenses, isLoading } = useFixedExpenses();
+  const { remove } = useFixedExpenseMutations();
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editExpense, setEditExpense] = useState<FixedExpense | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+
+  function handleEdit(expense: FixedExpense) {
+    setEditExpense(expense);
+    setDialogOpen(true);
+  }
+
+  function handleCreate() {
+    setEditExpense(null);
+    setDialogOpen(true);
+  }
+
+  function handleDelete(id: string) {
+    if (deleteId === id) return;
+    setDeleteId(id);
+    remove.mutate(id, {
+      onSettled: () => setDeleteId(null),
+    });
+  }
 
   const columns: Column<FixedExpense>[] = [
     {
@@ -68,20 +95,63 @@ function DespesasFixas() {
         </span>
       ),
     },
+    {
+      key: 'actions',
+      header: '',
+      className: 'w-20 text-right',
+      render: (e) => (
+        <div className="flex items-center justify-end gap-1" onClick={(ev) => ev.stopPropagation()}>
+          <button
+            type="button"
+            onClick={() => handleEdit(e)}
+            className="rounded-lg p-1.5 text-[var(--color-neutral-400)] transition-colors hover:bg-[var(--color-neutral-100)] hover:text-[var(--color-neutral-600)]"
+            title="Editar"
+          >
+            <Pencil size={14} />
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              if (window.confirm(`Excluir "${e.descricao}"?`)) {
+                handleDelete(e.id);
+              }
+            }}
+            disabled={deleteId === e.id}
+            className="rounded-lg p-1.5 text-[var(--color-neutral-400)] transition-colors hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
+            title="Excluir"
+          >
+            <Trash2 size={14} />
+          </button>
+        </div>
+      ),
+    },
   ];
 
   return (
-    <PageContainer title="Despesas Fixas" subtitle="Despesas recorrentes mensais">
+    <PageContainer
+      title="Despesas Fixas"
+      subtitle="Despesas recorrentes mensais"
+      actions={
+        <Button onClick={handleCreate} size="sm">
+          <Plus size={16} className="mr-1.5" />
+          Nova Despesa Fixa
+        </Button>
+      }
+    >
       <DataTable
         columns={columns}
         data={fixedExpenses ?? []}
         keyExtractor={(e) => e.id}
         loading={isLoading}
         emptyMessage="Nenhuma despesa fixa cadastrada"
+        onRowClick={handleEdit}
         mobileRender={(e) => (
-          <div className="rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-card)]">
+          <div
+            className="rounded-lg border border-[var(--color-neutral-200)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-card)]"
+            onClick={() => handleEdit(e)}
+          >
             <div className="flex items-center justify-between">
-              <div>
+              <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium text-[var(--color-neutral-800)]">{e.descricao}</p>
                 <p className="mt-0.5 text-xs text-[var(--color-neutral-500)]">
                   Dia {e.dia_vencimento ?? '—'} · {e.natureza?.nome ?? 'Sem natureza'}
@@ -99,6 +169,12 @@ function DespesasFixas() {
             </div>
           </div>
         )}
+      />
+
+      <FixedExpenseDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        expense={editExpense}
       />
     </PageContainer>
   );

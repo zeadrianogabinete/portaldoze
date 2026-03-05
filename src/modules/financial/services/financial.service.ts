@@ -14,6 +14,7 @@ import type {
   TransactionDocument,
   CeapExpense,
   OverallBalance,
+  MonthlyQuotaOverride,
   CreateCategoryInput,
   CreateNatureInput,
   CreateFundingSourceInput,
@@ -612,6 +613,44 @@ export const financialService = {
 
     if (error) throw error;
     return data.signedUrl;
+  },
+
+  // === Cotas Mensais (sobrescritas por mês) ===
+  async getMonthlyQuotaOverrides(year: number, month: number): Promise<MonthlyQuotaOverride[]> {
+    const { data, error } = await supabase
+      .from('finan_cotas_mensais')
+      .select('*')
+      .eq('ano', year)
+      .eq('mes', month);
+
+    if (error) throw error;
+    return (data ?? []) as MonthlyQuotaOverride[];
+  },
+
+  async upsertMonthlyQuota(input: {
+    ano: number;
+    mes: number;
+    natureza_id: string | null;
+    valor: number;
+  }): Promise<void> {
+    const { error } = await supabase.rpc('upsert_cota_mensal', {
+      p_ano: input.ano,
+      p_mes: input.mes,
+      p_natureza_id: input.natureza_id,
+      p_valor: input.valor,
+    });
+
+    if (error) throw error;
+  },
+
+  async getEffectiveGeneralQuota(year: number, month: number): Promise<number> {
+    const { data, error } = await supabase.rpc('obter_cota_geral_mes', {
+      p_year: year,
+      p_month: month,
+    });
+
+    if (error) throw error;
+    return (data as number) ?? 0;
   },
 
   async uploadDocument(

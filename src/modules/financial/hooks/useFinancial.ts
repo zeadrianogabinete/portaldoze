@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { financialService } from '../services/financial.service';
-import type { TransactionFilters, CreateTransactionInput } from '../types/financial.types';
+import type { TransactionFilters, CreateTransactionInput, FixedExpense, CreateFixedExpenseInput } from '../types/financial.types';
 
 export function useTransactions(filters: TransactionFilters = {}) {
   return useQuery({
@@ -118,6 +118,51 @@ export function useFixedExpenses() {
   });
 }
 
+export function useFixedExpenseMutations() {
+  const queryClient = useQueryClient();
+  const invalidate = () => {
+    queryClient.invalidateQueries({ queryKey: ['financial', 'fixed-expenses'] });
+    queryClient.invalidateQueries({ queryKey: ['financial'] });
+  };
+
+  const create = useMutation({
+    mutationFn: (input: CreateFixedExpenseInput) =>
+      financialService.createFixedExpense(input),
+    onSuccess: () => {
+      invalidate();
+      toast.success('Despesa fixa criada com sucesso');
+    },
+    onError: (error: Error) => {
+      toast.error(`Erro ao criar despesa fixa: ${error.message}`);
+    },
+  });
+
+  const update = useMutation({
+    mutationFn: ({ id, input }: { id: string; input: Partial<FixedExpense> }) =>
+      financialService.updateFixedExpense(id, input),
+    onSuccess: () => {
+      invalidate();
+      toast.success('Despesa fixa atualizada');
+    },
+    onError: (error: Error) => {
+      toast.error(`Erro ao atualizar despesa fixa: ${error.message}`);
+    },
+  });
+
+  const remove = useMutation({
+    mutationFn: (id: string) => financialService.deleteFixedExpense(id),
+    onSuccess: () => {
+      invalidate();
+      toast.success('Despesa fixa excluída');
+    },
+    onError: (error: Error) => {
+      toast.error(`Erro ao excluir despesa fixa: ${error.message}`);
+    },
+  });
+
+  return { create, update, remove };
+}
+
 export function useQuotaConfig() {
   return useQuery({
     queryKey: ['financial', 'quota-config'],
@@ -137,6 +182,34 @@ export function useCeapExpenses(year: number, month: number) {
     queryKey: ['financial', 'ceap-expenses', year, month],
     queryFn: () => financialService.getCeapExpenses(year, month),
   });
+}
+
+export function useEffectiveGeneralQuota(year: number, month: number) {
+  return useQuery({
+    queryKey: ['financial', 'effective-general-quota', year, month],
+    queryFn: () => financialService.getEffectiveGeneralQuota(year, month),
+  });
+}
+
+export function useMonthlyQuotaMutations() {
+  const queryClient = useQueryClient();
+
+  const upsert = useMutation({
+    mutationFn: (input: { ano: number; mes: number; natureza_id: string | null; valor: number }) =>
+      financialService.upsertMonthlyQuota(input),
+    onSuccess: (_data, vars) => {
+      queryClient.invalidateQueries({ queryKey: ['financial', 'monthly-quotas', vars.ano, vars.mes] });
+      queryClient.invalidateQueries({ queryKey: ['financial', 'effective-general-quota', vars.ano, vars.mes] });
+      queryClient.invalidateQueries({ queryKey: ['financial', 'quota-usage', vars.ano, vars.mes] });
+      queryClient.invalidateQueries({ queryKey: ['financial', 'quota-config'] });
+      toast.success('Cota mensal atualizada');
+    },
+    onError: (error: Error) => {
+      toast.error(`Erro ao atualizar cota: ${error.message}`);
+    },
+  });
+
+  return { upsert };
 }
 
 export function useDocumentCounts(ids: string[]) {
